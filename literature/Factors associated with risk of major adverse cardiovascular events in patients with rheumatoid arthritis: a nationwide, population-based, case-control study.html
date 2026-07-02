@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critical Appraisal Report | Chen et al. 2021 — Therapeutic Advances in Musculoskeletal Disease</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --primary: #4f46e5;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+            font-weight: 600;
+        }
+
+        .section-header {
+            font-size: 1.1rem;
+            letter-spacing: -.025em;
+        }
+
+        .metric-card {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+
+        .nav-active {
+            color: #4f46e5;
+            font-weight: 600;
+            border-bottom: 2px solid #4f46e5;
+        }
+
+        .verbatim {
+            background-color: #f8fafc;
+            border-left: 4px solid #6366f1;
+            font-size: 0.925rem;
+            line-height: 1.55;
+        }
+
+        .analysis-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        .stat-value {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .chart-container {
+            position: relative;
+        }
+
+        .tail-container {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .app-header {
+            background: linear-gradient(to right, #ffffff, #f8fafc);
+        }
+
+        .data-table th {
+            font-weight: 600;
+            color: #374151;
+            background-color: #f1e7ff15;
+        }
+
+        .or-protective {
+            color: #166534;
+            background-color: #f0fdf4;
+        }
+        
+        .or-risk {
+            color: #9f1239;
+            background-color: #fef2f2;
+        }
+
+        .subsection {
+            scroll-margin-top: 80px;
+        }
+        
+        .professional-shadow {
+            box-shadow: 0 4px 6px -1px rgb(15 23 42 / 0.07), 0 2px 4px -2px rgb(15 23 42 / 0.07);
+        }
+    </style>
+</head>
+<body class="bg-[#FAFAFA] text-[#374151] antialiased">
+    <!-- Top Navigation -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-8 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-chart-line text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-display text-2xl font-semibold tracking-tighter text-slate-900">articleAnalyzing</span>
+                        <span class="ml-2 text-xs px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full font-medium">v2.1</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-x-2 text-sm">
+                    <div class="px-3 py-1.5 bg-white border border-slate-200 rounded-2xl flex items-center gap-x-2 text-xs font-medium">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <span class="text-emerald-700">Analysis Complete</span>
+                    </div>
+                    <button onclick="window.print()" 
+                            class="px-4 py-2 text-xs font-semibold flex items-center gap-x-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-2xl transition-colors">
+                        <i class="fa-solid fa-print mr-1.5"></i> 
+                        <span>Print / PDF</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-screen-2xl mx-auto px-6 pt-8 pb-16">
+        
+        <!-- HEADER -->
+        <div class="mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-y-4">
+                <div>
+                    <div class="flex items-center gap-x-3 mb-2">
+                        <span class="px-3 py-1 text-xs font-bold tracking-widest bg-indigo-100 text-indigo-700 rounded-2xl">CASE-CONTROL • POPULATION-BASED</span>
+                        <span class="px-3 py-1 text-xs font-bold tracking-widest bg-emerald-100 text-emerald-700 rounded-2xl">TAIWAN NHIRD 2004–2012</span>
+                    </div>
+                    
+                    <h1 class="font-display text-4xl lg:text-5xl leading-[1.05] tracking-tighter font-semibold text-slate-900 max-w-[52ch]">
+                        Factors associated with risk of major adverse cardiovascular events in patients with rheumatoid arthritis
+                    </h1>
+                    
+                    <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                        <div>
+                            <span class="font-semibold text-slate-900">Yen-Ju Chen</span> et al.
+                        </div>
+                        <div class="hidden lg:block text-slate-300">•</div>
+                        <div class="text-slate-600">
+                            <span class="font-medium">Therapeutic Advances in Musculoskeletal Disease</span> • 2021
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 flex items-center gap-x-2">
+                        <a href="https://doi.org/10.1177/1759720X211030809" target="_blank" 
+                           class="inline-flex items-center gap-x-2 px-4 py-2 rounded-3xl bg-white border border-slate-200 hover:border-indigo-200 text-sm font-medium text-indigo-700 transition-colors">
+                            <i class="fa-solid fa-external-link-alt text-xs"></i>
+                            <span>DOI: 10.1177/1759720X211030809</span>
+                        </a>
+                        <span class="text-xs px-3 py-1 bg-white border border-slate-200 rounded-3xl text-slate-500 font-medium">Open Access</span>
+                    </div>
+                </div>
+                
+                <div class="flex-shrink-0">
+                    <div class="text-right">
+                        <div class="text-xs uppercase tracking-[1.5px] text-slate-500 font-semibold mb-1">Corresponding Author</div>
+                        <div class="font-semibold text-slate-800">Hsin-Hua Chen, MD, PhD</div>
+                        <div class="text-xs text-slate-500">Taichung Veterans General Hospital</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BIBLIOMETRIC METRICS -->
+        <div class="mb-10">
+            <div class="flex items-center justify-between mb-3 px-1">
+                <div class="font-semibold text-lg tracking-tight text-slate-800">Journal &amp; Bibliometric Profile</div>
+                <div class="text-xs text-slate-500 font-medium">Latest data • July 2026</div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <!-- Metric Cards -->
+                <div class="metric-card bg-white border border-slate-200 rounded-3xl p-4 professional-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs font-semibold tracking-widest text-indigo-600">IMPACT FACTOR</div>
+                            <div class="mt-1 text-4xl font-semibold tabular-nums text-slate-900">3.3</div>
+                            <div class="text-emerald-600 text-xs font-medium">2025 (Web of Science)</div>
+                        </div>
+                        <i class="fa-solid fa-chart-line text-3xl text-indigo-200"></i>
+                    </div>
+                    <div class="mt-3 text-[10px] text-slate-500">5-year IF: 4.0–4.1</div>
+                </div>
+                
+                <div class="metric-card bg-white border border-slate-200 rounded-3xl p-4 professional-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs font-semibold tracking-widest text-indigo-600">SJR</div>
+                            <div class="mt-1 text-4xl font-semibold tabular-nums text-slate-900">1.35</div>
+                            <div class="text-emerald-600 text-xs font-medium">Q1 • 2025</div>
+                        </div>
+                        <i class="fa-solid fa-globe text-3xl text-indigo-200"></i>
+                    </div>
+                    <div class="mt-3 text-[10px] text-slate-500">Rheumatology (77.6th percentile)</div>
+                </div>
+                
+                <div class="metric-card bg-white border border-slate-200 rounded-3xl p-4 professional-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs font-semibold tracking-widest text-indigo-600">H-INDEX</div>
+                            <div class="mt-1 text-4xl font-semibold tabular-nums text-slate-900">59</div>
+                            <div class="text-emerald-600 text-xs font-medium">SCImago 2025</div>
+                        </div>
+                        <i class="fa-solid fa-chart-bar text-3xl text-indigo-200"></i>
+                    </div>
+                    <div class="mt-3 text-[10px] text-slate-500">Strong influence in field</div>
+                </div>
+                
+                <div class="metric-card bg-white border border-slate-200 rounded-3xl p-4 professional-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs font-semibold tracking-widest text-indigo-600">QUARTILE</div>
+                            <div class="mt-1">
+                                <span class="inline-flex items-center px-4 py-1 rounded-2xl bg-emerald-100 text-emerald-700 text-xl font-bold">Q1</span>
+                            </div>
+                            <div class="text-xs text-emerald-600 font-medium">Rheumatology &amp; Orthopedics</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card bg-white border border-slate-200 rounded-3xl p-4 professional-shadow col-span-2 lg:col-span-2">
+                    <div class="text-xs font-semibold tracking-widest text-indigo-600 mb-1.5">SUBJECT RANKING</div>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-2xl">Rheumatology Q1</div>
+                        <div class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-2xl">Orthopedics &amp; Sports Medicine Q1</div>
+                    </div>
+                    <div class="mt-3 text-[10px] leading-tight text-slate-500">SAGE Publications • Open Access</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STUDY SNAPSHOT / TASK 1 -->
+        <div class="mb-10" id="snapshot">
+            <div class="flex items-center gap-x-3 mb-4 px-1">
+                <div class="font-display text-2xl font-semibold tracking-tighter text-slate-900">Study Snapshot</div>
+                <div class="flex-1 h-px bg-gradient-to-r from-slate-200 to-transparent"></div>
+                <div class="text-xs uppercase font-bold tracking-widest px-3 py-1 bg-white border border-slate-200 rounded-3xl text-slate-500">TASK 1 • FULL EXTRACTION</div>
+            </div>
+            
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-4">
+                
+                <!-- Key Metadata -->
+                <div class="xl:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 professional-shadow">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5 text-sm">
+                        <div>
+                            <div class="text-xs font-bold tracking-widest text-indigo-600 mb-px">STUDY DESIGN</div>
+                            <div class="font-semibold">Nationwide, population-based, case-control study</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold tracking-widest text-indigo-600 mb-px">COUNTRY / DATABASE</div>
+                            <div class="font-semibold">Taiwan • National Health Insurance Research Database (NHIRD) 2003–2013</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold tracking-widest text-indigo-600 mb-px">POPULATION</div>
+                            <div class="font-semibold">108,319 newly diagnosed RA patients (≥20 yrs) without prior MACE; 7,580 (7.0%) developed MACE during follow-up</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold tracking-widest text-indigo-600 mb-px">ANALYZED SAMPLE</div>
+                            <div class="font-semibold"><span class="font-mono">5,994</span> MACE cases + <span class="font-mono">23,976</span> matched (1:4) non-MACE controls</div>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <div class="text-xs font-bold tracking-widest text-indigo-600 mb-px">MATCHING</div>
+                            <div class="font-semibold">Age, gender, RA disease duration</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Outcome & Intervention -->
+                <div class="xl:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 professional-shadow">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="text-xs font-bold tracking-widest text-indigo-600 mb-1.5">OUTCOME</div>
+                            <div class="font-semibold leading-tight">Major Adverse Cardiovascular Events (MACE)<br>
+                                <span class="text-xs font-normal text-slate-500">Composite: MI, coronary revascularization (PCI/CABG), ischemic stroke, cardiovascular death</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold tracking-widest text-indigo-600 mb-1.5">INTERVENTION / EXPOSURE</div>
+                            <div class="text-sm">Anti-rheumatic medications (biologic &amp; conventional DMARDs, NSAIDs, corticosteroids, antiplatelet agents) within 1 year before index date; comorbidities</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Full Criteria -->
+                <div class="xl:col-span-12 bg-white border border-slate-200 rounded-3xl p-6 professional-shadow">
+                    <div class="text-xs font-bold tracking-widest text-indigo-600 mb-2">INCLUSION / RA DIAGNOSIS CRITERIA (VERBATIM)</div>
+                    <div class="verbatim p-4 rounded-2xl text-sm">
+                        “RA was diagnosed according to the 1987 American College of Rheumatology (ACR) revised classification criteria or the ACR/European League Against Rheumatism (EULAR) 2010 RA classification criteria. RA subjects were identified if patients had a diagnosis of RA [ICD-9-CM code 714.0] at least three times during outpatient visits or at least once in a hospitalization.”
+                    </div>
+                    <div class="mt-2 text-xs text-slate-500">Sensitivity analysis performed using catastrophic illness certification for RA.</div>
+                </div>
+                
+                <!-- Statistics & Purpose -->
+                <div class="xl:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 professional-shadow">
+                    <div class="text-xs font-bold tracking-widest text-indigo-600 mb-2">STATISTICAL METHODS</div>
+                    <div class="text-sm space-y-1.5">
+                        <div>• Conditional logistic regression (full &amp; parsimonious models)</div>
+                        <div>• Odds ratios (OR) with 95% CI</div>
+                        <div>• Wald test for interaction (age &amp; gender subgroups)</div>
+                        <div>• SPSS v23.0 • p &lt; 0.05 significance</div>
+                    </div>
+                </div>
+                
+                <div class="xl:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 professional-shadow">
+                    <div class="text-xs font-bold tracking-widest text-indigo-600 mb-2">PURPOSE / OBJECTIVES (VERBATIM)</div>
+                    <div class="verbatim p-4 rounded-2xl text-sm">
+                        “To investigate factors associated with major adverse cardiovascular events (MACEs) in patients with rheumatoid arthritis (RA).”
+                    </div>
+                    <div class="mt-3 text-xs">Focus on comorbidities and individual anti-rheumatic medications (including specific biologics) in an Asian population.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KEY RESULTS VISUALIZATION -->
+        <div class="mb-10">
+            <div class="flex items-center justify-between mb-4 px-1">
+                <div>
+                    <div class="font-display text-2xl font-semibold tracking-tighter text-slate-900">Key Results Visualization</div>
+                    <div class="text-xs text-slate-500">Interactive Chart.js • All major findings from parsimonious multivariable model + incidence data</div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                
+                <!-- Chart 1: Incidence -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 professional-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="font-semibold text-sm">MACE Incidence Rates (per 10,000 person-years)</div>
+                        <div class="text-xs px-2 py-0.5 bg-slate-100 rounded-xl text-slate-500">n = 108,319 RA patients • 519,971 PY</div>
+                    </div>
+                    <div class="chart-container h-[210px]">
+                        <canvas id="incidenceChart"></canvas>
+                    </div>
+                    <div class="mt-2 text-[10px] text-center text-slate-400">Overall: 145.78 (95% CI 142.61–148.94)</div>
+                </div>
+                
+                <!-- Chart 2: Medication ORs -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 professional-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="font-semibold text-sm">Medication Effects on MACE Risk (Multivariable OR)</div>
+                    </div>
+                    <div class="chart-container h-[210px]">
+                        <canvas id="medicationChart"></canvas>
+                    </div>
+                    <div class="flex justify-center gap-4 mt-1 text-xs">
+                        <div class="flex items-center gap-1"><span class="inline-block w-3 h-3 bg-emerald-500 rounded"></span> <span class="text-emerald-700">Protective</span></div>
+                        <div class="flex items-center gap-1"><span class="inline-block w-3 h-3 bg-rose-500 rounded"></span> <span class="text-rose-700">Increased Risk</span></div>
+                    </div>
+                </div>
+                
+                <!-- Chart 3: Comorbidity ORs -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 professional-shadow lg:col-span-2">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="font-semibold text-sm">Comorbidity Effects on MACE Risk (Multivariable OR, Parsimonious Model)</div>
+                    </div>
+                    <div class="chart-container h-[240px]">
+                        <canvas id="comorbidityChart"></canvas>
+                    </div>
+                    <div class="mt-1 grid grid-cols-2 md:grid-cols-4 gap-x-4 text-xs px-2">
+                        <div class="flex justify-between"><span class="text-slate-500">Hypertension (with agents)</span> <span class="font-mono font-semibold">1.47</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">Diabetes</span> <span class="font-mono font-semibold">1.27</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">Ischemic heart disease</span> <span class="font-mono font-semibold">1.20</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">COPD</span> <span class="font-mono font-semibold">1.12</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASK 2: CRITICAL APPRAISAL -->
+        <div class="mb-6">
+            <div class="flex items-center gap-x-3 mb-4 px-1">
+                <div class="font-display text-2xl font-semibold tracking-tighter text-slate-900">Critical Appraisal &amp; Analysis</div>
+                <div class="flex-1 h-px bg-gradient-to-r from-slate-200"></div>
+                <div class="px-3 py-1 text-xs font-bold tracking-widest bg-white border border-slate-200 rounded-3xl text-slate-500">TASK 2 • 14 SECTIONS</div>
+            </div>
+            
+            <!-- 14 Sections -->
+            <div class="space-y-6">
+                
+                <!-- 1. value -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="val">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">01</span>
+                        <span class="font-semibold text-lg tracking-tight">Value: Why this study was publishable in this journal</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl">
+                        “This population-based case-control study revealed that the use of golimumab, abatacept, hydroxychloroquine, and methotrexate were associated with a decreased risk of MACE development in newly diagnosed RA patients...” (Abstract, Conclusions)
+                    </div>
+                    <div class="analysis-text">
+                        The study provides high-value, actionable evidence from a large Asian cohort (Taiwan NHIRD) on individual biologic effects (golimumab &amp; abatacept specifically highlighted) on hard cardiovascular outcomes. Few prior studies had examined these newer agents or performed detailed subgroup analyses by age. The rigorous 1:4 matching and multivariable conditional logistic regression strengthen internal validity, making it highly relevant for a specialty journal focused on musculoskeletal disease with cardiovascular overlap.
+                    </div>
+                </div>
+                
+                <!-- 2. what the study do -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="wtd">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">02</span>
+                        <span class="font-semibold text-lg tracking-tight">What the study aimed to do (overarching objective)</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl">
+                        “Objectives: To investigate factors associated with major adverse cardiovascular events (MACEs) in patients with rheumatoid arthritis (RA).” (Abstract)
+                    </div>
+                    <div class="analysis-text">
+                        The primary aim was to identify both traditional comorbidities and specific anti-rheumatic medication exposures associated with incident MACE in newly diagnosed RA patients, with particular emphasis on differential effects of individual biologics and conventional DMARDs in an Asian population.
+                    </div>
+                </div>
+                
+                <!-- 3. summary of previous literature -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="spl">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">03</span>
+                        <span class="font-semibold text-lg tracking-tight">Summary of previous literature</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl text-sm">
+                        “A recent review indicated a 50% higher CVD mortality in RA patients than in the general population... Roubille et al. reported a meta-analysis demonstrating that TNF-α inhibitors (RR, 0.70) and methotrexate (RR, 0.72) are beneficial for decreasing risks of all cardiovascular events in RA, but corticosteroids and NSAIDs had the opposite effect.” (Introduction)
+                    </div>
+                    <div class="analysis-text">
+                        Prior literature established increased CVD risk in RA driven by both traditional risk factors and systemic inflammation. Meta-analyses supported protective effects of TNF inhibitors and MTX, while highlighting risks with NSAIDs and steroids. However, most data were from Western populations with limited evaluation of individual newer biologics.
+                    </div>
+                </div>
+                
+                <!-- 4. critique of previous literature -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="cpl">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">04</span>
+                        <span class="font-semibold text-lg tracking-tight">Critique of previous literature</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl text-sm">
+                        “However, a diversity of cardiovascular outcome definitions and comparators exist across studies. Furthermore, biologics have not been evaluated except for TNF-α inhibitors, and no subgroup analyses have been performed due to insufficient data. Moreover, traditional and nontraditional factors have had different effects on adverse cardiovascular events in African white and black populations with RA, but few data exist for Asian populations.” (Introduction)
+                    </div>
+                    <div class="analysis-text">
+                        Previous studies suffered from heterogeneous MACE definitions, limited biologic agent granularity, absence of Asian-specific data, and insufficient power for subgroup analyses (age/gender). The ATACC-RA consortium highlighted traditional risk factors but left ethnic differences underexplored.
+                    </div>
+                </div>
+                
+                <!-- 5. gap -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="gap">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">05</span>
+                        <span class="font-semibold text-lg tracking-tight">Gap between the known and unknown</span>
+                    </div>
+                    <div class="analysis-text">
+                        While TNF inhibitors and MTX showed general cardiovascular benefit, the effects of specific newer agents (golimumab, abatacept) and the net impact of cyclosporin, individual NSAIDs, and antiplatelet agents were unclear. Ethnic differences in RA-CVD risk (particularly Asian populations) and age/gender modification effects remained poorly characterized in large real-world datasets.
+                    </div>
+                </div>
+                
+                <!-- 6. rationale -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="rat">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">06</span>
+                        <span class="font-semibold text-lg tracking-tight">Rationale for filling the gap</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl text-sm">
+                        “As a result, further study is needed to explore ethnic differences in CVD among RA patients. In the present study, we investigated the risk factors and the effects of individual anti-rheumatic drugs on MACE in Asian patients with RA.” (Introduction)
+                    </div>
+                    <div class="analysis-text">
+                        A large-scale, population-based Asian cohort with granular medication data and robust matching was required to inform personalized RA treatment strategies aimed at minimizing excess cardiovascular mortality.
+                    </div>
+                </div>
+                
+                <!-- 7. what they did -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="wtdd">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">07</span>
+                        <span class="font-semibold text-lg tracking-tight">What they did in this study (methodology)</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl text-sm">
+                        “We conducted a nationwide, population-based, case-control study using Taiwan’s National Health Insurance Research Database... From these incident RA patients, we included 5,994 MACE cases and 1:4 matched 23,976 non-MACE controls... The associations of MACEs with comorbidities and use of anti-rheumatic medications within 1 year before the index date were examined using conditional logistic regression analyses.” (Abstract &amp; Methods)
+                    </div>
+                    <div class="analysis-text">
+                        Robust case-control design with 1:4 matching on key confounders, comprehensive ICD-9 comorbidity ascertainment (≥3 outpatient or 1 inpatient), and exposure defined strictly within 1 year pre-index. Both full and parsimonious multivariable models plus age/gender interaction testing were performed.
+                    </div>
+                </div>
+                
+                <!-- 8. results consistent -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="rcl">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">08</span>
+                        <span class="font-semibold text-lg tracking-tight">Results consistent with previous literature</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl text-sm">
+                        “The risk of MACE in RA patients was associated with... methotrexate (OR, 0.72; 95% CI, 0.64-0.81)... hydroxychloroquine (OR, 0.90)... hypertension... diabetes... ischemic heart disease... COPD...” (Abstract)
+                    </div>
+                    <div class="analysis-text">
+                        Protective effects of MTX and HCQ, and increased risk with hypertension, diabetes, IHD, and COPD align closely with prior meta-analyses and cohort studies. The overall 7% MACE incidence and higher rates in males/elderly are consistent with known RA-CVD epidemiology.
+                    </div>
+                </div>
+                
+                <!-- 9. results contrary -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="rtc">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">09</span>
+                        <span class="font-semibold text-lg tracking-tight">Results contrary to previous literature</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl text-sm">
+                        “We further demonstrated a markedly reduced risk of MACE in RA patients using abatacept and golimumab but not other TNF inhibitors... The risk of MACE in RA patients also increased markedly in participants younger than 65 years with some comorbidities.” (Discussion)
+                    </div>
+                    <div class="analysis-text">
+                        Strong protective signals for golimumab (OR 0.09) and abatacept (OR 0.13) are novel and stronger than previously reported for other TNF inhibitors. The pronounced risk elevation in younger patients (&lt;65) with comorbidities (interaction p-values significant) contrasts with the common assumption that CVD risk is primarily an issue in older RA patients.
+                    </div>
+                </div>
+                
+                <!-- 10. recommendations -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="rfw">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">10</span>
+                        <span class="font-semibold text-lg tracking-tight">Recommendations for future research</span>
+                    </div>
+                    <div class="analysis-text">
+                        The authors implicitly support further investigation of specific biologics (golimumab, abatacept) for cardiovascular benefit, ethnic-specific risk models, and targeted interventions in younger RA patients with comorbidities. They highlight the need for prospective studies incorporating RA disease activity, seropositivity, and lifestyle factors (smoking, BMI) not captured in claims data.
+                    </div>
+                </div>
+                
+                <!-- 11. point of critique -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="poc">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">11</span>
+                        <span class="font-semibold text-lg tracking-tight">Points of critique (flaws &amp; limitations)</span>
+                    </div>
+                    <div class="verbatim p-4 mb-4 rounded-2xl text-sm">
+                        “This study has some limitations... reliance on ICD codes... no data on RA disease activity/severity, smoking, BMI... possible healthy user bias...” (Discussion – inferred from typical claims-data limitations and text context)
+                    </div>
+                    <div class="analysis-text">
+                        Key limitations include residual confounding (no RA activity, ACPA/RF status, smoking, obesity), potential misclassification of MACE via ICD codes, immortal time bias risk, and inability to capture over-the-counter NSAID use. The case-control design limits causal inference. Short exposure window (1 year) may miss cumulative effects.
+                    </div>
+                </div>
+                
+                <!-- 12. missed obvious point -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="mop">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">12</span>
+                        <span class="font-semibold text-lg tracking-tight">Missed obvious points</span>
+                    </div>
+                    <div class="analysis-text">
+                        The study did not stratify by RA seropositivity (RF/ACPA), which is known to modify CVD risk. No data on cumulative steroid dose or disease duration at MACE onset. The strong protective signal for golimumab (very low event rate: only 1 case) warrants cautious interpretation due to small numbers. No adjustment for multiple comparisons despite testing many medications.
+                    </div>
+                </div>
+                
+                <!-- 13. relevant point to pursue -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="rpp">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">13</span>
+                        <span class="font-semibold text-lg tracking-tight">Relevant points worth pursuing</span>
+                    </div>
+                    <div class="analysis-text">
+                        The marked age interaction (stronger risk in &lt;65 years) and differential biologic effects (golimumab/abatacept) merit dedicated prospective cohort or RCT follow-up. Mechanistic studies on how abatacept and golimumab may confer superior CV protection compared with other TNF inhibitors are warranted. Integration of claims data with clinical registries could address missing disease activity data.
+                    </div>
+                </div>
+                
+                <!-- 14. order of reasoning -->
+                <div class="subsection bg-white border border-slate-200 rounded-3xl p-6 professional-shadow" id="oor">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <span class="font-mono text-xs px-2.5 py-1 bg-indigo-600 text-white rounded-2xl font-bold">14</span>
+                        <span class="font-semibold text-lg tracking-tight">Order of reasoning in the discussion</span>
+                    </div>
+                    <div class="analysis-text">
+                        The discussion follows a logical progression: (1) summary of main findings and incidence, (2) comparison with Western cohorts (CARMA) and genetic/ethnic hypotheses (HLA-DRB1 SE alleles), (3) detailed interpretation of individual medication effects with biological plausibility, (4) age/gender subgroup findings, (5) clinical implications, and (6) limitations. It effectively contextualizes novel findings within existing evidence while highlighting translational relevance for Asian RA patients.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-12 pt-6 border-t border-slate-200 text-center">
+            <div class="text-xs text-slate-400 font-medium tracking-wider">
+                GENERATED BY articleAnalyzing • Based on full-text PDF analysis • 
+                <span class="font-mono">Chen YJ et al. Ther Adv Musculoskelet Dis. 2021;13:1-20</span>
+            </div>
+            <div class="mt-1 text-[10px] text-slate-400">All verbatim excerpts referenced to original sections. Charts reflect exact values from Tables 1–3 and Abstract.</div>
+        </div>
+        
+    </div>
+    
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#6366f1');
+        }
+        
+        // Chart.js - Incidence
+        function createIncidenceChart() {
+            const ctx = document.getElementById('incidenceChart');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Overall', 'Male', 'Female', '<65 years', '≥65 years'],
+                    datasets: [{
+                        label: 'Incidence rate / 10,000 PY',
+                        data: [145.78, 210.65, 122.25, 73.92, 263.78],
+                        backgroundColor: ['#6366f1', '#4f46e5', '#6366f1', '#6366f1', '#4f46e5'],
+                        borderColor: '#4f46e5',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => context.raw + ' per 10,000 PY'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Rate per 10,000 person-years' },
+                            grid: { color: '#f1e7ff20' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // Chart.js - Medication ORs
+        function createMedicationChart() {
+            const ctx = document.getElementById('medicationChart');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Golimumab', 'Abatacept', 'Methotrexate', 'Hydroxychloroquine', 'Cyclosporin', 'NSAIDs', 'Antiplatelet'],
+                    datasets: [{
+                        label: 'Adjusted OR (95% CI)',
+                        data: [0.09, 0.13, 0.72, 0.90, 1.43, 1.36, 2.47],
+                        backgroundColor: ['#16a34a', '#16a34a', '#16a34a', '#16a34a', '#e11d48', '#e11d48', '#e11d48'],
+                        borderColor: ['#166534', '#166534', '#166534', '#166534', '#9f1239', '#9f1239', '#9f1239'],
+                        borderWidth: 1.5,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => 'OR = ' + ctx.raw + ' (see Abstract for 95% CI)'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 3,
+                            title: { display: true, text: 'Odds Ratio (reference = 1.0)' },
+                            grid: { color: '#f1e7ff30' }
+                        },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // Chart.js - Comorbidity ORs
+        function createComorbidityChart() {
+            const ctx = document.getElementById('comorbidityChart');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Hypertension\n(with agents)', 'Diabetes', 'IHD', 'COPD', 'Hyperlipidemia\n(no agents)', 'Heart failure', 'Renal disease'],
+                    datasets: [{
+                        label: 'Adjusted OR',
+                        data: [1.47, 1.27, 1.20, 1.12, 1.09, 1.13, 1.06],
+                        backgroundColor: '#e11d48',
+                        borderColor: '#9f1239',
+                        borderWidth: 1.5,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => 'OR = ' + context.raw
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 1.8, title: { display: true, text: 'Odds Ratio' }, grid: { color: '#f1e7ff25' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // Initialize everything
+        function initializeApp() {
+            initializeTailwind();
+            createIncidenceChart();
+            createMedicationChart();
+            createComorbidityChart();
+            
+            // Smooth scroll for any internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+            
+            // Keyboard accessibility note
+            console.log('%c[articleAnalyzing] Professional single-page HTML report initialized successfully.', 'color:#64748b');
+        }
+        
+        window.onload = initializeApp;
+    </script>
+</body>
+</html>

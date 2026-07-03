@@ -45,7 +45,7 @@
         <div class="text-xs uppercase tracking-[2px] text-teal-700 font-medium">CATEGORY</div>
         <h1 class="text-4xl font-semibold tracking-tight">文獻解讀</h1>
       </div>
-      <div class="text-sm text-zinc-500">自動同步 GitHub 資料夾內容</div>
+      <div class="text-sm text-zinc-500">Auto-synced from GitHub folder</div>
     </div>
 
     <!-- Dataview-style Table -->
@@ -53,27 +53,27 @@
       <table class="w-full dataview-table">
         <thead>
           <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="text-left px-8 py-4">文獻標題</th>
-            <th class="text-left px-4 py-4">疾病</th>
-            <th class="text-right px-8 py-4">操作</th>
+            <th class="text-left px-8 py-4">Title</th>
+            <th class="text-left px-4 py-4">Disease</th>
+            <th class="text-right px-8 py-4">Action</th>
           </tr>
         </thead>
         <tbody id="file-list" class="text-sm divide-y divide-zinc-100">
           <tr id="loading-row">
             <td colspan="3" class="px-8 py-8 text-center text-zinc-500">
-              <i class="fa-solid fa-spinner fa-spin mr-2"></i>載入文獻列表並分析疾病…
+              <i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading literature and analyzing diseases…
             </td>
           </tr>
         </tbody>
       </table>
       <div id="empty-state" class="hidden px-8 py-12 text-center text-sm text-zinc-500">
-        目前尚無內容。請將 HTML 檔案上傳至 <code class="font-mono bg-zinc-100 px-1.5 py-px rounded">/literature</code> 資料夾後重新整理。
+        No content yet. Upload HTML files to the <code class="font-mono bg-zinc-100 px-1.5 py-px rounded">/literature</code> folder and refresh this page.
       </div>
     </div>
 
     <div class="mt-4 text-xs text-zinc-500 flex items-center gap-x-2">
       <i class="fa-solid fa-info-circle"></i>
-      <span>新增或更新檔案後，重新整理本頁即可自動顯示最新列表。</span>
+      <span>Refresh this page after adding or updating files to see the latest list.</span>
     </div>
   </div>
 
@@ -83,26 +83,26 @@
 
   <script>
     const DISEASE_LEXICON = [
-      { label: '類風濕性關節炎', patterns: [/rheumatoid\s+arthritis/i, /(?:patients?|subjects?|participants?|people)\s+with\s+ra\b/i, /\bra\s+patients?\b/i, /newly\s+diagnosed\s+ra\b/i, /incident\s+ra\b/i, /類風濕性關節炎/, /类风湿关节炎/] },
-      { label: '乾癬性關節炎', patterns: [/psoriatic\s+arthritis/i, /\bpsa\b/i, /乾癬性關節炎/] },
-      { label: '僵直性脊椎炎', patterns: [/ankylosing\s+spondylitis/i, /僵直性脊椎炎/] },
-      { label: '全身性紅斑性狼瘡', patterns: [/systemic\s+lupus/i, /\bsle\b/i, /lupus\s+erythematosus/i, /全身性紅斑性狼瘡/, /紅斑性狼瘡/] },
-      { label: '痛風', patterns: [/\bgout\b/i, /痛風/] },
-      { label: '骨關節炎', patterns: [/osteoarthritis/i, /骨關節炎/] },
-      { label: '骨質疏鬆症', patterns: [/osteoporosis/i, /骨質疏鬆/] },
-      { label: '乾癬', patterns: [/\bpsoriasis\b/i, /乾癬(?!性)/] },
-      { label: '發炎性腸道疾病', patterns: [/inflammatory\s+bowel/i, /\bibd\b/i, /crohn/i, /ulcerative\s+colitis/i, /發炎性腸道/] },
-      { label: '血管炎', patterns: [/vasculitis/i, /血管炎/] },
-      { label: '乾燥症', patterns: [/sj[oö]gren/i, /乾燥症/] },
-      { label: '硬皮症', patterns: [/scleroderma/i, /systemic\s+sclerosis/i, /硬皮症/] },
-      { label: '皮肌炎／多發性肌炎', patterns: [/dermatomyositis/i, /polymyositis/i, /皮肌炎/, /多發性肌炎/] },
-      { label: '巨細胞動脈炎', patterns: [/giant\s+cell\s+arteritis/i, /temporal\s+arteritis/i, /巨細胞動脈炎/] },
-      { label: '風濕性多發性肌痛', patterns: [/polymyalgia\s+rheumatica/i, /風濕性多發性肌痛/] },
-      { label: '纖維肌痛', patterns: [/fibromyalgia/i, /纖維肌痛/] },
-      { label: '心血管疾病', patterns: [/major\s+adverse\s+cardiovascular/i, /\bmace\b/i, /cardiovascular\s+(?:events?|disease|mortality|risk)/i, /心血管疾病/] },
-      { label: '高血壓', patterns: [/hypertension/i, /高血壓/] },
-      { label: '糖尿病', patterns: [/diabetes(?:\s+mellitus)?/i, /糖尿病/] },
-      { label: '缺血性心臟病', patterns: [/ischemic\s+heart\s+disease/i, /coronary\s+(?:artery\s+)?disease/i, /缺血性心臟病/] },
+      { label: 'Rheumatoid Arthritis', patterns: [/rheumatoid\s+arthritis/i, /(?:patients?|subjects?|participants?|people)\s+with\s+ra\b/i, /\bra\s+patients?\b/i, /newly\s+diagnosed\s+ra\b/i, /incident\s+ra\b/i, /類風濕性關節炎/, /类风湿关节炎/] },
+      { label: 'Psoriatic Arthritis', patterns: [/psoriatic\s+arthritis/i, /\bpsa\b/i, /乾癬性關節炎/] },
+      { label: 'Ankylosing Spondylitis', patterns: [/ankylosing\s+spondylitis/i, /僵直性脊椎炎/] },
+      { label: 'Systemic Lupus Erythematosus', patterns: [/systemic\s+lupus/i, /\bsle\b/i, /lupus\s+erythematosus/i, /全身性紅斑性狼瘡/, /紅斑性狼瘡/] },
+      { label: 'Gout', patterns: [/\bgout\b/i, /痛風/] },
+      { label: 'Osteoarthritis', patterns: [/osteoarthritis/i, /骨關節炎/] },
+      { label: 'Osteoporosis', patterns: [/osteoporosis/i, /骨質疏鬆/] },
+      { label: 'Psoriasis', patterns: [/\bpsoriasis\b/i, /乾癬(?!性)/] },
+      { label: 'Inflammatory Bowel Disease', patterns: [/inflammatory\s+bowel/i, /\bibd\b/i, /crohn/i, /ulcerative\s+colitis/i, /發炎性腸道/] },
+      { label: 'Vasculitis', patterns: [/vasculitis/i, /血管炎/] },
+      { label: "Sjögren's Syndrome", patterns: [/sj[oö]gren/i, /乾燥症/] },
+      { label: 'Systemic Sclerosis', patterns: [/scleroderma/i, /systemic\s+sclerosis/i, /硬皮症/] },
+      { label: 'Dermatomyositis / Polymyositis', patterns: [/dermatomyositis/i, /polymyositis/i, /皮肌炎/, /多發性肌炎/] },
+      { label: 'Giant Cell Arteritis', patterns: [/giant\s+cell\s+arteritis/i, /temporal\s+arteritis/i, /巨細胞動脈炎/] },
+      { label: 'Polymyalgia Rheumatica', patterns: [/polymyalgia\s+rheumatica/i, /風濕性多發性肌痛/] },
+      { label: 'Fibromyalgia', patterns: [/fibromyalgia/i, /纖維肌痛/] },
+      { label: 'Cardiovascular Disease', patterns: [/major\s+adverse\s+cardiovascular/i, /\bmace\b/i, /cardiovascular\s+(?:events?|disease|mortality|risk)/i, /心血管疾病/] },
+      { label: 'Hypertension', patterns: [/hypertension/i, /高血壓/] },
+      { label: 'Diabetes', patterns: [/diabetes(?:\s+mellitus)?/i, /糖尿病/] },
+      { label: 'Ischemic Heart Disease', patterns: [/ischemic\s+heart\s+disease/i, /coronary\s+(?:artery\s+)?disease/i, /缺血性心臟病/] },
     ];
 
     const RHEUMATIC_DISEASES = DISEASE_LEXICON.slice(0, 15);
@@ -173,7 +173,7 @@
 
       try {
         const res = await fetch('https://api.github.com/repos/jingyuba/jingyuba.github.io/contents/literature');
-        if (!res.ok) throw new Error('無法取得資料');
+        if (!res.ok) throw new Error('Unable to fetch data');
 
         const files = await res.json();
         const htmlFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.html'));
@@ -207,7 +207,7 @@
             <td class="px-8 py-4 text-right whitespace-nowrap">
               <a href="literature/${fileName}"
                  class="inline-flex items-center gap-x-1.5 text-teal-700 hover:text-teal-800 text-sm font-medium">
-                閱讀 <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                Read <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
               </a>
             </td>
           `;
@@ -215,7 +215,7 @@
         });
       } catch (err) {
         tbody.innerHTML = '';
-        empty.innerHTML = `無法載入列表：${err.message}。請確認網路連線或稍後再試。`;
+        empty.innerHTML = `Unable to load list: ${err.message}. Please check your connection and try again later.`;
         empty.classList.remove('hidden');
       }
     }

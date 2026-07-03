@@ -83,15 +83,40 @@
   </footer>
 
   <script>
+    const CACHE_BUST = () => `_=${Date.now()}`;
+
+    async function fetchNoCache(url) {
+      const sep = url.includes('?') ? '&' : '?';
+      const res = await fetch(`${url}${sep}${CACHE_BUST()}`, { cache: 'no-store' });
+      return res;
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function extractTitle(doc, fallback) {
+      const h1 = doc.querySelector('h1');
+      const title = h1?.textContent?.trim();
+      return title || fallback;
+    }
+
     const DISEASE_LEXICON = [
+      { label: 'Immune-Mediated Inflammatory Diseases', patterns: [/immune.?mediated\s+inflammatory\s+diseases/i, /\bimids?\b/i] },
       { label: 'Rheumatoid Arthritis', patterns: [/rheumatoid\s+arthritis/i, /(?:patients?|subjects?|participants?|people)\s+with\s+ra\b/i, /\bra\s+patients?\b/i, /newly\s+diagnosed\s+ra\b/i, /incident\s+ra\b/i, /類風濕性關節炎/, /类风湿关节炎/] },
       { label: 'Psoriatic Arthritis', patterns: [/psoriatic\s+arthritis/i, /\bpsa\b/i, /乾癬性關節炎/] },
-      { label: 'Ankylosing Spondylitis', patterns: [/ankylosing\s+spondylitis/i, /僵直性脊椎炎/] },
+      { label: 'Ankylosing Spondylitis', patterns: [/ankylosing\s+spondylitis/i, /\bas\s*\/\s*ps[oa]/i, /(?:RA,\s*)?AS(?:\s*\/|\s*,)/i, /僵直性脊椎炎/] },
+      { label: "Crohn's Disease", patterns: [/crohn(?:'s)?\s+disease/i, /\bcd\b/i] },
+      { label: 'Ulcerative Colitis', patterns: [/ulcerative\s+colitis/i, /\buc\b/i] },
       { label: 'Systemic Lupus Erythematosus', patterns: [/systemic\s+lupus/i, /\bsle\b/i, /lupus\s+erythematosus/i, /全身性紅斑性狼瘡/, /紅斑性狼瘡/] },
       { label: 'Gout', patterns: [/\bgout\b/i, /痛風/] },
       { label: 'Osteoarthritis', patterns: [/osteoarthritis/i, /骨關節炎/] },
       { label: 'Osteoporosis', patterns: [/osteoporosis/i, /骨質疏鬆/] },
-      { label: 'Psoriasis', patterns: [/\bpsoriasis\b/i, /乾癬(?!性)/] },
+      { label: 'Psoriasis', patterns: [/\bpsoriasis\b/i, /\bpso\b/i, /乾癬(?!性)/] },
       { label: 'Inflammatory Bowel Disease', patterns: [/inflammatory\s+bowel/i, /\bibd\b/i, /crohn/i, /ulcerative\s+colitis/i, /發炎性腸道/] },
       { label: 'Vasculitis', patterns: [/vasculitis/i, /血管炎/] },
       { label: "Sjögren's Syndrome", patterns: [/sj[oö]gren/i, /乾燥症/] },
@@ -106,21 +131,53 @@
       { label: 'Ischemic Heart Disease', patterns: [/ischemic\s+heart\s+disease/i, /coronary\s+(?:artery\s+)?disease/i, /缺血性心臟病/] },
     ];
 
-    const RHEUMATIC_DISEASES = DISEASE_LEXICON.slice(0, 15);
-    const COMORBIDITY_DISEASES = DISEASE_LEXICON.slice(15);
+    const RHEUMATIC_DISEASES = DISEASE_LEXICON.slice(0, 19);
+    const COMORBIDITY_DISEASES = DISEASE_LEXICON.slice(19);
 
-    function collectStudyText(doc) {
+    function collectMetadataFields(doc) {
       const chunks = [];
+      doc.querySelectorAll('span, div, label, dt, th').forEach(el => {
+        if (el.children.length > 0) return;
+        const text = (el.textContent || '').trim();
+        if (/^(INTERVENTION(?:\s*\/\s*EXPOSURE)?|OUTCOME|POPULATION(?:\s*&\s*BASELINE)?|VARIABLES|PURPOSES?|RESULTS|CONCLUSION|TNFI\s+EXPOSURE)$/i.test(text)) {
+          const block = el.closest('div') || el.parentElement;
+          if (block) chunks.push(block.textContent);
+        }
+      });
+      return chunks.join('\n');
+    }
+
+    function collectStudySections(doc) {
+      const chunks = [];
+      const seen = new Set();
+
+      function addText(text) {
+        const normalized = (text || '').trim();
+        if (!normalized || seen.has(normalized)) return;
+        seen.add(normalized);
+        chunks.push(normalized);
+      }
+
       const h1 = doc.querySelector('h1');
-      if (h1) chunks.push(h1.textContent);
+      if (h1) addText(h1.textContent);
 
       ['snapshot', 'appraisal'].forEach(id => {
         const section = doc.getElementById(id);
-        if (section) chunks.push(section.textContent);
+        if (section) addText(section.textContent);
       });
 
+      doc.querySelectorAll('span, h2, h3').forEach(heading => {
+        const headingText = heading.textContent || '';
+        if (/study\s+snapshot|critical\s+appraisal|task\s*1|task\s*2/i.test(headingText)) {
+          const section = heading.closest('.mb-10, .mb-6, section, article') || heading.parentElement?.parentElement;
+          if (section) addText(section.textContent);
+        }
+      });
+
+      addText(collectMetadataFields(doc));
+
       doc.querySelectorAll('.verbatim, .analysis-text').forEach(el => {
-        chunks.push(el.textContent);
+        addText(el.textContent);
       });
 
       return chunks.join('\n');
@@ -130,6 +187,7 @@
       const chunks = [];
       const h1 = doc.querySelector('h1');
       if (h1) chunks.push(h1.textContent);
+      chunks.push(collectMetadataFields(doc));
       doc.querySelectorAll('.verbatim').forEach((el, i) => {
         if (i < 4) chunks.push(el.textContent);
       });
@@ -151,7 +209,7 @@
         return meta.content.split(/[,，、]/).map(s => s.trim()).filter(Boolean);
       }
 
-      const fullText = collectStudyText(doc);
+      const fullText = collectStudySections(doc);
       const primaryContext = collectPrimaryContext(doc);
       const rheumatic = matchDiseases(fullText, RHEUMATIC_DISEASES);
       const comorbidities = matchDiseases(primaryContext, COMORBIDITY_DISEASES);
@@ -204,28 +262,13 @@
     }
 
     function collectInterventionText(doc) {
-      const chunks = [];
-      const h1 = doc.querySelector('h1');
-      if (h1) chunks.push(h1.textContent);
-
-      const snapshot = doc.getElementById('snapshot');
-      if (snapshot) chunks.push(snapshot.textContent);
-
-      doc.querySelectorAll('*').forEach(el => {
-        const text = (el.textContent || '').trim();
-        if (/^INTERVENTION\s*\/?\s*EXPOSURE$/i.test(text)) {
-          const block = el.closest('div');
-          if (block) chunks.push(block.textContent);
-        }
-      });
-
+      const chunks = [collectStudySections(doc)];
       doc.querySelectorAll('.verbatim').forEach((el, i) => {
         const t = el.textContent || '';
-        if (i < 6 || /medication|drug|treatment|inhibitor|methotrexate|exposure|intervention|dmard|biologic/i.test(t)) {
+        if (i < 6 || /medication|drug|treatment|inhibitor|methotrexate|exposure|intervention|dmard|biologic|tnfi/i.test(t)) {
           chunks.push(t);
         }
       });
-
       return chunks.join('\n');
     }
 
@@ -279,11 +322,13 @@
       empty.classList.add('hidden');
 
       try {
-        const res = await fetch('https://api.github.com/repos/jingyuba/jingyuba.github.io/contents/literature');
+        const res = await fetchNoCache('https://api.github.com/repos/jingyuba/jingyuba.github.io/contents/literature?ref=main');
         if (!res.ok) throw new Error('Unable to fetch data');
 
         const files = await res.json();
-        const htmlFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.html'));
+        const htmlFiles = files
+          .filter(f => f.type === 'file' && f.name.endsWith('.html'))
+          .sort((a, b) => a.name.localeCompare(b.name));
 
         if (htmlFiles.length === 0) {
           tbody.innerHTML = '';
@@ -292,13 +337,16 @@
         }
 
         const rows = await Promise.all(htmlFiles.map(async file => {
-          const title = file.name.replace('.html', '').replace(/-/g, ' ').replace(/_/g, ' ');
+          const fallbackTitle = file.name.replace('.html', '').replace(/-/g, ' ').replace(/_/g, ' ');
+          let title = fallbackTitle;
           let diseases = [];
           let interventions = [];
           try {
-            const contentRes = await fetch(`literature/${encodeURIComponent(file.name)}`);
+            const contentRes = await fetchNoCache(`literature/${encodeURIComponent(file.name)}`);
             if (contentRes.ok) {
               const html = await contentRes.text();
+              const doc = new DOMParser().parseFromString(html, 'text/html');
+              title = extractTitle(doc, fallbackTitle);
               diseases = extractDiseases(html);
               interventions = extractInterventions(html);
             }
@@ -310,12 +358,13 @@
         rows.forEach(({ title, fileName, diseases, interventions }) => {
           const row = document.createElement('tr');
           row.className = 'dataview-row';
+          const filePath = `literature/${encodeURIComponent(fileName)}`;
           row.innerHTML = `
-            <td class="px-6 py-4 font-medium max-w-sm">${title}</td>
+            <td class="px-6 py-4 font-medium max-w-sm">${escapeHtml(title)}</td>
             <td class="px-4 py-4">${renderTags(diseases, 'disease')}</td>
             <td class="px-4 py-4">${renderTags(interventions, 'intervention')}</td>
             <td class="px-6 py-4 text-right whitespace-nowrap">
-              <a href="literature/${fileName}"
+              <a href="${filePath}"
                  class="inline-flex items-center gap-x-1.5 text-teal-700 hover:text-teal-800 text-sm font-medium">
                 Read <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
               </a>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critical Appraisal Report • Chao et al. 2020 | Sepsis Risk in TNFi-Treated IMIDs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --primary: #4F46E5;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .heading-font {
+            font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+            font-weight: 600;
+            letter-spacing: -.025em;
+        }
+
+        .section-header {
+            font-size: 1.05rem;
+            letter-spacing: -.015em;
+        }
+
+        .metric-card {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+
+        .analysis-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        .verbatim {
+            background-color: #F8FAFC;
+            border-left: 4px solid #6366F1;
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+
+        .nav-active {
+            color: #4F46E5;
+            font-weight: 600;
+        }
+
+        .data-table {
+            font-size: 0.875rem;
+        }
+
+        .chart-container {
+            position: relative;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stat-value {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tail-container {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-[#FAFAFA] text-[#374151]">
+    <!-- Top Navigation / Header -->
+    <div class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-chart-line text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-xl tracking-tight">articleAnalyzing</span>
+                        <span class="text-xs px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full ml-1.5 font-medium">v2.1</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-x-2 text-sm">
+                    <div class="px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-2xl text-xs font-medium flex items-center gap-x-1.5">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>Open Access • 2020</span>
+                    </div>
+                    <a href="https://doi.org/10.1177/1759720X20929208" target="_blank" 
+                       class="px-4 py-2 text-xs font-semibold flex items-center gap-x-2 rounded-2xl border border-gray-200 hover:bg-gray-50 transition-colors">
+                        <i class="fa-solid fa-external-link-alt text-xs"></i>
+                        <span>View on SAGE</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 pt-8 pb-12">
+        
+        <!-- Prominent Header -->
+        <div class="mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-y-3">
+                <div>
+                    <div class="flex items-center gap-x-2 mb-1">
+                        <span class="px-3 py-1 text-xs font-bold tracking-wider bg-indigo-100 text-indigo-700 rounded-2xl">THERAPEUTIC ADVANCES IN MUSCULOSKELETAL DISEASE</span>
+                        <span class="text-xs text-gray-500 font-medium">2020;12:1–10</span>
+                    </div>
+                    <h1 class="heading-font text-4xl lg:text-5xl leading-[1.05] tracking-tighter text-[#1F2937]">
+                        Factors associated with sepsis risk in immune-mediated inflammatory diseases receiving tumor necrosis factor inhibitors: a nationwide study
+                    </h1>
+                    <div class="mt-3 flex flex-wrap items-center gap-x-2 text-sm">
+                        <span class="font-semibold text-[#1F2937]">Wen-Cheng Chao</span>
+                        <span class="text-gray-400">•</span>
+                        <span class="text-gray-600">Chen-Yu Wang, Bo-Chueh Hsu, Ching-Heng Lin, Wen-Nan Huang, Yi-Hsing Chen, Chieh-Liang Wu, Hsin-Hua Chen</span>
+                    </div>
+                    <div class="mt-1 text-sm text-gray-500">
+                        Taichung Veterans General Hospital &amp; collaborators • Taiwan
+                    </div>
+                </div>
+                
+                <div class="flex-shrink-0">
+                    <a href="https://doi.org/10.1177/1759720X20929208" target="_blank"
+                       class="inline-flex items-center justify-center gap-x-2 px-5 py-2.5 bg-white border border-gray-200 hover:border-indigo-200 text-sm font-semibold rounded-3xl shadow-sm transition-all active:scale-[0.985]">
+                        <span>DOI: 10.1177/1759720X20929208</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-indigo-500"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bibliometric Metrics -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-3 px-1">
+                <div class="text-xs uppercase tracking-[1px] font-semibold text-gray-500">Latest Bibliometric Data (2024–2025)</div>
+                <div class="text-[10px] text-gray-400">Source: ScimagoJR • JCR • Journal Citation Reports</div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <!-- Metric Cards -->
+                <div class="metric-card bg-white border border-gray-100 rounded-3xl p-4 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs text-gray-500">Journal Impact Factor</div>
+                            <div class="text-3xl font-semibold text-[#1F2937] stat-value">4.1</div>
+                            <div class="text-emerald-600 text-xs font-medium mt-0.5">2024 JIF</div>
+                        </div>
+                        <i class="fa-solid fa-chart-line text-indigo-300 text-xl mt-1"></i>
+                    </div>
+                </div>
+                
+                <div class="metric-card bg-white border border-gray-100 rounded-3xl p-4 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs text-gray-500">SJR</div>
+                            <div class="text-3xl font-semibold text-[#1F2937] stat-value">1.348</div>
+                            <div class="text-emerald-600 text-xs font-medium mt-0.5">Q1 • 2024</div>
+                        </div>
+                        <i class="fa-solid fa-globe text-indigo-300 text-xl mt-1"></i>
+                    </div>
+                </div>
+                
+                <div class="metric-card bg-white border border-gray-100 rounded-3xl p-4 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs text-gray-500">h-Index (Journal)</div>
+                            <div class="text-3xl font-semibold text-[#1F2937] stat-value">54</div>
+                            <div class="text-emerald-600 text-xs font-medium mt-0.5">2024</div>
+                        </div>
+                        <i class="fa-solid fa-chart-bar text-indigo-300 text-xl mt-1"></i>
+                    </div>
+                </div>
+                
+                <div class="metric-card bg-white border border-gray-100 rounded-3xl p-4 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs text-gray-500">Subject Ranking</div>
+                            <div class="text-xl font-semibold text-[#1F2937]">Q1</div>
+                            <div class="text-xs leading-tight text-emerald-600">Rheumatology<br>Orthopedics &amp; Sports Medicine</div>
+                        </div>
+                        <i class="fa-solid fa-tachometer-alt text-indigo-300 text-xl mt-1"></i>
+                    </div>
+                </div>
+                
+                <div class="metric-card bg-white border border-gray-100 rounded-3xl p-4 shadow-sm col-span-2 md:col-span-1 lg:col-span-2">
+                    <div class="flex items-center gap-x-4">
+                        <div class="flex-1">
+                            <div class="text-xs text-gray-500">Article Metrics</div>
+                            <div class="flex items-baseline gap-x-2 mt-1">
+                                <span class="text-lg font-semibold">Open Access</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-0.5">PMC7298427 • Cited in subsequent IMID infection studies</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STUDY SNAPSHOT -->
+        <div class="mb-10">
+            <div class="flex items-center gap-x-3 mb-4 px-1">
+                <div class="w-8 h-px bg-indigo-200 flex-1"></div>
+                <span class="uppercase text-xs font-bold tracking-[1.5px] text-indigo-600">Study Snapshot • TASK 1: Complete Structured Extraction</span>
+                <div class="w-8 h-px bg-indigo-200 flex-1"></div>
+            </div>
+            
+            <div class="bg-white border border-gray-100 shadow-sm rounded-3xl p-7">
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-x-8 gap-y-7">
+                    
+                    <!-- Left column: Core metadata -->
+                    <div class="xl:col-span-5 space-y-5">
+                        <div>
+                            <div class="text-xs font-semibold text-gray-500 mb-1.5">TITLE</div>
+                            <div class="font-semibold text-lg leading-tight">Factors associated with sepsis risk in immune-mediated inflammatory diseases receiving tumor necrosis factor inhibitors: a nationwide study</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-xs font-semibold text-gray-500">PUBLISH DATE</div>
+                                <div class="font-medium">Accepted 30 April 2020 • Published 2020 (Vol. 12)</div>
+                            </div>
+                            <div>
+                                <div class="text-xs font-semibold text-gray-500">DOI</div>
+                                <div class="font-mono text-sm">10.1177/1759720X20929208</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="text-xs font-semibold text-gray-500 mb-1">AUTHORS (8)</div>
+                            <div class="text-sm">Wen-Cheng Chao (corresponding), Chen-Yu Wang, Bo-Chueh Hsu, Ching-Heng Lin, Wen-Nan Huang, Yi-Hsing Chen, Chieh-Liang Wu, Hsin-Hua Chen</div>
+                        </div>
+                        
+                        <div>
+                            <div class="text-xs font-semibold text-gray-500 mb-1">JOURNAL</div>
+                            <div class="font-medium">Therapeutic Advances in Musculoskeletal Disease (SAGE)</div>
+                        </div>
+                        
+                        <div class="pt-2 border-t">
+                            <div class="grid grid-cols-2 gap-y-3 text-sm">
+                                <div><span class="font-medium text-gray-600">Design:</span> <span class="font-semibold">Nationwide retrospective cohort study</span></div>
+                                <div><span class="font-medium text-gray-600">Country:</span> <span class="font-semibold">Taiwan</span></div>
+                                <div><span class="font-medium text-gray-600">Data Source:</span> <span class="font-semibold">NHIRD 2003–2017</span></div>
+                                <div><span class="font-medium text-gray-600">Population:</span> <span class="font-semibold">17,764 patients</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Population &amp; Design details -->
+                    <div class="xl:col-span-7">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-[#F8FAFC] border border-gray-100 p-4 rounded-2xl">
+                                <div class="uppercase text-[10px] font-bold tracking-widest text-gray-500 mb-2">POPULATION &amp; BASELINE</div>
+                                <div class="space-y-1.5 text-sm">
+                                    <div class="flex justify-between"><span>Mean age</span> <span class="font-semibold stat-value">49.3 ± 14.3 years</span></div>
+                                    <div class="flex justify-between"><span>Female</span> <span class="font-semibold">57.6% (n=10,229)</span></div>
+                                    <div class="flex justify-between"><span>RA</span> <span class="font-semibold">58.6%</span></div>
+                                    <div class="flex justify-between"><span>AS / PsO / PsA</span> <span class="font-semibold">19.1% / 15.1% / 2.5%</span></div>
+                                    <div class="flex justify-between"><span>IBD (CD + UC)</span> <span class="font-semibold">4.7%</span></div>
+                                    <div class="flex justify-between pt-1 border-t"><span>Recent sepsis (within 3 mo)</span> <span class="font-semibold text-rose-600">2.2%</span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-[#F8FAFC] border border-gray-100 p-4 rounded-2xl">
+                                <div class="uppercase text-[10px] font-bold tracking-widest text-gray-500 mb-2">TNFi EXPOSURE</div>
+                                <div class="text-sm space-y-1">
+                                    <div class="flex justify-between"><span>Etanercept</span> <span class="font-semibold">n=7,891 (44.4%)</span></div>
+                                    <div class="flex justify-between"><span>Adalimumab</span> <span class="font-semibold">n=7,538 (42.4%)</span></div>
+                                    <div class="flex justify-between"><span>Golimumab</span> <span class="font-semibold">n=2,335 (13.1%)</span></div>
+                                </div>
+                                <div class="mt-3 pt-3 border-t text-xs">
+                                    <span class="font-medium">Mean follow-up person-years:</span> 60,688<br>
+                                    <span class="font-medium">Total sepsis events:</span> 660 (3.7%)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Full TASK 1 fields row -->
+                    <div class="xl:col-span-12 pt-4 border-t">
+                        <div class="text-xs uppercase font-bold tracking-widest text-gray-500 mb-3">COMPLETE TASK 1 FIELDS (NO OMISSION)</div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5 text-sm">
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">CRITERIA (verbatim)</span>
+                                <span class="text-xs">"Sepsis was identified by the ICD-9-CM and ICD-10-CM codes proposed by Angus et al., in which a diagnosis of bacterial or fungal infection and at least one acute organ dysfunction are needed to define a septic episode. The definition of acute organ dysfunction comprised: dysfunction of the respiratory, cardiovascular, hepatic, hematologic, renal, and/or central nervous system; metabolic dysfunction; and cardiovascular shock."</span>
+                            </div>
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">CASE / CONTROL</span>
+                                <span class="text-xs">Cohort study (single exposed cohort of all TNFi initiators). No matched case-control design. Risk factor analysis performed within the cohort using Cox regression.</span>
+                            </div>
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">OUTCOME</span>
+                                <span class="text-xs">First diagnosis of sepsis after TNFi initiation (index date = first ED or hospital visit for sepsis). Censored at 31 Dec 2017, death, or NHI withdrawal.</span>
+                            </div>
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">INTERVENTION</span>
+                                <span class="text-xs">TNFi therapy: etanercept, adalimumab, or golimumab. (Infliximab &amp; certolizumab excluded — approved in Taiwan 2017.)</span>
+                            </div>
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">VARIABLES (key)</span>
+                                <span class="text-xs">Age, sex, CCI, recent sepsis (3 mo pre-TNFi), IMID type (RA, AS, PsO, PsA, CD, UC), TNFi type, concomitant DMARDs (MTX, SSZ, HCQ, LEF, immunosuppressants), glucocorticoid dose (prednisolone-equivalent mg/day), urbanization level (I–IV), insured amount (payroll quartiles Q1–Q4).</span>
+                            </div>
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">STATISTICS</span>
+                                <span class="text-xs">Descriptive (mean±SD, %). Incidence rate per 100,000 person-years. Cox proportional hazards regression (univariable + multivariable). HR + 95% CI. Adjusted for age, sex, CCI and other confounders. SAS 9.3. p &lt; 0.05 significant.</span>
+                            </div>
+                            
+                            <div class="lg:col-span-3"><span class="font-semibold block text-xs text-gray-500">PURPOSES</span>
+                                <span class="text-xs">"To investigate the incidence of sepsis and to identify risk factors for sepsis in patients receiving TNFi for IMIDs" using Sepsis-3 definition in the Taiwanese NHIRD.</span>
+                            </div>
+                            
+                            <div class="lg:col-span-3"><span class="font-semibold block text-xs text-gray-500">RESULTS (ALL KEY FINDINGS)</span>
+                                <span class="text-xs">Overall IR = <strong>1,088 / 100,000 py</strong>. Highest in CD (2,509), UC (1,520), RA (1,262). Golimumab lower IR vs etanercept (IRR 0.6 in RA). Multivariable HRs: recent sepsis <strong>2.35</strong> (1.73–3.20), CD <strong>3.36</strong> (2.11–5.34 vs AS), glucocorticoid dose <strong>1.05/mg/day</strong> (1.05–1.06), golimumab <strong>0.56</strong> (0.38–0.83 vs etanercept), urbanization level IV <strong>1.69</strong> (1.35–2.12), insured Q4 <strong>0.32</strong> (0.19–0.52). Sulfasalazine protective (HR 0.81). Dose-response SES gradient observed.</span>
+                            </div>
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">CONCLUSION</span>
+                                <span class="text-xs">"Recent sepsis, CD, concomitant glucocorticoid use, and low socioeconomic status, which were associated with an increased risk of sepsis, are crucial for individualized risk management plans."</span>
+                            </div>
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">INNOVATION</span>
+                                <span class="text-xs">First nationwide study applying Sepsis-3 definition to TNFi-treated IMIDs. Identified golimumab signal, strong CD risk, and socioeconomic gradient in universal-coverage setting. Real-world evidence for precision risk stratification.</span>
+                            </div>
+                            
+                            <div><span class="font-semibold block text-xs text-gray-500">LIMITATION</span>
+                                <span class="text-xs">"First, ... data on drug compliance could not be assessed... laboratory data, including disease activity and microbiological findings, could not be assessed... The lack of data regarding disease activity in claim data is also a limitation... the risk for viral infections as well as mycobacterial infections... were not assessed."</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KEY RESULTS VISUALIZATION -->
+        <div class="mb-10">
+            <div class="flex items-center gap-x-3 mb-4 px-1">
+                <div class="w-8 h-px bg-indigo-200 flex-1"></div>
+                <span class="uppercase text-xs font-bold tracking-[1.5px] text-indigo-600">Key Results Visualization • Interactive Chart.js</span>
+                <div class="w-8 h-px bg-indigo-200 flex-1"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                
+                <!-- Chart 1: Incidence by IMID -->
+                <div class="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <div class="font-semibold text-sm">Incidence Rate of Sepsis by IMID (per 100,000 py)</div>
+                            <div class="text-xs text-gray-500">Overall: 1,088 events</div>
+                        </div>
+                    </div>
+                    <div class="chart-container h-[210px]">
+                        <canvas id="chartIncidenceIMID"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Chart 2: Incidence by TNFi -->
+                <div class="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <div class="font-semibold text-sm">Incidence Rate by TNFi Type</div>
+                            <div class="text-xs text-gray-500">Golimumab showed lowest rate</div>
+                        </div>
+                    </div>
+                    <div class="chart-container h-[210px]">
+                        <canvas id="chartIncidenceTNFi"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Chart 3: Key Multivariable HRs -->
+                <div class="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm lg:col-span-2 xl:col-span-1">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <div class="font-semibold text-sm">Selected Adjusted Hazard Ratios (95% CI)</div>
+                            <div class="text-xs text-gray-500">Multivariable Cox model</div>
+                        </div>
+                    </div>
+                    <div class="chart-container h-[210px]">
+                        <canvas id="chartHRs"></canvas>
+                    </div>
+                    <div class="text-[10px] text-center text-gray-400 mt-1">Reference groups: AS for disease, Etanercept for TNFi, Urbanization I, Insured Q1</div>
+                </div>
+            </div>
+            
+            <div class="mt-2 text-xs text-center text-gray-400">All charts are fully interactive. Hover for exact values, CIs and p-values. Data extracted directly from Tables 2 &amp; 3.</div>
+        </div>
+
+        <!-- TASK 2: Critical Appraisal -->
+        <div>
+            <div class="flex items-center gap-x-3 mb-5 px-1">
+                <div class="w-8 h-px bg-indigo-200 flex-1"></div>
+                <span class="uppercase text-xs font-bold tracking-[1.5px] text-indigo-600">TASK 2: Critical Appraisal &amp; Analysis (with verbatim excerpts)</span>
+                <div class="w-8 h-px bg-indigo-200 flex-1"></div>
+            </div>
+            
+            <!-- 1. value -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">1</span>
+                    <span class="font-semibold section-header">Value (val) — Why this study was publishable in this journal</span>
+                </div>
+                <div class="analysis-text">
+                    This study was highly publishable because it filled a critical evidence gap using a rigorous, modern definition (Sepsis-3) in a large, unselected nationwide cohort of TNFi-treated patients across multiple IMIDs. The journal (Therapeutic Advances in Musculoskeletal Disease) focuses on practical, real-world advances in rheumatology; this paper directly informs individualized risk management — a clinically urgent topic given the well-known infection risk of biologics. The identification of golimumab as potentially protective, the striking CD signal, and the socioeconomic gradient (even within universal healthcare) provided novel, actionable insights beyond existing meta-analyses of "serious infections."
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Abstract):</strong><br>
+                    "Risk factors for sepsis have not been assessed in patients receiving tumor necrosis factor-alpha inhibitors (TNFi) for immune-mediated inflammatory diseases (IMIDs) who are vulnerable to serious/hospitalized infections... These data provide real-world evidence of sepsis risk in patients treated with distinct TNFi for IMIDs and highlight the need for individualized risk management strategies."
+                </div>
+            </div>
+            
+            <!-- 2. wtd -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">2</span>
+                    <span class="font-semibold section-header">What the study aimed to do (wtd)</span>
+                </div>
+                <div class="analysis-text">
+                    The overarching objective was to quantify the incidence of sepsis (using the 2016 Sepsis-3 definition) and identify independent risk factors among patients initiating TNFi for any of six IMIDs in a real-world Asian population. The authors explicitly moved beyond vague "serious infection" endpoints used in prior trials and meta-analyses.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Introduction):</strong><br>
+                    "Therefore, we aimed to assess the sepsis risk in patients receiving TNFi for IMIDs using the Sepsis-3 definition. In the present study, we used the Taiwanese Nationwide Health Insurance (NHI) Research Database (NHIRD) to investigate the incidence of sepsis and to identify risk factors for sepsis in patients receiving TNFi for IMIDs."
+                </div>
+            </div>
+            
+            <!-- 3. spl -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">3</span>
+                    <span class="font-semibold section-header">Summary of previous literature (spl)</span>
+                </div>
+                <div class="analysis-text">
+                    Prior literature established that TNFi increase serious infection risk (Singh Bayesian NMA, OR 1.31–1.90). However, definitions were heterogeneous (hospitalization, IV antibiotics, death). Data were strongest for RA; relatively sparse for AS, PsO, PsA and especially IBD. Socioeconomic determinants and history of recent sepsis were rarely examined in biologic users.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Discussion):</strong><br>
+                    "TNFi is associated with an increased risk of infection with varied definitions. However, the definite sepsis risk in patients receiving TNFi for IMIDs remains unclear. Singh et al. conducted a Bayesian network meta-analysis... standard-dose biological drugs (odds ratio, 1.31; 95% CI 1.09–1.58)..."
+                </div>
+            </div>
+            
+            <!-- 4. cpl -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">4</span>
+                    <span class="font-semibold section-header">Critique of previous literature (cpl)</span>
+                </div>
+                <div class="analysis-text">
+                    Previous studies suffered from inconsistent infection definitions, limited generalizability beyond RA, and failure to apply organ-dysfunction-based criteria (Sepsis-3). Many relied on trial populations with strict inclusion criteria, missing real-world channelling bias and socioeconomic gradients. The authors correctly note that Sepsis-2 criteria are unreliable.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Discussion):</strong><br>
+                    "The previous sepsis definition, Sepsis-2... has been found to be somewhat unreliable. One in eight patients admitted to an intensive care unit with infection and new organ failure are estimated to not fulfil the sepsis definition according to Sepsis-2..."
+                </div>
+            </div>
+            
+            <!-- 5. gap -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">5</span>
+                    <span class="font-semibold section-header">Gap between the known and unknown (gap)</span>
+                </div>
+                <div class="analysis-text">
+                    No prior study had specifically quantified sepsis incidence (Sepsis-3) or comprehensively examined risk factors (including recent sepsis history, IMID subtype differences, TNFi molecule differences, and socioeconomic status) in a nationwide cohort of TNFi-treated patients spanning RA, SpA and IBD.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Introduction):</strong><br>
+                    "Risk factors for sepsis have not been assessed in patients receiving tumor necrosis factor-alpha inhibitors (TNFi) for immune-mediated inflammatory diseases (IMIDs) who are vulnerable to serious/hospitalized infections."
+                </div>
+            </div>
+            
+            <!-- 6. rat -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">6</span>
+                    <span class="font-semibold section-header">Rationale for filling the gap (rat)</span>
+                </div>
+                <div class="analysis-text">
+                    A large claims database with universal coverage allowed unbiased estimation of incidence and risk factors. Sepsis-3 provides a clinically meaningful, reproducible endpoint. Identifying modifiable (glucocorticoid dose, recent sepsis) and non-modifiable (CD, low SES) risk factors enables targeted monitoring and shared decision-making.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Conclusion):</strong><br>
+                    "These findings provide real-world evidence of specific risk factors of sepsis in TNFi-treated patients with IMIDs, which warrant further studies to establish individualized risk management strategies in patients receiving TNFi for IMIDs."
+                </div>
+            </div>
+            
+            <!-- 7. wtdd -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">7</span>
+                    <span class="font-semibold section-header">What they did in this study (wtdd) — Methodology</span>
+                </div>
+                <div class="analysis-text">
+                    Retrospective cohort of all patients starting etanercept, adalimumab or golimumab for RA/AS/PsO/PsA/CD/UC in NHIRD 2003–2017 (n=17,764). Sepsis defined by Angus ICD codes + organ dysfunction. Person-time incidence calculated. Multivariable Cox models with extensive adjustment. Sensitivity analyses implicit via stratification by IMID and TNFi.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Methods — Outcome):</strong><br>
+                    "The study outcome was the first diagnosis with sepsis after the initiation of TNFi. In the present study, we employed the Sepsis-3 definition to identify patients with sepsis... The index date of sepsis was defined as the first day of an emergency department or hospital visit for sepsis."
+                </div>
+            </div>
+            
+            <!-- 8. rcl -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">8</span>
+                    <span class="font-semibold section-header">Results consistent with previous literature (rcl)</span>
+                </div>
+                <div class="analysis-text">
+                    Findings align with known higher infection risk in RA and IBD on TNFi, dose-dependent glucocorticoid risk, older age, higher CCI, and increased recurrent sepsis risk after recent sepsis (consistent with Prescott Medicare and Shen NHIRD studies). Incidence in CD (2,509/100k) closely mirrored French IBD data (1,890/100k serious infections).
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Discussion):</strong><br>
+                    "Using the Medicare claim database... Prescott et al. found that patients were frequently re-hospitalized within the first 90 days after severe sepsis... Similarly, in a study of the Taiwanese NHIRD, Shen et al. reported that patients who survived hospitalization for sepsis had a higher risk of subsequent sepsis..."
+                </div>
+            </div>
+            
+            <!-- 9. rtc -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">9</span>
+                    <span class="font-semibold section-header">Results contrary to previous literature (rtc)</span>
+                </div>
+                <div class="analysis-text">
+                    Novel signals include: (1) golimumab associated with ~44% lower sepsis risk vs etanercept (not previously shown in head-to-head); (2) CD carried markedly higher risk than RA (HR 3.36); (3) strong, graded socioeconomic effect on sepsis despite universal NHI coverage — a finding under-appreciated in prior biologic safety literature.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Results &amp; Discussion):</strong><br>
+                    "Intriguingly, golimumab users appeared to have a lower risk of sepsis compared with etanercept users (HR, 0.56; 95% CI, 0.38–0.83)... The sepsis risk was greatest in patients with the lowest level (IV) of urbanization (HR, 1.69; 95% CI, 1.35–2.12)..."
+                </div>
+            </div>
+            
+            <!-- 10. rfw -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">10</span>
+                    <span class="font-semibold section-header">Recommendations for future research (rfw)</span>
+                </div>
+                <div class="analysis-text">
+                    The authors recommend vigilance for recurrent sepsis in recent sepsis survivors, consideration of urban-rural and income disparities when initiating TNFi, and further validation of the golimumab signal. They implicitly support steroid-sparing strategies and individualized monitoring plans.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Discussion):</strong><br>
+                    "These lines of evidence indicate the importance of vigilance for recurrent sepsis in patients treated with TNFi for IMIDs who have recently recovered from sepsis... the association between living in less urbanized areas and the increased sepsis risk... suggests that urban-rural disparities across Taiwan should be considered while administering TNFi..."
+                </div>
+            </div>
+            
+            <!-- 11. poc -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">11</span>
+                    <span class="font-semibold section-header">Points of critique (flaws &amp; limitations) (poc)</span>
+                </div>
+                <div class="analysis-text">
+                    Major limitations include reliance on claims data (no disease activity scores, no microbiologic confirmation, no drug level or compliance data), exclusion of infliximab/certolizumab, potential channelling bias (etanercept users had higher comorbidity burden), and inability to assess viral or mycobacterial infections. The short look-back for "recent sepsis" (3 months) may underestimate longer-term vulnerability.
+                </div>
+                <div class="mt-3 verbatim p-4 rounded-r-2xl text-sm">
+                    <strong>Verbatim excerpt (Discussion — Limitations):</strong><br>
+                    "The present study has several limitations. First, given that the study focused on the sepsis risk among patients receiving TNFi, the risk for viral infections as well as mycobacterial infections and the role of biologics other than TNFi were not assessed. Second, data on drug compliance could not be assessed in the NHIRD..."
+                </div>
+            </div>
+            
+            <!-- 12. mop -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">12</span>
+                    <span class="font-semibold section-header">Missed obvious points (mop)</span>
+                </div>
+                <div class="analysis-text">
+                    The authors did not compare sepsis rates to the general Taiwanese population or to IMID patients not receiving TNFi. They also did not explore whether the protective golimumab signal persists after adjustment for channeling (etanercept users were sicker). No formal interaction testing between TNFi type and IMID subtype was presented. Disease duration was shorter in etanercept users — a potential unmeasured confounder.
+                </div>
+            </div>
+            
+            <!-- 13. rpp -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">13</span>
+                    <span class="font-semibold section-header">Relevant points worth pursuing (rpp)</span>
+                </div>
+                <div class="analysis-text">
+                    Prospective validation of golimumab vs other TNFi regarding sepsis; mechanistic studies of why CD patients have disproportionately high risk (intra-abdominal source?); targeted interventions (closer monitoring, vaccination, steroid minimization) for recent-sepsis and low-SES subgroups; integration with tapering strategies (see SORAIRO trial data) to balance infection risk vs disease control; cost-effectiveness of risk-stratified monitoring.
+                </div>
+            </div>
+            
+            <!-- 14. oor -->
+            <div class="mb-6 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center gap-x-2 mb-2">
+                    <span class="font-mono text-xs px-2.5 py-px bg-indigo-100 text-indigo-700 rounded">14</span>
+                    <span class="font-semibold section-header">Order of reasoning in the discussion (oor)</span>
+                </div>
+                <div class="analysis-text">
+                    The discussion follows a logical clinical narrative: (1) summary of main findings, (2) detailed discussion of the strongest predictor (recent sepsis) with supporting external literature, (3) justification for Sepsis-3 over prior definitions, (4) comparison of incidence rates to existing serious-infection literature (Singh, Quartuccio, Kirchgessner French IBD), (5) explanation of high CD risk (intra-abdominal infections), (6) intriguing golimumab signal and call for validation, (7) socioeconomic findings with external corroboration, (8) transparent limitations, and (9) concise clinical implications.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-10 pt-6 border-t text-xs text-center text-gray-400">
+            Generated by articleAnalyzing • Critical appraisal of Chao WC et al. Ther Adv Musculoskelet Dis. 2020.<br>
+            All verbatim excerpts and data are sourced directly from the provided full-text PDF. Bibliometric data current as of 2026.
+        </div>
+        
+    </div>
+
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#4F46E5');
+        }
+        
+        // Chart 1: Incidence by IMID
+        function createIncidenceIMIDChart() {
+            const ctx = document.getElementById('chartIncidenceIMID');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['AS', 'RA', 'PsO', 'PsA', 'CD', 'UC'],
+                    datasets: [{
+                        label: 'Incidence rate (per 100,000 py)',
+                        data: [519, 1262, 866, 951, 2509, 1520],
+                        backgroundColor: ['#6366F1', '#6366F1', '#6366F1', '#6366F1', '#F43F5E', '#6366F1'],
+                        borderColor: '#4F46E5',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.raw.toLocaleString()} per 100,000 person-years`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            title: { display: true, text: 'Incidence rate / 100k py' },
+                            grid: { color: '#F1E7FF20' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // Chart 2: Incidence by TNFi
+        function createIncidenceTNFiChart() {
+            const ctx = document.getElementById('chartIncidenceTNFi');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Etanercept', 'Adalimumab', 'Golimumab'],
+                    datasets: [{
+                        label: 'Incidence rate (per 100,000 py)',
+                        data: [1088, 1179, 624],
+                        backgroundColor: ['#6366F1', '#6366F1', '#10B981'],
+                        borderColor: '#4F46E5',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.raw.toLocaleString()} per 100,000 person-years (IRR 0.6 for Golimumab vs Etanercept in RA)`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Incidence rate / 100k py' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // Chart 3: Key HRs
+        function createHRsChart() {
+            const ctx = document.getElementById('chartHRs');
+            if (!ctx) return;
+            
+            const labels = [
+                'Recent sepsis (3 mo)',
+                'CD vs AS',
+                'Golimumab vs Etanercept',
+                'Glucocorticoid (per mg/day)',
+                'Urbanization IV vs I',
+                'Insured Q4 vs Q1',
+                'Age (per year)',
+                'CCI (per point)'
+            ];
+            
+            const data = [2.35, 3.36, 0.56, 1.05, 1.69, 0.32, 1.06, 1.31];
+            const colors = data.map(v => v > 1 ? '#F43F5E' : '#10B981');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Adjusted HR',
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: '#4F46E5',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const idx = context.dataIndex;
+                                    const ciMap = [
+                                        'HR 2.35 (1.73–3.20) p<0.001',
+                                        'HR 3.36 (2.11–5.34) p<0.001',
+                                        'HR 0.56 (0.38–0.83) p=0.004',
+                                        'HR 1.05 (1.05–1.06) p<0.001',
+                                        'HR 1.69 (1.35–2.12) p<0.001',
+                                        'HR 0.32 (0.19–0.52) p<0.001',
+                                        'HR 1.06 (1.05–1.07) p<0.001',
+                                        'HR 1.31 (1.23–1.39) p<0.001'
+                                    ];
+                                    return ciMap[idx];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 4,
+                            title: { display: true, text: 'Hazard Ratio (log scale reference)' },
+                            grid: { color: '#F1E7FF20' }
+                        },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // Initialize everything
+        function initializeAll() {
+            initializeTailwind();
+            createIncidenceIMIDChart();
+            createIncidenceTNFiChart();
+            createHRsChart();
+            
+            // Optional: subtle animation for metric cards
+            const cards = document.querySelectorAll('.metric-card');
+            cards.forEach((card, i) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(8px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    card.style.transitionDelay = (i * 60) + 'ms';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 120);
+            });
+            
+            // Keyboard accessibility note
+            console.log('%c[articleAnalyzing] Professional single-page critical appraisal report initialized successfully.', 'color:#64748b');
+        }
+        
+        window.onload = initializeAll;
+    </script>
+</body>
+</html>

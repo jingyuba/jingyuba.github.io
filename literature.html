@@ -53,15 +53,16 @@
       <table class="w-full dataview-table">
         <thead>
           <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="text-left px-8 py-4">Title</th>
+            <th class="text-left px-6 py-4">Title</th>
             <th class="text-left px-4 py-4">Disease</th>
-            <th class="text-right px-8 py-4">Action</th>
+            <th class="text-left px-4 py-4">Intervention</th>
+            <th class="text-right px-6 py-4">Action</th>
           </tr>
         </thead>
         <tbody id="file-list" class="text-sm divide-y divide-zinc-100">
           <tr id="loading-row">
-            <td colspan="3" class="px-8 py-8 text-center text-zinc-500">
-              <i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading literature and analyzing diseases…
+            <td colspan="4" class="px-8 py-8 text-center text-zinc-500">
+              <i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading literature and analyzing content…
             </td>
           </tr>
         </tbody>
@@ -157,12 +158,118 @@
       return [...new Set([...rheumatic, ...comorbidities])];
     }
 
-    function renderDiseaseTags(diseases) {
-      if (!diseases.length) {
+    const INTERVENTION_LEXICON = [
+      { label: 'Methotrexate', patterns: [/methotrexate/i, /\bmtx\b/i] },
+      { label: 'Ozoralizumab', patterns: [/ozoralizumab/i, /\bozr\b/i] },
+      { label: 'Golimumab', patterns: [/golimumab/i] },
+      { label: 'Abatacept', patterns: [/abatacept/i] },
+      { label: 'Hydroxychloroquine', patterns: [/hydroxychloroquine/i] },
+      { label: 'Etanercept', patterns: [/etanercept/i] },
+      { label: 'Adalimumab', patterns: [/adalimumab/i] },
+      { label: 'Infliximab', patterns: [/infliximab/i] },
+      { label: 'Tocilizumab', patterns: [/tocilizumab/i] },
+      { label: 'Rituximab', patterns: [/rituximab/i] },
+      { label: 'Cyclosporin', patterns: [/cyclosporin/i] },
+      { label: 'TNF Inhibitors', patterns: [/tnf[\s-]?(?:α|alpha)?\s*inhibitors?/i, /tumou?r\s+necrosis\s+factor/i] },
+      { label: 'Biologics', patterns: [/biologics?/i, /\bbdmards?\b/i] },
+      { label: 'Conventional DMARDs', patterns: [/conventional\s+dmards?/i, /\bcsdmards?\b/i] },
+      { label: 'NSAIDs', patterns: [/nsaids?/i, /non.?steroidal\s+anti/i] },
+      { label: 'Corticosteroids', patterns: [/corticosteroids?/i] },
+      { label: 'Antiplatelet Agents', patterns: [/antiplatelet/i] },
+      { label: 'Continued Treatment', patterns: [/continued\s+treatment/i] },
+      { label: 'Dose Reduction', patterns: [/dose\s+reduction/i, /reducing\s+(?:the\s+)?(?:methotrexate|mtx)\s+dose/i] },
+      { label: 'Dosing Interval Spacing', patterns: [/spacing/i, /dosing\s+interval/i, /interval\s+extension/i] },
+      { label: 'Medication Tapering', patterns: [/tapering/i, /de-?escalation/i] },
+    ];
+
+    function normalizeInterventionLabel(label) {
+      return label
+        .replace(/\bOZR\b/gi, 'Ozoralizumab')
+        .replace(/\bMTX\b/gi, 'Methotrexate')
+        .trim();
+    }
+
+    function extractArmLabels(doc) {
+      const arms = [];
+      doc.querySelectorAll('div, span').forEach(el => {
+        if (el.children.length > 2) return;
+        const text = (el.textContent || '').trim();
+        const match = text.match(/^ARM\s*\d+\s*[—–-]\s*(.+)$/i);
+        if (match) {
+          const label = normalizeInterventionLabel(match[1].trim());
+          if (label.length > 0 && label.length < 80) arms.push(label);
+        }
+      });
+      return [...new Set(arms)];
+    }
+
+    function collectInterventionText(doc) {
+      const chunks = [];
+      const h1 = doc.querySelector('h1');
+      if (h1) chunks.push(h1.textContent);
+
+      const snapshot = doc.getElementById('snapshot');
+      if (snapshot) chunks.push(snapshot.textContent);
+
+      doc.querySelectorAll('*').forEach(el => {
+        const text = (el.textContent || '').trim();
+        if (/^INTERVENTION\s*\/?\s*EXPOSURE$/i.test(text)) {
+          const block = el.closest('div');
+          if (block) chunks.push(block.textContent);
+        }
+      });
+
+      doc.querySelectorAll('.verbatim').forEach((el, i) => {
+        const t = el.textContent || '';
+        if (i < 6 || /medication|drug|treatment|inhibitor|methotrexate|exposure|intervention|dmard|biologic/i.test(t)) {
+          chunks.push(t);
+        }
+      });
+
+      return chunks.join('\n');
+    }
+
+    function matchInterventions(text, lexicon) {
+      const found = [];
+      for (const { label, patterns } of lexicon) {
+        if (patterns.some(p => p.test(text))) found.push(label);
+      }
+      return found;
+    }
+
+    function extractInterventions(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const meta = doc.querySelector('meta[name="article-intervention"]');
+      if (meta?.content?.trim()) {
+        return meta.content.split(/[,，、]/).map(s => s.trim()).filter(Boolean);
+      }
+
+      const arms = extractArmLabels(doc);
+      if (arms.length >= 2) return arms;
+
+      const text = collectInterventionText(doc);
+      const matched = matchInterventions(text, INTERVENTION_LEXICON);
+
+      const strategies = matched.filter(i =>
+        ['Continued Treatment', 'Dose Reduction', 'Dosing Interval Spacing', 'Medication Tapering'].includes(i)
+      );
+      const drugs = matched.filter(i => !strategies.includes(i));
+
+      if (strategies.length && drugs.length) {
+        return [...new Set([...strategies, ...drugs.slice(0, 4)])];
+      }
+      return [...new Set(matched)].slice(0, 6);
+    }
+
+    function renderTags(items, variant) {
+      if (!items.length) {
         return '<span class="text-zinc-400 text-xs">—</span>';
       }
-      return diseases.map(d =>
-        `<span class="inline-block px-2.5 py-0.5 mr-1 mb-1 bg-teal-50 text-teal-800 text-xs font-medium rounded-full border border-teal-100">${d}</span>`
+      const styles = variant === 'intervention'
+        ? 'bg-indigo-50 text-indigo-800 border-indigo-100'
+        : 'bg-teal-50 text-teal-800 border-teal-100';
+      return items.map(item =>
+        `<span class="inline-block px-2.5 py-0.5 mr-1 mb-1 ${styles} text-xs font-medium rounded-full border">${item}</span>`
       ).join('');
     }
 
@@ -187,24 +294,27 @@
         const rows = await Promise.all(htmlFiles.map(async file => {
           const title = file.name.replace('.html', '').replace(/-/g, ' ').replace(/_/g, ' ');
           let diseases = [];
+          let interventions = [];
           try {
             const contentRes = await fetch(`literature/${encodeURIComponent(file.name)}`);
             if (contentRes.ok) {
               const html = await contentRes.text();
               diseases = extractDiseases(html);
+              interventions = extractInterventions(html);
             }
-          } catch (_) { /* keep empty diseases */ }
-          return { title, fileName: file.name, diseases };
+          } catch (_) { /* keep empty fields */ }
+          return { title, fileName: file.name, diseases, interventions };
         }));
 
         tbody.innerHTML = '';
-        rows.forEach(({ title, fileName, diseases }) => {
+        rows.forEach(({ title, fileName, diseases, interventions }) => {
           const row = document.createElement('tr');
           row.className = 'dataview-row';
           row.innerHTML = `
-            <td class="px-8 py-4 font-medium max-w-md">${title}</td>
-            <td class="px-4 py-4">${renderDiseaseTags(diseases)}</td>
-            <td class="px-8 py-4 text-right whitespace-nowrap">
+            <td class="px-6 py-4 font-medium max-w-sm">${title}</td>
+            <td class="px-4 py-4">${renderTags(diseases, 'disease')}</td>
+            <td class="px-4 py-4">${renderTags(interventions, 'intervention')}</td>
+            <td class="px-6 py-4 text-right whitespace-nowrap">
               <a href="literature/${fileName}"
                  class="inline-flex items-center gap-x-1.5 text-teal-700 hover:text-teal-800 text-sm font-medium">
                 Read <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>

@@ -56,12 +56,13 @@
             <th class="text-left px-6 py-4">Title</th>
             <th class="text-left px-4 py-4">Disease</th>
             <th class="text-left px-4 py-4">Intervention</th>
+            <th class="text-right px-4 py-4">Case Number</th>
             <th class="text-right px-6 py-4">Action</th>
           </tr>
         </thead>
         <tbody id="file-list" class="text-sm divide-y divide-zinc-100">
           <tr id="loading-row">
-            <td colspan="4" class="px-8 py-8 text-center text-zinc-500">
+            <td colspan="5" class="px-8 py-8 text-center text-zinc-500">
               <i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading literature and analyzing content…
             </td>
           </tr>
@@ -304,6 +305,107 @@
       return [...new Set(matched)].slice(0, 6);
     }
 
+    function parseCount(value) {
+      const n = parseInt(String(value).replace(/,/g, ''), 10);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function formatCount(n) {
+      return n.toLocaleString('en-US');
+    }
+
+    function findLabeledValue(doc, labelPattern) {
+      const candidates = doc.querySelectorAll('span, div, label, dt, th, h3');
+      for (const el of candidates) {
+        const ownText = (el.textContent || '').trim();
+        if (!labelPattern.test(ownText)) continue;
+
+        const inlineMatch = ownText.match(/:\s*(.+)$/);
+        if (inlineMatch) return inlineMatch[1].trim();
+
+        const sibling = el.nextElementSibling;
+        if (sibling?.textContent?.trim()) return sibling.textContent.trim();
+
+        const parent = el.parentElement;
+        if (parent) {
+          const valueEl = [...parent.children].find(child => child !== el && child.textContent?.trim());
+          if (valueEl) return valueEl.textContent.trim();
+        }
+      }
+      return '';
+    }
+
+    function findPopulationSectionText(doc) {
+      for (const heading of doc.querySelectorAll('h3, h2')) {
+        if (!/^population$/i.test((heading.textContent || '').trim())) continue;
+        const section = heading.closest('div') || heading.parentElement;
+        if (section) return section.textContent;
+      }
+      return '';
+    }
+
+    function extractFromAnalyzedSample(text) {
+      const caseControl = text.match(/([\d,]+)\s+\w[\w\s-]*\s+cases?\s*\+\s*([\d,]+)/i);
+      if (caseControl) {
+        const total = parseCount(caseControl[1]) + parseCount(caseControl[2]);
+        if (total) return formatCount(total);
+      }
+      const single = text.match(/([\d,]+)/);
+      return single ? single[1] : '';
+    }
+
+    function extractFromPopulationText(text) {
+      const totalN = text.match(/Total\s+N\s*=\s*([\d,]+)/i);
+      if (totalN) return totalN[1];
+
+      const nEquals = text.match(/\bN\s*=\s*([\d,]+)/i);
+      if (nEquals) return nEquals[1];
+
+      const patients = text.match(/([\d,]+)\s+patients?\b/i);
+      if (patients) return patients[1];
+
+      const subjects = text.match(/([\d,]+)\s+subjects?\b/i);
+      if (subjects) return subjects[1];
+
+      return '';
+    }
+
+    function extractCaseNumber(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const meta = doc.querySelector('meta[name="article-case-number"]');
+      if (meta?.content?.trim()) return meta.content.trim();
+
+      const analyzedSample = findLabeledValue(doc, /^ANALYZED\s+SAMPLE$/i);
+      if (analyzedSample) {
+        const value = extractFromAnalyzedSample(analyzedSample);
+        if (value) return value;
+      }
+
+      const populationField = findLabeledValue(doc, /^POPULATION$/i)
+        || findLabeledValue(doc, /^Population:$/i);
+      if (populationField) {
+        const value = extractFromPopulationText(populationField);
+        if (value) return value;
+      }
+
+      const populationSection = findPopulationSectionText(doc);
+      if (populationSection) {
+        const value = extractFromPopulationText(populationSection);
+        if (value) return value;
+      }
+
+      const studyText = collectStudySections(doc);
+      const fallback = extractFromPopulationText(studyText);
+      return fallback || '';
+    }
+
+    function renderCaseNumber(value) {
+      if (!value) {
+        return '<span class="text-zinc-400 text-xs">—</span>';
+      }
+      return `<span class="font-mono text-sm text-zinc-700 tabular-nums">${escapeHtml(value)}</span>`;
+    }
+
     function renderTags(items, variant) {
       if (!items.length) {
         return '<span class="text-zinc-400 text-xs">—</span>';
@@ -341,6 +443,7 @@
           let title = fallbackTitle;
           let diseases = [];
           let interventions = [];
+          let caseNumber = '';
           try {
             const contentRes = await fetchNoCache(`literature/${encodeURIComponent(file.name)}`);
             if (contentRes.ok) {
@@ -349,13 +452,14 @@
               title = extractTitle(doc, fallbackTitle);
               diseases = extractDiseases(html);
               interventions = extractInterventions(html);
+              caseNumber = extractCaseNumber(html);
             }
           } catch (_) { /* keep empty fields */ }
-          return { title, fileName: file.name, diseases, interventions };
+          return { title, fileName: file.name, diseases, interventions, caseNumber };
         }));
 
         tbody.innerHTML = '';
-        rows.forEach(({ title, fileName, diseases, interventions }) => {
+        rows.forEach(({ title, fileName, diseases, interventions, caseNumber }) => {
           const row = document.createElement('tr');
           row.className = 'dataview-row';
           const filePath = `literature/${encodeURIComponent(fileName)}`;
@@ -363,6 +467,7 @@
             <td class="px-6 py-4 font-medium max-w-sm">${escapeHtml(title)}</td>
             <td class="px-4 py-4">${renderTags(diseases, 'disease')}</td>
             <td class="px-4 py-4">${renderTags(interventions, 'intervention')}</td>
+            <td class="px-4 py-4 text-right whitespace-nowrap">${renderCaseNumber(caseNumber)}</td>
             <td class="px-6 py-4 text-right whitespace-nowrap">
               <a href="${filePath}"
                  class="inline-flex items-center gap-x-1.5 text-teal-700 hover:text-teal-800 text-sm font-medium">

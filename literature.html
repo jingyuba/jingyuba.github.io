@@ -10,8 +10,49 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Inter:wght@400;500;600&amp;display=swap');
     body { font-family: 'Noto Sans TC', 'Inter', system-ui, sans-serif; }
     .nav-active { color: #0f766e; font-weight: 600; }
-    .dataview-table { border-collapse: collapse; }
-    .dataview-table th { font-weight: 500; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .dataview-table { border-collapse: collapse; table-layout: fixed; width: 100%; min-width: 640px; }
+    .dataview-table th {
+      position: relative;
+      font-weight: 500;
+      color: #64748b;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .dataview-table td { overflow: hidden; vertical-align: top; }
+    .dataview-table .col-title { word-break: break-word; white-space: normal; }
+    .dataview-table .col-tags { white-space: normal; }
+    .col-resize-handle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 8px;
+      height: 100%;
+      cursor: col-resize;
+      user-select: none;
+      touch-action: none;
+      z-index: 1;
+    }
+    .col-resize-handle::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      bottom: 20%;
+      left: 3px;
+      width: 1px;
+      background: #e4e4e7;
+      transition: background 0.15s ease;
+    }
+    .col-resize-handle:hover::after,
+    .col-resize-handle.active::after {
+      background: #14b8a6;
+      width: 2px;
+      left: 2px;
+    }
+    body.col-resizing { cursor: col-resize; user-select: none; }
     .dataview-row { transition: background 0.1s ease; }
     .dataview-row:hover { background: #f8fafc; }
   </style>
@@ -50,14 +91,36 @@
 
     <!-- Dataview-style Table -->
     <div class="bg-white border border-zinc-200 rounded-3xl overflow-hidden">
-      <table class="w-full dataview-table">
+      <div class="overflow-x-auto">
+      <table id="literature-table" class="dataview-table">
+        <colgroup>
+          <col data-col="title">
+          <col data-col="disease">
+          <col data-col="intervention">
+          <col data-col="case-number">
+          <col data-col="action">
+        </colgroup>
         <thead>
           <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="text-left px-6 py-4">Title</th>
-            <th class="text-left px-4 py-4">Disease</th>
-            <th class="text-left px-4 py-4">Intervention</th>
-            <th class="text-right px-4 py-4">Case Number</th>
-            <th class="text-right px-6 py-4">Action</th>
+            <th class="text-left px-6 py-4" data-col="title">
+              <span class="pr-2">Title</span>
+              <span class="col-resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize Title column"></span>
+            </th>
+            <th class="text-left px-4 py-4" data-col="disease">
+              <span class="pr-2">Disease</span>
+              <span class="col-resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize Disease column"></span>
+            </th>
+            <th class="text-left px-4 py-4" data-col="intervention">
+              <span class="pr-2">Intervention</span>
+              <span class="col-resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize Intervention column"></span>
+            </th>
+            <th class="text-right px-4 py-4" data-col="case-number">
+              <span class="pr-2">Case Number</span>
+              <span class="col-resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize Case Number column"></span>
+            </th>
+            <th class="text-right px-6 py-4" data-col="action">
+              <span class="pr-2">Action</span>
+            </th>
           </tr>
         </thead>
         <tbody id="file-list" class="text-sm divide-y divide-zinc-100">
@@ -68,6 +131,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
       <div id="empty-state" class="hidden px-8 py-12 text-center text-sm text-zinc-500">
         No content yet. Upload HTML files to the <code class="font-mono bg-zinc-100 px-1.5 py-px rounded">/literature</code> folder and refresh this page.
       </div>
@@ -406,6 +470,105 @@
       return `<span class="font-mono text-sm text-zinc-700 tabular-nums">${escapeHtml(value)}</span>`;
     }
 
+    const COL_STORAGE_KEY = 'literature-dataview-col-widths';
+    const DEFAULT_COL_WIDTHS = {
+      title: 300,
+      disease: 180,
+      intervention: 220,
+      'case-number': 110,
+      action: 100,
+    };
+    const MIN_COL_WIDTH = 72;
+
+    function getColElement(table, colId) {
+      return table.querySelector(`colgroup col[data-col="${colId}"]`);
+    }
+
+    function readColWidth(table, colId) {
+      const col = getColElement(table, colId);
+      if (col?.style.width) return parseInt(col.style.width, 10);
+      const th = table.querySelector(`thead th[data-col="${colId}"]`);
+      return th?.offsetWidth || DEFAULT_COL_WIDTHS[colId] || MIN_COL_WIDTH;
+    }
+
+    function applyColWidths(table, widths) {
+      Object.entries(widths).forEach(([colId, width]) => {
+        const col = getColElement(table, colId);
+        if (col && width) col.style.width = `${width}px`;
+      });
+    }
+
+    function initColumnResize() {
+      const table = document.getElementById('literature-table');
+      if (!table) return;
+
+      const cols = [...table.querySelectorAll('colgroup col')];
+      let saved = {};
+      try {
+        saved = JSON.parse(localStorage.getItem(COL_STORAGE_KEY) || '{}');
+      } catch (_) { /* ignore invalid storage */ }
+
+      const initialWidths = cols.reduce((acc, col) => {
+        const id = col.dataset.col;
+        acc[id] = saved[id] || DEFAULT_COL_WIDTHS[id] || MIN_COL_WIDTH;
+        return acc;
+      }, {});
+      applyColWidths(table, initialWidths);
+
+      table.querySelectorAll('thead th[data-col] .col-resize-handle').forEach(handle => {
+        handle.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          const th = handle.closest('th');
+          const colId = th.dataset.col;
+          const col = getColElement(table, colId);
+          const colIndex = cols.indexOf(col);
+          const nextCol = cols[colIndex + 1];
+          if (!col || !nextCol) return;
+
+          const nextId = nextCol.dataset.col;
+          const startX = e.clientX;
+          const startW = readColWidth(table, colId);
+          const startNextW = readColWidth(table, nextId);
+
+          document.body.classList.add('col-resizing');
+          handle.classList.add('active');
+
+          function onMove(ev) {
+            const delta = ev.clientX - startX;
+            let newW = startW + delta;
+            let newNextW = startNextW - delta;
+
+            if (newW < MIN_COL_WIDTH) {
+              newNextW -= MIN_COL_WIDTH - newW;
+              newW = MIN_COL_WIDTH;
+            }
+            if (newNextW < MIN_COL_WIDTH) {
+              newW -= MIN_COL_WIDTH - newNextW;
+              newNextW = MIN_COL_WIDTH;
+            }
+
+            col.style.width = `${newW}px`;
+            nextCol.style.width = `${newNextW}px`;
+          }
+
+          function onUp() {
+            document.body.classList.remove('col-resizing');
+            handle.classList.remove('active');
+            const widths = cols.reduce((acc, c) => {
+              acc[c.dataset.col] = readColWidth(table, c.dataset.col);
+              return acc;
+            }, {});
+            localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(widths));
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+          }
+
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp);
+        });
+      });
+    }
+
     function renderTags(items, variant) {
       if (!items.length) {
         return '<span class="text-zinc-400 text-xs">—</span>';
@@ -464,9 +627,9 @@
           row.className = 'dataview-row';
           const filePath = `literature/${encodeURIComponent(fileName)}`;
           row.innerHTML = `
-            <td class="px-6 py-4 font-medium max-w-sm">${escapeHtml(title)}</td>
-            <td class="px-4 py-4">${renderTags(diseases, 'disease')}</td>
-            <td class="px-4 py-4">${renderTags(interventions, 'intervention')}</td>
+            <td class="px-6 py-4 font-medium col-title">${escapeHtml(title)}</td>
+            <td class="px-4 py-4 col-tags">${renderTags(diseases, 'disease')}</td>
+            <td class="px-4 py-4 col-tags">${renderTags(interventions, 'intervention')}</td>
             <td class="px-4 py-4 text-right whitespace-nowrap">${renderCaseNumber(caseNumber)}</td>
             <td class="px-6 py-4 text-right whitespace-nowrap">
               <a href="${filePath}"
@@ -484,6 +647,7 @@
       }
     }
 
+    initColumnResize();
     loadLiterature();
   </script>
 </body>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>過敏原居家偵測實用指南：從「致敏」到「過敏」</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: "Noto Sans TC", system-ui, -apple-system, sans-serif;
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 16px;
+        }
+        .section-card {
+            transition: all 0.3s ease;
+        }
+        .section-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 leading-relaxed">
+    <!-- Header -->
+    <header class="hero-bg text-white py-12">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex items-center gap-4 mb-6">
+                <i class="fa-solid fa-house-medical text-5xl"></i>
+                <div>
+                    <h1 class="text-4xl font-bold">過敏原居家偵測實用指南</h1>
+                    <p class="text-xl mt-2 opacity-90">從「致敏」到「過敏」</p>
+                </div>
+            </div>
+            <p class="max-w-2xl text-lg opacity-90">幫助您正確理解檢測結果，建立有效症狀日記，並在醫師指導下安全進行居家驗證。避免不必要的飲食限制，守護全家健康。</p>
+        </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-6 py-8">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-md rounded-xl p-2 mb-10 sticky top-4 z-50">
+            <div class="flex flex-wrap gap-2 justify-center">
+                <a href="#part1" class="nav-link px-5 py-3 rounded-xl hover:bg-blue-50 transition-colors flex items-center gap-2 font-medium">
+                    <i class="fa-solid fa-info-circle"></i>
+                    <span>第一部：致敏 vs 過敏</span>
+                </a>
+                <a href="#part2" class="nav-link px-5 py-3 rounded-xl hover:bg-blue-50 transition-colors flex items-center gap-2 font-medium">
+                    <i class="fa-solid fa-book-medical"></i>
+                    <span>第二部：症狀日記</span>
+                </a>
+                <a href="#part3" class="nav-link px-5 py-3 rounded-xl hover:bg-blue-50 transition-colors flex items-center gap-2 font-medium">
+                    <i class="fa-solid fa-utensils"></i>
+                    <span>第三部：排除與激發測試</span>
+                </a>
+                <a href="#part4" class="nav-link px-5 py-3 rounded-xl hover:bg-blue-50 transition-colors flex items-center gap-2 font-medium">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>第四部：台灣常見過敏原與緊急處理</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- 第一部 -->
+        <section id="part1" class="mb-16 section-card bg-white rounded-3xl p-8 shadow">
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center gap-3">
+                <span class="w-10 h-10 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold">1</span>
+                區分「過敏」與「致敏」——避免過度限制
+            </h2>
+            
+            <div class="prose max-w-none mb-8">
+                <p class="text-lg">血液或皮膚檢測報告發現自己對某些物質呈陽性，稱為「<strong>致敏（Sensitization）</strong>」。</p>
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 my-6">
+                    <p class="text-xl font-semibold text-amber-800">「致敏」不等於「過敏（Clinical Allergy）」</p>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full border border-gray-200 rounded-2xl overflow-hidden">
+                    <thead>
+                        <tr class="bg-blue-50">
+                            <th class="text-left border-b border-gray-200">特徵</th>
+                            <th class="text-left border-b border-gray-200">致敏 (Sensitization)</th>
+                            <th class="text-left border-b border-gray-200">臨床過敏 (Clinical Allergy)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="font-medium">機制</td>
+                            <td>免疫系統「識別」了過敏原，產生了IgE抗體。</td>
+                            <td>免疫系統「識別」後，啟動了發炎反應。</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="font-medium">症狀</td>
+                            <td>無臨床症狀，只是檢測陽性。</td>
+                            <td>伴隨紅疹、嘔吐、腹瀉、氣喘等症狀。</td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">重點</td>
+                            <td>陽性結果可能高達 60% 為假陽性。</td>
+                            <td>必須有實際接觸並引發症狀才能確診。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 bg-red-50 border border-red-200 rounded-2xl p-6 text-red-800">
+                <p class="font-medium">⚠️ 重要提醒：僅檢測報告呈陽性（致敏）就禁食，可能導致不必要的飲食限制和營養失衡。</p>
+            </div>
+            
+            <p class="mt-8 text-lg font-medium text-gray-700">居家自我測試核心目標，就是驗證檢測結果（致敏）是否會導致實際症狀（臨床過敏）。</p>
+        </section>
+
+        <!-- 第二部 -->
+        <section id="part2" class="mb-16 section-card bg-white rounded-3xl p-8 shadow">
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center gap-3">
+                <span class="w-10 h-10 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold">2</span>
+                居家偵探工作——建立高解析度症狀日記
+            </h2>
+            
+            <p class="text-lg mb-6">精確症狀日記是找出真正過敏原的「黃金標準」。模糊回憶毫無價值，務必記錄詳細細節：</p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full border border-gray-200 rounded-2xl overflow-hidden">
+                    <thead>
+                        <tr class="bg-emerald-50">
+                            <th class="text-left border-b border-gray-200">記錄維度</th>
+                            <th class="text-left border-b border-gray-200">記錄細節要求 (越精確越好)</th>
+                            <th class="text-left border-b border-gray-200">臨床應用重點</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="font-medium">時間戳記</td>
+                            <td>攝入食物或接觸過敏原的精確時間（到分鐘）。</td>
+                            <td>速發型（數分鐘至 2 小時內，多為 IgE）或遲發型（數小時至數天）。</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="font-medium">完整成分</td>
+                            <td>詳列所有食材、調味料、醬汁，並保留包裝成分表照片。</td>
+                            <td>許多過敏原藏在複合調料中（如醬油、咖哩）。</td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">食物加工狀態</td>
+                            <td>生食、熟食（水煮、油炸、烘焙）等烹調方式。</td>
+                            <td>加熱會破壞某些過敏原蛋白（如口腔過敏症候群），熟食可能安全。</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="font-medium">輔助因子</td>
+                            <td>進食前後 2-4 小時內，是否有運動、壓力、酒精、服用止痛藥。</td>
+                            <td>這些因素可能降低過敏閾值，讓原本耐受的食物誘發反應。</td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">症狀描述</td>
+                            <td>部位（如皮膚）、性質（癢、腫、痛）、嚴重度（1-10 分）。</td>
+                            <td>特別注意呼吸道、循環系統的危險信號。</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="font-medium">環境背景</td>
+                            <td>地點（家中、戶外）、天氣（濕度、花粉季）。</td>
+                            <td>排除環境過敏原（塵蟎、花粉）的干擾。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-8 bg-sky-50 border border-sky-200 rounded-2xl p-6">
+                <p class="font-semibold text-sky-800 mb-3">📸 實用建議：</p>
+                <ul class="space-y-2 text-sky-700">
+                    <li class="flex gap-3"><i class="fa-solid fa-check mt-1 text-sm"></i>發生症狀時<strong>立即記錄</strong>，非事後回憶。</li>
+                    <li class="flex gap-3"><i class="fa-solid fa-check mt-1 text-sm"></i>拍攝食物照片和症狀發作時的照片。</li>
+                    <li class="flex gap-3"><i class="fa-solid fa-check mt-1 text-sm"></i>提供給醫師最佳證據。</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 第三部 -->
+        <section id="part3" class="mb-16 section-card bg-white rounded-3xl p-8 shadow">
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center gap-3">
+                <span class="w-10 h-10 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold">3</span>
+                飲食排除與激發測試策略
+            </h2>
+            
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4 text-gray-700">1. 常見排除飲食法 (Elimination Diets)</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6">
+                        <h4 class="font-bold text-lg mb-2">六項食物排除法 (SFED)</h4>
+                        <p class="text-gray-600">適用嚴重或長期慢性過敏。需嚴格排除牛奶、雞蛋、小麥、大豆、堅果、海鮮，持續 4-6 週直到症狀穩定。</p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6">
+                        <h4 class="font-bold text-lg mb-2">低 FODMAP 飲食</h4>
+                        <p class="text-gray-600">用於區分「食物過敏」與「大腸激躁症 (IBS)」。若症狀改善，則問題可能出在腸道發酵而非免疫過敏。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-semibold mb-4 text-gray-700">2. 重新引入（激發）測試流程 <span class="text-red-600 text-base font-normal">(醫師許可才可進行)</span></h3>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full border border-gray-200 rounded-2xl overflow-hidden">
+                        <thead>
+                            <tr class="bg-orange-50">
+                                <th class="text-left border-b border-gray-200">階段</th>
+                                <th class="text-left border-b border-gray-200">原則與步驟</th>
+                                <th class="text-left border-b border-gray-200">關鍵安全點</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="font-medium">原則</td>
+                                <td>一次只測一種食物，否則無法判斷兇手。</td>
+                                <td>必須確認測試前一週無發燒、感冒、氣喘發作。</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="font-medium">藥物停用</td>
+                                <td>測試前停用抗組織胺至少 3-5 天。</td>
+                                <td>必須備妥未過期的腎上腺素注射筆和速效抗組織胺。</td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium">階梯測試法</td>
+                                <td>
+                                    Day 1-3（試探）：極少量<br>
+                                    Day 4-6（加量）：增加至常規份量一半<br>
+                                    Day 7（全量）：攝入正常份量
+                                </td>
+                                <td>測試期間須有<strong>專業醫護人員</strong>在場觀察，切勿獨自進行。</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="font-medium">洗牌期</td>
+                                <td>測試完一種食物後，需等待 3-7 天症狀完全消失。</td>
+                                <td><strong>絕對禁止</strong>對曾發生過敏性休克的食物進行居家激發。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第四部 -->
+        <section id="part4" class="section-card bg-white rounded-3xl p-8 shadow">
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center gap-3">
+                <span class="w-10 h-10 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold">4</span>
+                台灣常見過敏原與緊急應變
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-10">
+                <!-- 台灣特有環境因子 -->
+                <div>
+                    <h3 class="text-2xl font-semibold mb-5 flex items-center gap-2">
+                        <i class="fa-solid fa-tree text-emerald-600"></i>
+                        台灣特有環境因子（Exposome）
+                    </h3>
+                    
+                    <div class="space-y-8">
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">塵蟎 <span class="text-sm font-normal text-emerald-600">(頭號元兇)</span></h4>
+                            <p class="text-gray-600">優勢種為屋塵蟎。數量高峰在8-11月，但症狀常在春秋季惡化。</p>
+                            <div class="mt-3 bg-emerald-50 rounded-2xl p-5 text-sm">
+                                <p class="font-medium mb-2">居家對策：</p>
+                                <ul class="space-y-1 text-emerald-700">
+                                    <li>• 使用高效除濕機，將室內濕度恆定控制在 <strong>50-55%</strong>（最關鍵）</li>
+                                    <li>• 寢具每 1-2 週以 55°C 以上熱水清洗</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">黴菌</h4>
+                            <p class="text-gray-600">僅次於塵蟎的第二大過敏原。隱匿點多在浴室、冷氣濾網、壁癌處。</p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">口腔過敏症候群 (PFAS/OAS)</h4>
+                            <p class="text-gray-600">對花粉過敏者，吃某些生水果、蔬菜（如蘋果、香蕉、西瓜）可能導致口腔發癢、嘴唇紅腫。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 嚴重過敏反應 -->
+                <div>
+                    <h3 class="text-2xl font-semibold mb-5 text-red-700 flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        識別嚴重過敏反應（Anaphylaxis）
+                    </h3>
+                    <div class="bg-red-50 border border-red-200 rounded-3xl p-7">
+                        <p class="font-medium mb-4">過敏性休克不一定有皮膚症狀。若出現以下「紅燈」徵兆，請立即就醫：</p>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3">
+                                <span class="text-red-600 font-bold">呼吸系統：</span>
+                                <span class="text-red-700">持續咳嗽、聲音沙啞、喘鳴、呼吸困難</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-red-600 font-bold">循環系統：</span>
+                                <span class="text-red-700">頭暈、臉色蒼白、脈搏微弱、意識模糊</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-red-600 font-bold">消化系統：</span>
+                                <span class="text-red-700">噴射狀或重複性嘔吐</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-red-600 font-bold">全身性：</span>
+                                <span class="text-red-700">症狀涉及兩個以上系統</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 緊急處置流程 -->
+            <div class="mt-12 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-3xl p-8">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-ambulance"></i>
+                    緊急處置流程
+                </h3>
+                <ol class="space-y-6 text-lg">
+                    <li class="flex gap-5">
+                        <span class="w-8 h-8 bg-white text-red-600 font-bold rounded-2xl flex items-center justify-center flex-shrink-0">1</span>
+                        <div>
+                            <strong>注射腎上腺素 (Give Epinephrine FIRST)</strong><br>
+                            <span class="opacity-90">唯一救命藥物。抗組織胺只能緩解皮膚癢。</span>
+                        </div>
+                    </li>
+                    <li class="flex gap-5">
+                        <span class="w-8 h-8 bg-white text-red-600 font-bold rounded-2xl flex items-center justify-center flex-shrink-0">2</span>
+                        <div>
+                            <strong>姿勢管理</strong><br>
+                            <span class="opacity-90">平躺，抬高下肢維持腦部血流。若有嘔吐則採側臥。禁止站立或行走。</span>
+                        </div>
+                    </li>
+                    <li class="flex gap-5">
+                        <span class="w-8 h-8 bg-white text-red-600 font-bold rounded-2xl flex items-center justify-center flex-shrink-0">3</span>
+                        <div>
+                            <strong>呼叫救護車，立即就醫</strong><br>
+                            <span class="opacity-90">告知疑似過敏性休克，並持續監測病患。即使症狀緩解，仍需就醫觀察至少 6 小時。</span>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-20 text-center text-gray-500 text-sm py-10 border-t">
+            <p>此指南僅供參考，<strong>所有排除飲食與激發測試必須在醫師指導下進行</strong>。</p>
+            <p class="mt-2">如有嚴重過敏史，請盡速就醫並準備腎上腺素注射筆。</p>
+            <p class="mt-6 text-xs">© 2026 過敏原居家偵測指南</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tailwind script already loaded via CDN
+        // Smooth scrolling for nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

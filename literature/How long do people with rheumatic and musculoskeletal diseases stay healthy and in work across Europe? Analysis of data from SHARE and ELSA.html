@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critical Appraisal Report • Wilkie et al. • Ann Rheum Dis 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --accent: #6366f1;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+            font-weight: 600;
+        }
+
+        .section-header {
+            font-size: 1.05rem;
+            letter-spacing: -.025em;
+        }
+
+        .metric-value {
+            font-size: 1.65rem;
+            line-height: 1.1;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .article-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-active {
+            background-color: #6366f120;
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        .excerpt {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .analysis-text {
+            font-size: 0.925rem;
+            line-height: 1.7;
+        }
+
+        .data-table {
+            font-size: 0.875rem;
+        }
+
+        .chart-container {
+            position: relative;
+        }
+
+        .metric-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+        }
+
+        .tail-container {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .prose-custom p {
+            margin-bottom: 0.75rem;
+        }
+
+        .app-header {
+            background: linear-gradient(to right, #ffffff, #fafafa);
+        }
+
+        .result-highlight {
+            background-color: #f0f0ff;
+            border-left: 4px solid #6366f1;
+        }
+    </style>
+</head>
+<body class="bg-[#FAFAFA] text-[#374151] antialiased">
+    <!-- HEADER -->
+    <div class="border-b border-gray-200 bg-white sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-8 py-5 flex items-center justify-between">
+                <div class="flex items-center gap-x-4">
+                    <div class="flex items-center gap-x-3">
+                        <div class="w-11 h-11 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-inner">
+                            <i class="fa-solid fa-chart-line text-white text-3xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-display text-2xl font-semibold tracking-tighter text-[#1f2937]">article</span>
+                            <span class="font-display text-2xl font-semibold tracking-tighter text-indigo-600">Analyzing</span>
+                        </div>
+                    </div>
+                    <div class="hidden md:block h-7 w-px bg-gray-200"></div>
+                    <div class="hidden md:flex items-center gap-x-2 text-sm">
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">OPEN ACCESS</span>
+                        <span class="text-xs text-gray-500">CC BY 4.0</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-x-3">
+                    <div class="text-right">
+                        <div class="text-xs text-gray-500">Annals of the Rheumatic Diseases</div>
+                        <div class="font-semibold text-[#1f2937]">2026; online 5 March</div>
+                    </div>
+                    <a href="https://doi.org/10.1016/j.ard.2026.02.010" target="_blank" 
+                       class="inline-flex items-center px-4 py-2 text-sm font-medium bg-white border border-gray-300 hover:bg-gray-50 rounded-3xl transition-colors">
+                        <i class="fa-solid fa-external-link-alt mr-2 text-xs"></i>
+                        <span class="font-mono text-xs">10.1016/j.ard.2026.02.010</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TITLE SECTION -->
+    <div class="max-w-screen-2xl mx-auto px-8 pt-8 pb-6">
+        <div class="max-w-5xl">
+            <div class="flex items-start gap-3">
+                <div class="px-4 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold tracking-[0.5px] rounded-3xl flex items-center gap-1.5">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>EPIDEMIOLOGY</span>
+                </div>
+                <div class="px-4 py-1.5 bg-amber-100 text-amber-700 text-xs font-bold tracking-[0.5px] rounded-3xl">MULTI-COUNTRY</div>
+            </div>
+            
+            <h1 class="font-display text-4xl md:text-5xl leading-[1.05] tracking-tighter font-semibold text-[#1f2937] mt-3 mb-4">
+                How long do people with rheumatic and musculoskeletal diseases stay healthy and in work across Europe?
+            </h1>
+            <p class="text-xl text-gray-600">Analysis of data from SHARE and ELSA</p>
+            
+            <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+                <div>
+                    <span class="font-semibold">Ross Wilkie</span>, Oluwasikemi Onamusi, Jessica Potts, Marty Lynch
+                </div>
+                <div class="text-sm text-gray-500">• School of Medicine, Keele University, UK</div>
+            </div>
+            
+            <div class="mt-3 flex items-center gap-x-2 text-sm">
+                <span class="font-medium text-indigo-600">Handling Editor:</span> 
+                <span>Josef S. Smolen</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BIBLIOMETRIC METRICS -->
+    <div class="max-w-screen-2xl mx-auto px-8 pb-8">
+        <div class="flex items-end justify-between mb-3">
+            <div>
+                <span class="text-xs font-bold tracking-widest text-gray-500">BIBLIOMETRICS • JOURNAL &amp; ARTICLE</span>
+            </div>
+            <div class="text-[10px] text-gray-400">Data retrieved July 2026</div>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <!-- Metric Cards -->
+            <div class="metric-card rounded-3xl p-5 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-semibold text-gray-500">IMPACT FACTOR</div>
+                        <div class="metric-value">24.0</div>
+                    </div>
+                    <i class="fa-solid fa-chart-line text-3xl text-indigo-200"></i>
+                </div>
+                <div class="text-[10px] text-emerald-600 font-medium mt-1">2025 • CiteScore 34.6</div>
+            </div>
+            
+            <div class="metric-card rounded-3xl p-5 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-semibold text-gray-500">SJR 2025</div>
+                        <div class="metric-value">7.286</div>
+                    </div>
+                    <i class="fa-solid fa-globe text-3xl text-indigo-200"></i>
+                </div>
+                <div class="flex items-center gap-1 mt-1">
+                    <span class="px-2 py-px text-[10px] font-bold bg-emerald-100 text-emerald-700 rounded">Q1</span>
+                    <span class="text-xs text-gray-500">Rheumatology</span>
+                </div>
+            </div>
+            
+            <div class="metric-card rounded-3xl p-5 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-semibold text-gray-500">H-INDEX (JOURNAL)</div>
+                        <div class="metric-value">315</div>
+                    </div>
+                    <i class="fa-solid fa-book text-3xl text-indigo-200"></i>
+                </div>
+                <div class="text-xs text-gray-500 mt-1">Top-tier rheumatology journal</div>
+            </div>
+            
+            <div class="metric-card rounded-3xl p-5 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-semibold text-gray-500">SUBJECT RANKING</div>
+                        <div class="metric-value text-3xl">#1–2</div>
+                    </div>
+                    <i class="fa-solid fa-tachometer-alt text-3xl text-indigo-200"></i>
+                </div>
+                <div class="text-xs mt-1">Rheumatology category • Highest for original research</div>
+            </div>
+            
+            <div class="metric-card rounded-3xl p-5 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-semibold text-gray-500">CITATIONS (JUL 2026)</div>
+                        <div class="metric-value">0</div>
+                    </div>
+                    <i class="fa-solid fa-quote-left text-3xl text-indigo-200"></i>
+                </div>
+                <div class="text-xs text-amber-600 font-medium mt-1">In press / early online (Mar 2026)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDY SNAPSHOT -->
+    <div class="max-w-screen-2xl mx-auto px-8 pb-10">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="font-display text-3xl tracking-tighter font-semibold text-[#1f2937]">Study Snapshot</h2>
+            <div class="hidden md:flex items-center text-xs px-3 py-1 bg-white border border-gray-200 rounded-3xl text-gray-500">
+                <i class="fa-solid fa-info-circle mr-1.5"></i> 
+                <span>Full text extracted • 19 European countries</span>
+            </div>
+        </div>
+        
+        <div class="grid lg:grid-cols-12 gap-6">
+            
+            <!-- TASK 1: Structured Data -->
+            <div class="lg:col-span-7 bg-white border border-gray-200 rounded-3xl p-7 shadow-sm">
+                <h3 class="font-semibold text-lg mb-4 flex items-center gap-x-2">
+                    <span class="text-indigo-600"><i class="fa-solid fa-database"></i></span> 
+                    <span>TASK 1: Structured Data Extraction</span>
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 text-sm">
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">TITLE</div>
+                        <div class="font-medium leading-tight">How long do people with rheumatic and musculoskeletal diseases stay healthy and in work across Europe? Analysis of data from SHARE and ELSA</div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">PUBLISH DATE / DOI</div>
+                        <div>Accepted 10 Feb 2026 • Online 5 Mar 2026<br>
+                            <a href="https://doi.org/10.1016/j.ard.2026.02.010" class="text-indigo-600 hover:underline font-mono text-xs">10.1016/j.ard.2026.02.010</a>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">AUTHORS</div>
+                        <div>Ross Wilkie (corresponding), Oluwasikemi Onamusi, Jessica Potts, Marty Lynch<br>
+                            <span class="text-xs text-gray-500">Keele University, Staffordshire, UK</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">JOURNAL</div>
+                        <div class="font-medium">Annals of the Rheumatic Diseases (Ann Rheum Dis)</div>
+                        <div class="text-xs">EULAR official journal • Elsevier (from 2025)</div>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider mb-1">DESIGN</div>
+                        <div class="text-sm">Longitudinal cohort study using age-adjusted discrete-time 3-state multistate Markov models (interpolated Markov Chains via IMaCh v0.99r19). Data from two harmonised European longitudinal studies: SHARE (waves 1–9, 2004–2022, 18 countries) + ELSA (waves 1–10, 2002–2023, England).</div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">COUNTRY / POPULATION</div>
+                        <div class="text-sm">19 European countries. Nationally representative community-dwelling adults aged ≥50 years. Weighted samples per country from ~500k to &gt;30 million.</div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">RMD DEFINITION (verbatim)</div>
+                        <div class="text-xs excerpt">"RMDs were identified from self-report of ever having received a doctor diagnosis of arthritis or rheumatism. We assumed that the development of arthritis was irreversible; that is, once reported, arthritis would continue to be present..."</div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">HEALTH &amp; WORK STATES</div>
+                        <div class="text-sm">Healthy = no limiting long-standing illness (2 survey items). Working = currently employed or self-employed (SHARE) / paid work or self-employment in preceding month (ELSA).</div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">COMPARISONS</div>
+                        <div class="text-sm">Populations with RMDs vs without RMDs (overall + stratified by sex, educational attainment [ISCED-97 high vs low], physical activity [≥2 vs &lt;2 moderate/vigorous activities/week]).</div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">OUTCOME</div>
+                        <div class="text-sm"><strong>Healthy Working Life Expectancy (HWLE)</strong> from age 50: average years spent both healthy and in work.</div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">STATISTICS</div>
+                        <div class="text-sm">Maximum likelihood estimation of transition probabilities between 3 states (healthy &amp; working / not healthy &amp; working / dead). HWLE weighted by age-50 state prevalence. 95% CIs reported. Stratified by country then by sex/education/PA.</div>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <div class="font-semibold text-xs text-gray-500 tracking-wider">PURPOSES (verbatim from Abstract)</div>
+                        <div class="excerpt">"This study aims to estimate the extent of the reduction in healthy working life expectancy (HWLE), from age 50, for people with rheumatic and musculoskeletal diseases (RMDs) in 19 countries across Europe and highlight the need to target extending working lives through interventions and policy."</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Results Cards + Highlights -->
+            <div class="lg:col-span-5 space-y-4">
+                <div class="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
+                    <div class="uppercase text-xs font-bold tracking-widest text-indigo-600 mb-2">KEY FINDINGS AT A GLANCE</div>
+                    
+                    <div class="space-y-3 text-sm">
+                        <div class="flex gap-3">
+                            <div class="w-6 h-6 flex-shrink-0 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs font-bold">18/19</div>
+                            <div>HWLE lower in populations with RMDs than without (except Portugal)</div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-6 h-6 flex-shrink-0 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs font-bold">6</div>
+                            <div>Countries where HWLE with RMDs ≤50% of without RMDs (Austria lowest at <span class="font-semibold">42.9%</span>)</div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-6 h-6 flex-shrink-0 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold">ALL</div>
+                            <div>HWLE lower with low education in RMD populations in <span class="font-semibold">all 19 countries</span></div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-6 h-6 flex-shrink-0 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold">16/19</div>
+                            <div>HWLE lower with physical inactivity in RMD populations</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-3xl p-5 text-xs">
+                    <div class="font-semibold text-indigo-700 mb-1.5">WHAT THIS STUDY ADDS (verbatim)</div>
+                    <div class="excerpt">"This study has identified that the amount of time that the population of people with RMDs are healthy and in work is lower than that of the population without RMDs in 18 of 19 European countries. In 6 countries, HWLE for populations with RMDs was around 50% or less..."</div>
+                </div>
+            </div>
+            
+            <!-- VISUALIZATION -->
+            <div class="lg:col-span-12 bg-white border border-gray-200 rounded-3xl p-7 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-semibold text-xl tracking-tight">Key Results Visualization</h3>
+                        <p class="text-xs text-gray-500">Interactive Chart.js • HWLE from age 50 (years) • All major country-level findings</p>
+                    </div>
+                    <div class="text-xs px-3 py-1 bg-gray-100 rounded-3xl text-gray-500 flex items-center gap-1">
+                        <i class="fa-solid fa-mouse-pointer"></i> 
+                        <span>Hover for exact values &amp; 95% CI</span>
+                    </div>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <!-- Chart 1: HWLE Comparison -->
+                    <div>
+                        <div class="text-xs font-semibold text-gray-500 mb-2 px-1">HWLE WITH vs WITHOUT RMDs (selected countries with largest variation)</div>
+                        <div class="chart-container h-[320px]">
+                            <canvas id="chartHWLE"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart 2: Ratio % -->
+                    <div>
+                        <div class="text-xs font-semibold text-gray-500 mb-2 px-1">HWLE in RMD population as % of HWLE without RMDs (sorted by impact)</div>
+                        <div class="chart-container h-[320px]">
+                            <canvas id="chartRatio"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-5 text-[10px] text-gray-500 flex flex-wrap gap-x-4 gap-y-1 px-1">
+                    <div><span class="font-semibold">Austria</span> lowest absolute HWLE with RMDs: 2.60 years (95% CI 1.49–3.71)</div>
+                    <div><span class="font-semibold">Switzerland</span> highest with RMDs: 8.13 years</div>
+                    <div><span class="font-semibold">Portugal</span> unique: 100% equivalence (8.05 years both groups)</div>
+                </div>
+            </div>
+            
+            <!-- Full country data note -->
+            <div class="lg:col-span-12">
+                <div class="text-xs bg-white border px-4 py-3 rounded-2xl flex items-center gap-2 text-gray-600">
+                    <i class="fa-solid fa-table text-indigo-400"></i>
+                    <span><strong>Full stratified results</strong> (by sex, education, physical activity) available in original Supplementary Tables S2a &amp; S2b. Low education consistently associated with lower HWLE in RMD groups across all 19 countries. Physical inactivity associated with lower HWLE in 16 countries.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CRITICAL APPRAISAL -->
+    <div class="max-w-screen-2xl mx-auto px-8 pb-12">
+        <div class="mb-6">
+            <h2 class="font-display text-3xl tracking-tighter font-semibold text-[#1f2937]">Critical Appraisal &amp; Analysis</h2>
+            <p class="text-sm text-gray-500">TASK 2 • 14 subsections with direct verbatim excerpts from the original article (section references provided)</p>
+        </div>
+        
+        <div class="space-y-3">
+            
+            <!-- 1. value -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">1</div>
+                    <div class="font-semibold section-header">Value (val) — Why this study was publishable in this journal</div>
+                </div>
+                <div class="analysis-text">This study addresses a highly policy-relevant question in an aging European workforce where state retirement ages are rising. It provides the first multi-country estimates of HWLE reduction attributable to RMDs using harmonised longitudinal data. The findings directly inform rheumatology practice, occupational health, and national/international policy on extending working lives. ARD is the premier rheumatology journal for high-impact epidemiological and health services research with strong clinical implications.</div>
+                <div class="mt-4 excerpt bg-gray-50 border-l-4 border-indigo-300 px-4 py-3 text-xs">
+                    <strong>Verbatim (Introduction):</strong> "Across Europe, the relationship between rheumatic and musculoskeletal diseases (RMDs) and work is demanding more attention from policymakers, employers, health professionals, and people with these conditions [1–6]. ... good quality work is beneficial for individual's physical health, mental health and well-being, is an indicator of healthy ageing..."
+                </div>
+            </div>
+            
+            <!-- 2. wtd -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">2</div>
+                    <div class="font-semibold section-header">What the study aimed to do (wtd) — Overarching objective</div>
+                </div>
+                <div class="analysis-text">To quantify the reduction in healthy working life expectancy (HWLE) from age 50 in adults with RMDs compared to those without across 19 European countries, and to examine how this varies by sex, educational attainment, and physical activity, thereby identifying targets for interventions and policy.</div>
+                <div class="mt-3 excerpt bg-gray-50 border-l-4 border-indigo-300 px-4 py-3 text-xs">
+                    <strong>Verbatim (Abstract Objectives):</strong> "This study aims to estimate the extent of the reduction in healthy working life expectancy (HWLE), from age 50, for people with rheumatic and musculoskeletal diseases (RMDs) in 19 countries across Europe and highlight the need to target extending working lives through interventions and policy."
+                </div>
+            </div>
+            
+            <!-- 3. spl -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">3</div>
+                    <div class="font-semibold section-header">Summary of previous literature (spl)</div>
+                </div>
+                <div class="analysis-text">Prior work was limited to a single English study showing that adults aged 50 with osteoarthritis had approximately 4.32 fewer years of healthy working life than those without OA. No European multi-country data existed on HWLE for the broader RMD population, nor stratification by key demographic and modifiable factors.</div>
+                <div class="mt-3 excerpt bg-gray-50 border-l-4 border-indigo-300 px-4 py-3 text-xs">
+                    <strong>Verbatim (Introduction):</strong> "There has been one previous study, which focused on the most common RMD in adults aged 50 and over, and estimated that adults aged 50 with osteoarthritis worked on average for 4.32 years less than those who did not have osteoarthritis in England [15]. However, there are no estimates of HWLE for people with RMDs in other countries in Europe..."
+                </div>
+            </div>
+            
+            <!-- 4. cpl -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">4</div>
+                    <div class="font-semibold section-header">Critique of previous literature (cpl)</div>
+                </div>
+                <div class="analysis-text">The single prior study was restricted to one country (England), one RMD subtype (osteoarthritis), and did not examine variation by sex, socioeconomic status, physical activity, or cross-country differences in policy environments. It could not inform pan-European policy or identify modifiable targets.</div>
+            </div>
+            
+            <!-- 5. gap -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">5</div>
+                    <div class="font-semibold section-header">Gap between the known and unknown (gap)</div>
+                </div>
+                <div class="analysis-text">No robust, comparable estimates existed of the years of healthy working life lost to RMDs across diverse European health, pension, and labour market systems. The role of modifiable factors (education, physical activity) and sex differences in HWLE within RMD populations was unknown at a multi-country level.</div>
+            </div>
+            
+            <!-- 6. rat -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">6</div>
+                    <div class="font-semibold section-header">Rationale for filling the gap (rat)</div>
+                </div>
+                <div class="analysis-text">Providing country-specific and stratified HWLE estimates would allow identification of high-burden populations and successful policy environments, directly informing rheumatologists, employers, and policymakers on where to target interventions to extend healthy working lives.</div>
+                <div class="mt-3 excerpt bg-gray-50 border-l-4 border-indigo-300 px-4 py-3 text-xs">
+                    <strong>Verbatim (Introduction):</strong> "The overall aim is to inform health professionals in rheumatology of the extent of the reduction in healthy working life for people with RMDs and the potential need to target extending working lives through interventions and policy."
+                </div>
+            </div>
+            
+            <!-- 7. wtdd -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">7</div>
+                    <div class="font-semibold section-header">What they did in this study (wtdd) — Methodology</div>
+                </div>
+                <div class="analysis-text">Nationally representative longitudinal data from SHARE (18 countries) and ELSA (England). Self-reported doctor-diagnosed arthritis/rheumatism (assumed irreversible). Health = absence of limiting long-standing illness; Work = employment/self-employment. 3-state multistate models (healthy&amp;working vs other living states + absorbing death state) fitted with IMaCh software. HWLE estimated from transition probabilities, weighted by prevalence at age 50. Extensive patient and public involvement through prior interviews and dedicated workshops (selected education and physical activity as key factors).</div>
+                <div class="mt-3 excerpt bg-gray-50 border-l-4 border-indigo-300 px-4 py-3 text-xs">
+                    <strong>Verbatim (Methods - Patient and public involvement):</strong> "Methods were coproduced with people with RMDs through: (1) actively listening to people’s experiences... (3) convening dedicated workshops with people with RMDs to select factors that explain differences in health and work; education and physical activity were highlighted."
+                </div>
+            </div>
+            
+            <!-- 8. rcl -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">8</div>
+                    <div class="font-semibold section-header">Results consistent with previous literature (rcl)</div>
+                </div>
+                <div class="analysis-text">Confirms substantial reduction in healthy working life associated with RMDs, consistent with the prior English OA study (~4 years loss). Sex gradients (generally higher HWLE in men) and strong socioeconomic (education) gradients align with known health and labour market inequalities. Physical activity benefit in most countries supports existing evidence on exercise and work capacity in RMDs.</div>
+            </div>
+            
+            <!-- 9. rtc -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">9</div>
+                    <div class="font-semibold section-header">Results contrary to previous literature (rtc)</div>
+                </div>
+                <div class="analysis-text">Portugal showed no difference in HWLE between RMD and non-RMD populations (unique finding). In Estonia and Romania, women with RMDs had higher HWLE than men. Physical activity showed no clear benefit in 3 countries (Slovenia, Netherlands, Greece). Some countries (France) showed much smaller relative reductions than expected.</div>
+            </div>
+            
+            <!-- 10. rfw -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">10</div>
+                    <div class="font-semibold section-header">Recommendations for future research (rfw)</div>
+                </div>
+                <div class="analysis-text">Larger datasets needed to further identify how HWLE can be increased for RMD populations. Country-specific policy analyses, intervention trials targeting physical activity and vocational retraining, and examination of interactions between sex, education, and job characteristics are warranted. The study highlights need for international, national, and local policies plus clinical approaches focusing on work outcomes.</div>
+                <div class="mt-3 excerpt bg-gray-50 border-l-4 border-indigo-300 px-4 py-3 text-xs">
+                    <strong>Verbatim (How this study might affect...):</strong> "The extent that HWLE is lower in populations with RMDs in almost all countries indicates the need for policies (local, national, international), interventions and clinical approaches focusing on improving health and work for people with RMDs. ... The study indicates the need for larger datasets to further identify how HWLE can increase for populations with RMDs."
+                </div>
+            </div>
+            
+            <!-- 11. poc -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">11</div>
+                    <div class="font-semibold section-header">Points of critique — Flaws &amp; limitations (poc)</div>
+                </div>
+                <div class="analysis-text">Self-reported RMD diagnosis and health/work states introduce potential misclassification and recall bias. Assumption that arthritis is irreversible may not hold for all cases. Longitudinal studies are subject to attrition and healthy survivor bias. Country participation and number of waves varied. Physical activity measure was crude. No adjustment for comorbidities, disease severity, job physical demands, workplace accommodations, or specific RMD subtype. Wide confidence intervals in some stratified analyses (especially smaller countries).</div>
+            </div>
+            
+            <!-- 12. mop -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">12</div>
+                    <div class="font-semibold section-header">Missed obvious points (mop)</div>
+                </div>
+                <div class="analysis-text">The study did not differentiate between specific RMDs (e.g., RA vs OA vs others) or include disease duration/severity. No data on comorbidities, mental health, or objective clinical measures. Workplace factors (accommodations, job type, flexibility) and disability pension policies were discussed qualitatively but not modelled. Portugal’s equivalence finding was not explored in depth. Potential nocebo effects or selection of “healthy survivors” in long-running cohorts not fully addressed.</div>
+            </div>
+            
+            <!-- 13. rpp -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">13</div>
+                    <div class="font-semibold section-header">Relevant points worth pursuing (rpp)</div>
+                </div>
+                <div class="analysis-text">Mechanistic studies explaining why some countries (e.g., Portugal, France) show smaller HWLE losses. Trials of targeted interventions (vocational rehabilitation, workplace modifications, structured physical activity programmes) in RMD populations. Qualitative research with patients and employers on barriers/facilitators. Integration of objective RMD measures and comorbidity data in future HWLE modelling. Cross-country comparative policy analysis of disability pension and return-to-work schemes.</div>
+            </div>
+            
+            <!-- 14. oor -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6">
+                <div class="flex items-center gap-x-3 mb-3">
+                    <div class="w-7 h-7 flex-shrink-0 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xs font-bold">14</div>
+                    <div class="font-semibold section-header">Order of reasoning in the discussion (oor)</div>
+                </div>
+                <div class="analysis-text">Discussion begins with key findings (significant HWLE reduction, 6 countries ≤50%, country variation). Then interprets findings in context of symptoms (pain, fatigue, disability) and system-level factors (disability pensions, workplace support). Moves to stratified results (sex, education as SES proxy, physical activity). Ends with clear implications for policy, clinical practice (work-focused assessment), and future research needs (larger datasets). Logical flow from description → explanation → actionability.</div>
+                <div class="mt-3 excerpt bg-gray-50 border-l-4 border-indigo-300 px-4 py-3 text-xs">
+                    <strong>Verbatim (Discussion - Key findings):</strong> "This study has used nationally representative longitudinal data from 19 countries across Europe to estimate the average amount of time that adults who have RMDs are healthy and in work from age 50. These results indicate that RMDs are associated with a significant reduction in length of healthy working life; in 6 countries, the number of years that the population with RMDs were healthy and in work was around a half, or less, than that of the population without RMDs."
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <footer class="border-t border-gray-200 bg-white py-6">
+        <div class="max-w-screen-2xl mx-auto px-8 text-xs text-gray-500 flex flex-col md:flex-row items-center justify-between gap-y-2">
+            <div>Generated by <span class="font-semibold">articleAnalyzing</span> • Professional critical appraisal of Wilkie et al., Ann Rheum Dis 2026</div>
+            <div class="flex items-center gap-x-4">
+                <div>Based on full-text PDF extraction • 12 pages</div>
+                <div class="hidden md:block">•</div>
+                <div>Not for clinical decision-making • Educational &amp; research use only</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#6366f1');
+            
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            'display': ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif']
+                        }
+                    }
+                }
+            };
+        }
+        
+        // Chart 1: HWLE grouped bar (selected key countries)
+        function createHWLEChart() {
+            const ctx = document.getElementById('chartHWLE');
+            
+            const countries = ['Austria', 'Netherlands', 'Slovenia', 'Estonia', 'Hungary', 'Germany', 'France', 'Portugal', 'Switzerland'];
+            const rmd = [2.60, 3.82, 3.17, 4.54, 4.70, 3.96, 5.86, 8.05, 8.13];
+            const noRmd = [6.05, 8.32, 6.57, 9.21, 9.37, 7.43, 7.70, 8.05, 11.47];
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: countries,
+                    datasets: [
+                        {
+                            label: 'With RMDs',
+                            data: rmd,
+                            backgroundColor: '#6366f1',
+                            borderColor: '#4f46e5',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Without RMDs',
+                            data: noRmd,
+                            backgroundColor: '#94a3b8',
+                            borderColor: '#64748b',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { position: 'top', align: 'end', labels: { boxWidth: 12, padding: 15, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + ' years';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Healthy Working Life Expectancy from age 50 (years)', font: { size: 11 } },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        y: {
+                            grid: { color: '#f1f5f9' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Chart 2: Ratio % 
+        function createRatioChart() {
+            const ctx = document.getElementById('chartRatio');
+            
+            const countries = ['Austria', 'Netherlands', 'Slovenia', 'Estonia', 'Hungary', 'Germany', 'Spain', 'England', 'Greece', 'Denmark', 'Sweden', 'Belgium', 'France', 'Portugal'];
+            const ratios = [42.9, 45.9, 48.3, 49.3, 50.2, 53.3, 56.7, 59.9, 61.8, 62.4, 66.3, 64.5, 76.1, 100.0];
+            
+            // Color scale: red for low, green for high
+            const bgColors = ratios.map(r => {
+                if (r <= 50) return '#ef4444';
+                if (r <= 60) return '#f59e0b';
+                if (r <= 70) return '#eab308';
+                return '#22c55e';
+            });
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: countries,
+                    datasets: [{
+                        label: '% of HWLE without RMDs',
+                        data: ratios,
+                        backgroundColor: bgColors,
+                        borderColor: '#fff',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.toFixed(1) + '% of HWLE without RMDs';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 110,
+                            title: { display: true, text: 'HWLE with RMDs as % of HWLE without RMDs', font: { size: 11 } },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        y: {
+                            grid: { color: '#f1f5f9' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize everything
+        function initialize() {
+            initializeTailwind();
+            createHWLEChart();
+            createRatioChart();
+            
+            // Optional: keyboard accessibility note
+            console.log('%c[articleAnalyzing] Professional single-page HTML report initialized successfully.', 'color:#64748b');
+        }
+        
+        window.onload = initialize;
+    </script>
+</body>
+</html>

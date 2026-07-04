@@ -10,49 +10,63 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Inter:wght@400;500;600&amp;display=swap');
     body { font-family: 'Noto Sans TC', 'Inter', system-ui, sans-serif; }
     .nav-active { color: #0f766e; font-weight: 600; }
-    .dataview-table { border-collapse: collapse; table-layout: fixed; width: 100%; min-width: 640px; }
-    .dataview-table th {
+    .dataview-table-wrap { overflow-x: auto; width: 100%; }
+    .dataview-table {
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .dataview-table thead th {
       position: relative;
       font-weight: 500;
       color: #64748b;
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      overflow: hidden;
+      overflow: visible;
       white-space: nowrap;
-      text-overflow: ellipsis;
+      box-sizing: border-box;
     }
-    .dataview-table td { overflow: hidden; vertical-align: top; }
+    .dataview-table tbody td {
+      overflow: hidden;
+      vertical-align: top;
+      box-sizing: border-box;
+    }
     .dataview-table .col-title { word-break: break-word; white-space: normal; }
     .dataview-table .col-tags { white-space: normal; }
+    .th-label {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-right: 10px;
+    }
     .col-resize-handle {
       position: absolute;
       top: 0;
-      right: 0;
-      width: 8px;
+      right: -5px;
+      width: 10px;
       height: 100%;
       cursor: col-resize;
       user-select: none;
       touch-action: none;
-      z-index: 1;
+      z-index: 2;
     }
-    .col-resize-handle::after {
+    .col-resize-handle::before {
       content: '';
       position: absolute;
-      top: 20%;
-      bottom: 20%;
-      left: 3px;
-      width: 1px;
-      background: #e4e4e7;
-      transition: background 0.15s ease;
-    }
-    .col-resize-handle:hover::after,
-    .col-resize-handle.active::after {
-      background: #14b8a6;
+      top: 0;
+      bottom: 0;
+      left: 4px;
       width: 2px;
-      left: 2px;
+      background: transparent;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
     }
-    body.col-resizing { cursor: col-resize; user-select: none; }
+    .col-resize-handle:hover::before,
+    .col-resize-handle.active::before {
+      background: #14b8a6;
+      box-shadow: 0 0 0 1px #99f6e4;
+    }
+    body.col-resizing { cursor: col-resize !important; user-select: none; }
+    body.col-resizing * { cursor: col-resize !important; }
     .dataview-row { transition: background 0.1s ease; }
     .dataview-row:hover { background: #f8fafc; }
   </style>
@@ -91,7 +105,7 @@
 
     <!-- Dataview-style Table -->
     <div class="bg-white border border-zinc-200 rounded-3xl overflow-hidden">
-      <div class="overflow-x-auto">
+      <div id="literature-table-wrap" class="dataview-table-wrap">
       <table id="literature-table" class="dataview-table">
         <colgroup>
           <col data-col="title">
@@ -103,23 +117,24 @@
         <thead>
           <tr class="border-b border-zinc-200 bg-zinc-50">
             <th class="text-left px-6 py-4" data-col="title">
-              <span class="pr-2">Title</span>
-              <span class="col-resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize Title column"></span>
+              <span class="th-label">Title</span>
+              <span class="col-resize-handle" data-resize="pair" role="separator" aria-orientation="vertical" aria-label="Resize Title column"></span>
             </th>
             <th class="text-left px-4 py-4" data-col="disease">
-              <span class="pr-2">Disease</span>
-              <span class="col-resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize Disease column"></span>
+              <span class="th-label">Disease</span>
+              <span class="col-resize-handle" data-resize="pair" role="separator" aria-orientation="vertical" aria-label="Resize Disease column"></span>
             </th>
             <th class="text-left px-4 py-4" data-col="intervention">
-              <span class="pr-2">Intervention</span>
-              <span class="col-resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize Intervention column"></span>
+              <span class="th-label">Intervention</span>
+              <span class="col-resize-handle" data-resize="pair" role="separator" aria-orientation="vertical" aria-label="Resize Intervention column"></span>
             </th>
             <th class="text-right px-4 py-4" data-col="case-number">
-              <span class="pr-2">Case Number</span>
-              <span class="col-resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize Case Number column"></span>
+              <span class="th-label">Case Number</span>
+              <span class="col-resize-handle" data-resize="pair" role="separator" aria-orientation="vertical" aria-label="Resize Case Number column"></span>
             </th>
             <th class="text-right px-6 py-4" data-col="action">
-              <span class="pr-2">Action</span>
+              <span class="th-label">Action</span>
+              <span class="col-resize-handle" data-resize="last" role="separator" aria-orientation="vertical" aria-label="Resize Action column"></span>
             </th>
           </tr>
         </thead>
@@ -470,7 +485,8 @@
       return `<span class="font-mono text-sm text-zinc-700 tabular-nums">${escapeHtml(value)}</span>`;
     }
 
-    const COL_STORAGE_KEY = 'literature-dataview-col-widths';
+    const COL_STORAGE_KEY = 'literature-dataview-col-widths-v2';
+    const COL_IDS = ['title', 'disease', 'intervention', 'case-number', 'action'];
     const DEFAULT_COL_WIDTHS = {
       title: 300,
       disease: 180,
@@ -480,61 +496,128 @@
     };
     const MIN_COL_WIDTH = 72;
 
-    function getColElement(table, colId) {
-      return table.querySelector(`colgroup col[data-col="${colId}"]`);
+    function getColElements(table) {
+      return [...table.querySelectorAll('colgroup col')];
     }
 
-    function readColWidth(table, colId) {
-      const col = getColElement(table, colId);
-      if (col?.style.width) return parseInt(col.style.width, 10);
-      const th = table.querySelector(`thead th[data-col="${colId}"]`);
-      return th?.offsetWidth || DEFAULT_COL_WIDTHS[colId] || MIN_COL_WIDTH;
+    function getColumnCells(table, colIndex) {
+      return table.querySelectorAll(`thead th:nth-child(${colIndex + 1}), tbody td:nth-child(${colIndex + 1})`);
     }
 
-    function applyColWidths(table, widths) {
-      Object.entries(widths).forEach(([colId, width]) => {
-        const col = getColElement(table, colId);
-        if (col && width) col.style.width = `${width}px`;
+    function measureColumnWidths(table) {
+      const cols = getColElements(table);
+      return cols.map((col, index) => {
+        const th = table.querySelector(`thead th:nth-child(${index + 1})`);
+        const parsed = parseInt(col.style.width, 10);
+        const width = Number.isFinite(parsed) && parsed > 0
+          ? parsed
+          : (th?.getBoundingClientRect().width || DEFAULT_COL_WIDTHS[col.dataset.col] || MIN_COL_WIDTH);
+        return { id: col.dataset.col, col, index, width: Math.round(width) };
       });
+    }
+
+    function setColumnWidth(table, colIndex, width) {
+      const px = `${Math.max(MIN_COL_WIDTH, Math.round(width))}px`;
+      const col = getColElements(table)[colIndex];
+      if (col) col.style.width = px;
+      getColumnCells(table, colIndex).forEach(cell => {
+        cell.style.width = px;
+        cell.style.maxWidth = px;
+      });
+    }
+
+    function syncTableWidth(table) {
+      const columns = measureColumnWidths(table);
+      let total = columns.reduce((sum, item) => sum + item.width, 0);
+      const wrap = document.getElementById('literature-table-wrap');
+      const containerWidth = wrap?.clientWidth || total;
+
+      if (total < containerWidth && columns.length) {
+        const last = columns[columns.length - 1];
+        const padded = last.width + (containerWidth - total);
+        setColumnWidth(table, last.index, padded);
+        total = containerWidth;
+      }
+
+      table.style.width = `${total}px`;
+      return total;
+    }
+
+    function applyAllColumnWidths(table, widthsById) {
+      COL_IDS.forEach((id, index) => {
+        setColumnWidth(table, index, widthsById[id] || DEFAULT_COL_WIDTHS[id] || MIN_COL_WIDTH);
+      });
+      syncTableWidth(table);
+    }
+
+    function saveColumnWidths(table) {
+      const widths = {};
+      measureColumnWidths(table).forEach(item => { widths[item.id] = item.width; });
+      localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(widths));
+      return widths;
+    }
+
+    function loadColumnWidths(table) {
+      let saved = null;
+      try {
+        saved = JSON.parse(localStorage.getItem(COL_STORAGE_KEY) || 'null');
+      } catch (_) { /* ignore invalid storage */ }
+
+      if (saved && COL_IDS.every(id => Number.isFinite(saved[id]) && saved[id] >= MIN_COL_WIDTH)) {
+        applyAllColumnWidths(table, saved);
+        return;
+      }
+
+      const wrap = document.getElementById('literature-table-wrap');
+      const containerWidth = wrap?.clientWidth || Object.values(DEFAULT_COL_WIDTHS).reduce((a, b) => a + b, 0);
+      const defaultTotal = Object.values(DEFAULT_COL_WIDTHS).reduce((a, b) => a + b, 0);
+      const scale = containerWidth / defaultTotal;
+      const initial = {};
+      COL_IDS.forEach(id => {
+        initial[id] = Math.max(MIN_COL_WIDTH, Math.round(DEFAULT_COL_WIDTHS[id] * scale));
+      });
+      applyAllColumnWidths(table, initial);
     }
 
     function initColumnResize() {
       const table = document.getElementById('literature-table');
-      if (!table) return;
+      if (!table || table.dataset.resizeReady === 'true') return;
+      table.dataset.resizeReady = 'true';
 
-      const cols = [...table.querySelectorAll('colgroup col')];
-      let saved = {};
-      try {
-        saved = JSON.parse(localStorage.getItem(COL_STORAGE_KEY) || '{}');
-      } catch (_) { /* ignore invalid storage */ }
+      loadColumnWidths(table);
 
-      const initialWidths = cols.reduce((acc, col) => {
-        const id = col.dataset.col;
-        acc[id] = saved[id] || DEFAULT_COL_WIDTHS[id] || MIN_COL_WIDTH;
-        return acc;
-      }, {});
-      applyColWidths(table, initialWidths);
-
-      table.querySelectorAll('thead th[data-col] .col-resize-handle').forEach(handle => {
-        handle.addEventListener('mousedown', (e) => {
+      table.querySelectorAll('thead th .col-resize-handle').forEach(handle => {
+        handle.addEventListener('pointerdown', (e) => {
           e.preventDefault();
-          const th = handle.closest('th');
-          const colId = th.dataset.col;
-          const col = getColElement(table, colId);
-          const colIndex = cols.indexOf(col);
-          const nextCol = cols[colIndex + 1];
-          if (!col || !nextCol) return;
+          e.stopPropagation();
+          handle.setPointerCapture(e.pointerId);
 
-          const nextId = nextCol.dataset.col;
+          const th = handle.closest('th');
+          const colIndex = [...table.querySelectorAll('thead th')].indexOf(th);
+          if (colIndex < 0) return;
+
+          const columns = measureColumnWidths(table);
+          const current = columns[colIndex];
+          const next = columns[colIndex + 1];
+          const mode = handle.dataset.resize === 'last' ? 'last' : 'pair';
           const startX = e.clientX;
-          const startW = readColWidth(table, colId);
-          const startNextW = readColWidth(table, nextId);
+          const startW = current.width;
+          const startNextW = next?.width || 0;
 
           document.body.classList.add('col-resizing');
           handle.classList.add('active');
 
           function onMove(ev) {
             const delta = ev.clientX - startX;
+
+            if (mode === 'last') {
+              setColumnWidth(table, colIndex, startW + delta);
+              syncTableWidth(table);
+              return;
+            }
+
+            if (!next) return;
+
             let newW = startW + delta;
             let newNextW = startNextW - delta;
 
@@ -547,25 +630,33 @@
               newNextW = MIN_COL_WIDTH;
             }
 
-            col.style.width = `${newW}px`;
-            nextCol.style.width = `${newNextW}px`;
+            setColumnWidth(table, colIndex, newW);
+            setColumnWidth(table, colIndex + 1, newNextW);
+            syncTableWidth(table);
           }
 
-          function onUp() {
+          function onUp(ev) {
+            if (handle.hasPointerCapture(ev.pointerId)) {
+              handle.releasePointerCapture(ev.pointerId);
+            }
             document.body.classList.remove('col-resizing');
             handle.classList.remove('active');
-            const widths = cols.reduce((acc, c) => {
-              acc[c.dataset.col] = readColWidth(table, c.dataset.col);
-              return acc;
-            }, {});
-            localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(widths));
-            document.removeEventListener('mousemove', onMove);
-            document.removeEventListener('mouseup', onUp);
+            saveColumnWidths(table);
+            handle.removeEventListener('pointermove', onMove);
+            handle.removeEventListener('pointerup', onUp);
+            handle.removeEventListener('pointercancel', onUp);
           }
 
-          document.addEventListener('mousemove', onMove);
-          document.addEventListener('mouseup', onUp);
+          handle.addEventListener('pointermove', onMove);
+          handle.addEventListener('pointerup', onUp);
+          handle.addEventListener('pointercancel', onUp);
         });
+      });
+
+      window.addEventListener('resize', () => {
+        if (!document.body.classList.contains('col-resizing')) {
+          syncTableWidth(table);
+        }
       });
     }
 
@@ -647,8 +738,19 @@
       }
     }
 
-    initColumnResize();
-    loadLiterature();
+    function bootLiteraturePage() {
+      initColumnResize();
+      loadLiterature().then(() => {
+        const table = document.getElementById('literature-table');
+        if (table) syncTableWidth(table);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(bootLiteraturePage));
+    } else {
+      requestAnimationFrame(bootLiteraturePage);
+    }
   </script>
 </body>
 </html>

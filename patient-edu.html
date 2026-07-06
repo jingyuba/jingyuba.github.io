@@ -53,8 +53,7 @@
       <table class="w-full dataview-table">
         <thead>
           <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="text-left px-8 py-4 w-2/3">衛教主題</th>
-            <th class="text-left px-4 py-4">檔案</th>
+            <th class="text-left px-8 py-4">衛教主題</th>
             <th class="text-right px-8 py-4">操作</th>
           </tr>
         </thead>
@@ -102,7 +101,6 @@
           row.className = 'dataview-row';
           row.innerHTML = `
             <td class="px-8 py-4 font-medium">${title}</td>
-            <td class="px-4 py-4 text-xs font-mono text-zinc-500">${file.name}</td>
             <td class="px-8 py-4 text-right">
               <a href="patient-edu/${file.name}" 
                  class="inline-flex items-center gap-x-1.5 text-amber-700 hover:text-amber-800 text-sm font-medium">

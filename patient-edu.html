@@ -50,7 +50,11 @@
 
     <!-- Dataview-style Table -->
     <div class="bg-white border border-zinc-200 rounded-3xl overflow-hidden">
-      <table class="w-full dataview-table">
+      <table id="patient-edu-table" class="w-full dataview-table">
+        <colgroup>
+          <col>
+          <col>
+        </colgroup>
         <thead>
           <tr class="border-b border-zinc-200 bg-zinc-50">
             <th class="text-left px-8 py-4">衛教主題</th>
@@ -77,32 +81,73 @@
   </footer>
 
   <script>
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function showEmptyState(message) {
+      const table = document.getElementById('patient-edu-table');
+      const empty = document.getElementById('empty-state');
+      table.classList.add('hidden');
+      empty.innerHTML = message;
+      empty.classList.remove('hidden');
+    }
+
+    function showTable() {
+      const table = document.getElementById('patient-edu-table');
+      const empty = document.getElementById('empty-state');
+      table.classList.remove('hidden');
+      empty.classList.add('hidden');
+    }
+
     async function loadPatientEdu() {
       const tbody = document.getElementById('file-list');
-      const empty = document.getElementById('empty-state');
+      const defaultEmptyMessage = '目前尚無內容。請將 HTML 檔案上傳至 <code class="font-mono bg-zinc-100 px-1.5 py-px rounded">/patient-edu</code> 資料夾後重新整理。';
       tbody.innerHTML = '';
-      empty.classList.add('hidden');
+      showTable();
 
       try {
-        const res = await fetch('https://api.github.com/repos/jingyuba/jingyuba.github.io/contents/patient-edu');
+        const res = await fetch('https://api.github.com/repos/jingyuba/jingyuba.github.io/contents/patient-edu?ref=main', { cache: 'no-store' });
         if (!res.ok) throw new Error('無法取得資料');
 
         const files = await res.json();
-        const htmlFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.html'));
+        const htmlFiles = files
+          .filter(f => f.type === 'file' && f.name.endsWith('.html'))
+          .sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'));
 
         if (htmlFiles.length === 0) {
-          empty.classList.remove('hidden');
+          showEmptyState(defaultEmptyMessage);
           return;
         }
 
-        htmlFiles.forEach(file => {
-          const title = file.name.replace('.html', '').replace(/-/g, ' ').replace(/_/g, ' ');
+        const rows = await Promise.all(htmlFiles.map(async file => {
+          const fallbackTitle = file.name.replace(/\.html$/i, '').replace(/-/g, ' ').replace(/_/g, ' ');
+          let title = fallbackTitle;
+          try {
+            const contentRes = await fetch(`patient-edu/${encodeURIComponent(file.name)}`, { cache: 'no-store' });
+            if (contentRes.ok) {
+              const html = await contentRes.text();
+              const doc = new DOMParser().parseFromString(html, 'text/html');
+              title = doc.querySelector('title')?.textContent?.trim()
+                || doc.querySelector('h1')?.textContent?.trim()
+                || fallbackTitle;
+            }
+          } catch (_) { /* keep fallback title */ }
+          return { title, fileName: file.name };
+        }));
+
+        tbody.innerHTML = '';
+        rows.forEach(({ title, fileName }) => {
           const row = document.createElement('tr');
           row.className = 'dataview-row';
           row.innerHTML = `
-            <td class="px-8 py-4 font-medium">${title}</td>
+            <td class="px-8 py-4 font-medium">${escapeHtml(title)}</td>
             <td class="px-8 py-4 text-right">
-              <a href="patient-edu/${file.name}" 
+              <a href="patient-edu/${encodeURIComponent(fileName)}" 
                  class="inline-flex items-center gap-x-1.5 text-amber-700 hover:text-amber-800 text-sm font-medium">
                 閱讀 <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
               </a>
@@ -111,8 +156,8 @@
           tbody.appendChild(row);
         });
       } catch (err) {
-        empty.innerHTML = `無法載入列表：${err.message}。請確認網路連線或稍後再試。`;
-        empty.classList.remove('hidden');
+        tbody.innerHTML = '';
+        showEmptyState(`無法載入列表：${escapeHtml(err.message)}。請確認網路連線或稍後再試。`);
       }
     }
 

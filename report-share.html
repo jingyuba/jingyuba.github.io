@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>病患衛教 • 鯨魚爸醫學教育平台</title>
+  <title>報告分享 • 鯨魚爸醫學教育平台</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Inter:wght@400;500;600&amp;display=swap');
     body { font-family: 'Noto Sans TC', 'Inter', system-ui, sans-serif; }
-    .nav-active { color: #b45309; font-weight: 600; }
+    .nav-active { color: #1d4ed8; font-weight: 600; }
     .dataview-table { border-collapse: collapse; }
     .dataview-table th { font-weight: 500; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
     .dataview-row { transition: background 0.1s ease; }
-    .dataview-row:hover { background: #fffbeb; }
+    .dataview-row:hover { background: #eff6ff; }
   </style>
 </head>
 <body class="bg-zinc-50 text-zinc-800">
@@ -22,7 +22,7 @@
     <div class="max-w-5xl mx-auto px-6">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-x-3">
-          <div class="w-9 h-9 bg-amber-700 rounded-xl flex items-center justify-center">
+          <div class="w-9 h-9 bg-blue-700 rounded-xl flex items-center justify-center">
             <span class="text-white text-xl font-semibold tracking-tighter">鯨</span>
           </div>
           <div>
@@ -31,10 +31,10 @@
           </div>
         </div>
         <div class="flex items-center gap-x-8 text-sm">
-          <a href="index.html" class="hover:text-amber-700 transition-colors">首頁</a>
-          <a href="literature.html" class="hover:text-amber-700 transition-colors">文獻解讀</a>
-          <a href="patient-edu.html" class="nav-active">病患衛教</a>
-          <a href="report-share.html" class="hover:text-amber-700 transition-colors">報告分享</a>
+          <a href="index.html" class="hover:text-blue-700 transition-colors">首頁</a>
+          <a href="literature.html" class="hover:text-blue-700 transition-colors">文獻解讀</a>
+          <a href="patient-edu.html" class="hover:text-blue-700 transition-colors">病患衛教</a>
+          <a href="report-share.html" class="nav-active">報告分享</a>
         </div>
       </div>
     </div>
@@ -43,22 +43,22 @@
   <div class="max-w-5xl mx-auto px-6 pt-12 pb-8">
     <div class="flex items-end justify-between mb-6">
       <div>
-        <div class="text-xs uppercase tracking-[2px] text-amber-700 font-medium">CATEGORY</div>
-        <h1 class="text-4xl font-semibold tracking-tight">病患衛教</h1>
+        <div class="text-xs uppercase tracking-[2px] text-blue-700 font-medium">CATEGORY</div>
+        <h1 class="text-4xl font-semibold tracking-tight">報告分享</h1>
       </div>
       <div class="text-sm text-zinc-500">自動同步 GitHub 資料夾內容</div>
     </div>
 
     <!-- Dataview-style Table -->
     <div class="bg-white border border-zinc-200 rounded-3xl overflow-hidden">
-      <table id="patient-edu-table" class="w-full dataview-table">
+      <table id="report-share-table" class="w-full dataview-table">
         <colgroup>
           <col>
           <col>
         </colgroup>
         <thead>
           <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="text-left px-8 py-4">衛教主題</th>
+            <th class="text-left px-8 py-4">報告標題</th>
             <th class="text-right px-8 py-4">操作</th>
           </tr>
         </thead>
@@ -67,7 +67,7 @@
         </tbody>
       </table>
       <div id="empty-state" class="hidden px-8 py-12 text-center text-sm text-zinc-500">
-        目前尚無內容。請將 HTML 檔案上傳至 <code class="font-mono bg-zinc-100 px-1.5 py-px rounded">/patient-edu</code> 資料夾後重新整理。
+        目前尚無內容。請將 HTML 檔案上傳至 <code class="font-mono bg-zinc-100 px-1.5 py-px rounded">/report-share</code> 資料夾後重新整理。
       </div>
     </div>
 
@@ -91,7 +91,7 @@
     }
 
     function showEmptyState(message) {
-      const table = document.getElementById('patient-edu-table');
+      const table = document.getElementById('report-share-table');
       const empty = document.getElementById('empty-state');
       table.classList.add('hidden');
       empty.innerHTML = message;
@@ -99,20 +99,20 @@
     }
 
     function showTable() {
-      const table = document.getElementById('patient-edu-table');
+      const table = document.getElementById('report-share-table');
       const empty = document.getElementById('empty-state');
       table.classList.remove('hidden');
       empty.classList.add('hidden');
     }
 
-    async function loadPatientEdu() {
+    async function loadReportShare() {
       const tbody = document.getElementById('file-list');
-      const defaultEmptyMessage = '目前尚無內容。請將 HTML 檔案上傳至 <code class="font-mono bg-zinc-100 px-1.5 py-px rounded">/patient-edu</code> 資料夾後重新整理。';
+      const defaultEmptyMessage = '目前尚無內容。請將 HTML 檔案上傳至 <code class="font-mono bg-zinc-100 px-1.5 py-px rounded">/report-share</code> 資料夾後重新整理。';
       tbody.innerHTML = '';
       showTable();
 
       try {
-        const res = await fetch('https://api.github.com/repos/jingyuba/jingyuba.github.io/contents/patient-edu?ref=main', { cache: 'no-store' });
+        const res = await fetch('https://api.github.com/repos/jingyuba/jingyuba.github.io/contents/report-share?ref=main', { cache: 'no-store' });
         if (!res.ok) throw new Error('無法取得資料');
 
         const files = await res.json();
@@ -129,7 +129,7 @@
           const fallbackTitle = file.name.replace(/\.html$/i, '').replace(/-/g, ' ').replace(/_/g, ' ');
           let title = fallbackTitle;
           try {
-            const contentRes = await fetch(`patient-edu/${encodeURIComponent(file.name)}`, { cache: 'no-store' });
+            const contentRes = await fetch(`report-share/${encodeURIComponent(file.name)}`, { cache: 'no-store' });
             if (contentRes.ok) {
               const html = await contentRes.text();
               const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -148,8 +148,8 @@
           row.innerHTML = `
             <td class="px-8 py-4 font-medium">${escapeHtml(title)}</td>
             <td class="px-8 py-4 text-right">
-              <a href="patient-edu/${encodeURIComponent(fileName)}" 
-                 class="inline-flex items-center gap-x-1.5 text-amber-700 hover:text-amber-800 text-sm font-medium">
+              <a href="report-share/${encodeURIComponent(fileName)}" 
+                 class="inline-flex items-center gap-x-1.5 text-blue-700 hover:text-blue-800 text-sm font-medium">
                 閱讀 <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
               </a>
             </td>
@@ -162,7 +162,7 @@
       }
     }
 
-    loadPatientEdu();
+    loadReportShare();
   </script>
 </body>
 </html>

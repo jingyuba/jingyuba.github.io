@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phenotypes in PH — Weatherald 2024 + Sweatt 2019 Immune Phenotypes</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0E1620; --bg2:#14202E; --card:#1B2A3A; --card-2:#172331;
+    --border:#2A3D50; --text:#E6EDF3; --muted:#94A6B8;
+    --cyan:#45C4D8; --coral:#F2645A; --amber:#F5B14C;
+    --green:#5FCF80;
+  }
+  html,body{background:var(--bg);}
+  .reveal{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:var(--text);}
+  .reveal .slides{text-align:left;}
+  .reveal .slides > section{height:100%;width:100%;padding:0;}
+
+  /* ---- Layout skeleton: 10% title / 90% content ---- */
+  .slide-wrap{display:flex;flex-direction:column;height:100%;width:100%;
+    background:radial-gradient(circle at 18% 12%,#16263a 0%,var(--bg) 60%);}
+  .title-block{height:10%;width:100%;display:flex;align-items:center;justify-content:center;
+    text-align:center;padding:0 4%;box-sizing:border-box;}
+  .title-block h2{margin:0;font-size:40px;font-weight:700;line-height:1.1;color:var(--text);
+    letter-spacing:.3px;}
+  .title-block h2 .accent{color:var(--cyan);}
+  .content-block{height:90%;width:100%;box-sizing:border-box;padding:1% 5% 4% 5%;
+    display:flex;flex-direction:column;justify-content:center;text-align:left;overflow:hidden;}
+
+  .reveal h2{text-transform:none;}
+  .reveal p,.reveal li{font-size:22px;line-height:1.45;color:var(--text);}
+  .sub{font-size:30px;font-weight:600;color:var(--amber);margin:0 0 10px 0;}
+  .muted{color:var(--muted);}
+  .cap{font-size:13px;color:var(--muted);margin-top:6px;font-style:italic;}
+
+  /* ---- Cards ---- */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);padding:18px 22px;box-sizing:border-box;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;height:100%;align-items:stretch;}
+  .grid2.lean{grid-template-columns:0.92fr 1.08fr;}
+  .col{display:flex;flex-direction:column;gap:14px;min-height:0;}
+  .center-col{justify-content:center;}
+
+  ul.tight{margin:6px 0 0 0;padding-left:20px;}
+  ul.tight li{margin-bottom:9px;}
+  .key{color:var(--cyan);font-weight:600;}
+  .key2{color:var(--coral);font-weight:600;}
+  .key3{color:var(--amber);font-weight:600;}
+
+  /* ---- Stat chips ---- */
+  .stat-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .stat{background:var(--card-2);border:1px solid var(--border);border-radius:12px;
+    padding:12px 16px;flex:1;min-width:120px;}
+  .stat .num{font-size:34px;font-weight:700;line-height:1;color:var(--cyan);}
+  .stat .num.c{color:var(--coral);} .stat .num.a{color:var(--amber);}
+  .stat .lbl{font-size:14px;color:var(--muted);margin-top:6px;}
+
+  /* ---- Chart card ---- */
+  .chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);padding:14px 16px 10px;display:flex;
+    flex-direction:column;height:100%;min-height:0;box-sizing:border-box;}
+  .chart-card h3{margin:0 0 6px;font-size:18px;color:var(--text);font-weight:600;}
+  .chart-host{position:relative;flex:1;min-height:0;width:100%;}
+
+  /* ---- Title slide ---- */
+  .cover{height:100%;display:flex;flex-direction:column;justify-content:center;
+    align-items:center;text-align:center;padding:0 8%;
+    background:radial-gradient(circle at 50% 30%,#16314a 0%,var(--bg) 65%);}
+  .cover .tag{font-size:15px;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);}
+  .cover h1{font-size:54px;font-weight:800;margin:14px 0 10px;line-height:1.08;}
+  .cover h1 .accent{color:var(--cyan);}
+  .cover .authors{font-size:20px;color:var(--text);margin-top:8px;}
+  .cover .journal{font-size:15px;color:var(--muted);margin-top:14px;}
+  .bar{height:4px;width:160px;background:linear-gradient(90deg,var(--cyan),var(--coral));
+    border-radius:4px;margin:22px auto;}
+
+  .footer{position:absolute;bottom:14px;left:5%;right:5%;display:flex;justify-content:space-between;
+    font-size:12px;color:var(--muted);}
+  .reveal .controls{color:var(--cyan);}
+  .reveal .progress{color:var(--cyan);height:4px;}
+
+  .pill{display:inline-block;background:var(--card-2);border:1px solid var(--border);
+    border-radius:20px;padding:5px 13px;font-size:15px;margin:4px 6px 4px 0;color:var(--text);}
+  .pill b{color:var(--cyan);}
+
+  @media (max-width:768px){
+    .title-block h2{font-size:30px;} .cover h1{font-size:38px;}
+  }
+
+  /* ---- From Sweatt 2019 deck ---- */
+  :root{ --blue:#6E9BC5; }
+  .keyg{color:var(--green);font-weight:600;}
+  .stat .num.g{color:var(--green);}
+  .legend-dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:middle;}
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+  <!-- 1. TITLE -->
+  <section data-transition="fade">
+    <div class="cover">
+      <div class="tag">European Respiratory Journal · State-of-the-Art Review · 2024</div>
+      <h1>Phenotypes in <span class="accent">Pulmonary Hypertension</span></h1>
+      <div class="bar"></div>
+      <div class="authors">Weatherald J, Hemnes AR, Maron BA, Mielniczuk LM, Gerges C, Price LC, Hoeper MM, Humbert M</div>
+      <div class="journal">Eur Respir J 2024; 64: 2301633 · DOI: 10.1183/13993003.01633-2023</div>
+    </div>
+  </section>
+
+  <!-- 2. AGENDA -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Agenda</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col">
+            <div class="card">
+              <p><span class="key">01</span> &nbsp;Why phenotyping matters in PH</p>
+              <p><span class="key">02</span> &nbsp;Methodology: deep phenotyping &amp; omics</p>
+              <p><span class="key">03</span> &nbsp;Phenotypes in PAH (Group 1)</p>
+              <p><span class="key">04</span> &nbsp;Genetic &amp; immune sub-phenotypes</p>
+            </div>
+          </div>
+          <div class="col center-col">
+            <div class="card">
+              <p><span class="key2">05</span> &nbsp;PH in left heart disease (Group 2)</p>
+              <p><span class="key2">06</span> &nbsp;PH in lung disease (Group 3)</p>
+              <p><span class="key2">07</span> &nbsp;CTEPH (Group 4) &amp; sarcoidosis (Group 5)</p>
+              <p><span class="key2">08</span> &nbsp;Key findings &amp; future directions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. INTRODUCTION -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Why Phenotype Pulmonary Hypertension?</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col">
+            <p class="sub">A clinically heterogeneous disease</p>
+            <p>PH is defined as a resting <span class="key">mean PAP &gt; 20 mmHg</span>. Genetics, pathobiology, clinical features and outcomes all vary widely.</p>
+            <ul class="tight">
+              <li><span class="key">Phenotype</span> — a cluster of visible properties (demographic, physiological, imaging, molecular).</li>
+              <li><span class="key3">Endotype</span> — a shared genetic/molecular mechanism, opening the door to precision medicine.</li>
+            </ul>
+            <p class="muted" style="font-size:20px;">A clearer phenotype map sharpens diagnosis, prognostication and treatment selection.</p>
+          </div>
+          <div class="col center-col">
+            <div class="card">
+              <p class="sub" style="margin-bottom:14px;">Five clinical groups</p>
+              <span class="pill"><b>1</b> &nbsp;Pulmonary arterial hypertension</span>
+              <span class="pill"><b>2</b> &nbsp;Left heart disease</span>
+              <span class="pill"><b>3</b> &nbsp;Lung disease / hypoxia</span>
+              <span class="pill"><b>4</b> &nbsp;Chronic thromboembolic (CTEPD)</span>
+              <span class="pill"><b>5</b> &nbsp;Unclear / multifactorial</span>
+              <p class="cap">A framework evolving over 50 years (WHO 1973 → 2022 ESC/ERS).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. METHODOLOGY -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Methodology: Deep Phenotyping &amp; Omics</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Phenotyping starts at the bedside — history, imaging, lung function and right heart catheterisation — then layers on advanced computational discovery.</p>
+            <ul class="tight">
+              <li><span class="key">Multi-omics:</span> genome, transcriptome, proteome, metabolome (and exhaled "volatolomics").</li>
+              <li><span class="key3">Computational tools:</span> machine learning, LASSO, Shapley values, unsupervised clustering, network medicine.</li>
+              <li><span class="key2">Longitudinal data:</span> EMRs, wearables, implantable haemodynamic sensors.</li>
+            </ul>
+            <p class="muted" style="font-size:20px;">Goal — distil "big data" into parsimonious, treatable traits.</p>
+          </div>
+          <div class="col">
+            <div class="chart-card">
+              <h3>Data-driven subgroups discovered by clustering / omics</h3>
+              <div class="chart-host"><canvas data-chart="clusters"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>Source: Sweatt 2019 [17]; Jones 2022 [18]; Launay 2018 [56]</span><span>Weatherald et al. 2024 · Eur Respir J</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PVDOMICS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>The Misclassification Problem (PVDOMICS)</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>In <span class="key">PVDOMICS</span>, patients across the pulmonary-vascular spectrum underwent deep phenotyping and case adjudication.</p>
+            <div class="stat-row">
+              <div class="stat"><div class="num c">26%</div><div class="lbl">of patients labelled "PAH" actually showed a pattern of another PH form — usually a comorbidity warranting a non-Group&nbsp;1 cause</div></div>
+            </div>
+            <p class="muted" style="font-size:20px;">Comorbidities increasingly blur the line between PAH, Group&nbsp;2 and Group&nbsp;3 PH.</p>
+          </div>
+          <div class="col">
+            <div class="chart-card">
+              <h3>Adjudicated diagnosis of patients originally classified as PAH</h3>
+              <div class="chart-host"><canvas data-chart="pvdomics"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>Source: Hemnes et al. 2022 [42]</span><span>Weatherald et al. 2024 · Eur Respir J</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PAH PHENOTYPES TABLE -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Three Clinical Phenotypes Within PAH</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Beyond the <span class="key">classical PAH</span> phenotype (younger, female), two phenotypes emerge in older patients:</p>
+            <ul class="tight">
+              <li><span class="key3">Left heart phenotype</span> — ≥65 yrs, HFpEF risk factors, frequent atrial fibrillation.</li>
+              <li><span class="key2">Lung phenotype</span> — ≥65 yrs, male-predominant, heavy smoking history, very low D<sub>LCO</sub>.</li>
+            </ul>
+            <p class="muted" style="font-size:20px;">Sex and atrial-fibrillation burden cleanly separate the three.</p>
+          </div>
+          <div class="col">
+            <div class="chart-card">
+              <h3>Female predominance vs atrial fibrillation history (%)</h3>
+              <div class="chart-host"><canvas data-chart="pahpheno"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>Source: Table 1 · Hoeper 2022 [52]; AF data [44, 45]</span><span>Weatherald et al. 2024 · Eur Respir J</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. LEFT HEART PHENOTYPE -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>PAH With a Left Heart Phenotype</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Features signalling latent <span class="key3">HFpEF</span> despite a pre-capillary RHC reading (PAWP ≤ 15 mmHg at rest).</p>
+            <ul class="tight">
+              <li>Age ≥ 65, obesity, diabetes, coronary disease, hypertension.</li>
+              <li><span class="key2">1 in 3 to 1 in 2</span> have atrial fibrillation (vs &lt;10% in classical PAH).</li>
+              <li>Exercise / fluid loading can unmask <span class="key">PAWP ≥ 25 mmHg</span>.</li>
+            </ul>
+            <p class="muted" style="font-size:20px;">Recommended treatment: oral monotherapy, then individualised escalation.</p>
+          </div>
+          <div class="col">
+            <div class="chart-card">
+              <h3>HFpEF / comorbidity burden vs classical PAH</h3>
+              <div class="chart-host"><canvas data-chart="leftheart"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>Source: ESC/ERS 2022 [5,6]; Borlaug 2010 [48]; AMBITION [60]</span><span>Weatherald et al. 2024 · Eur Respir J</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. GENETIC PHENOTYPES -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Genetic Sub-Phenotypes in PAH</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col">
+            <div class="card">
+              <p><span class="key">BMPR2</span> — more severe haemodynamics, higher mortality; ground-glass "halos" on CT.</p>
+              <p><span class="key">EIF2AK4</span> — pulmonary veno-occlusive disease; low D<sub>LCO</sub>, hypoxaemia, poor therapy response.</p>
+            </div>
+          </div>
+          <div class="col center-col">
+            <div class="card">
+              <p><span class="key3">TBX4</span> — small patella syndrome, peribronchial cysts, low D<sub>LCO</sub>.</p>
+              <p><span class="key3">SOX17</span> — haemoptysis, tortuous vessels, neovascularisation.</p>
+              <p><span class="key2">KDR · ACVRL1/ENG/GDF2</span> — parenchymal change; HHT-modulated phenotypes.</p>
+            </div>
+          </div>
+        </div>
+        <p class="cap" style="text-align:center;margin-top:10px;">Each genotype carries a distinctive radiological and prognostic signature — Refs [64–76]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. PH IN LEFT HEART DISEASE -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Group 2: Reversible vs Persistent PH in LHD</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col">
+            <div class="card" style="border-left:4px solid var(--green);">
+              <p class="sub" style="color:var(--green);margin-bottom:8px;">Reversible PH</p>
+              <p style="font-size:20px;">Minimal vessel change · adaptive RV remodelling · resolves with treatment of the underlying valve/heart disease (GDMT, TAVR, mitral repair, septal ablation).</p>
+            </div>
+          </div>
+          <div class="col center-col">
+            <div class="card" style="border-left:4px solid var(--coral);">
+              <p class="sub" style="color:var(--coral);margin-bottom:8px;">Persistent (Cpc-)PH</p>
+              <p style="font-size:20px;">Progressive arterial &amp; venous remodelling · maladaptive RV · elevated PVR (&gt;2 WU) and reduced compliance that persist despite diuresis.</p>
+            </div>
+          </div>
+        </div>
+        <p class="cap" style="text-align:center;margin-top:12px;">Combined pre-/post-capillary PH should be viewed as an independent pathology, not a secondary phenomenon — Refs [50, 81–85]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. PH IN LUNG DISEASE — COPD -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Group 3: The COPD Pulmonary Vascular Phenotype</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Most COPD-PH is mild (mPAP 20–35 mmHg). But a distinct cluster shows <span class="key2">severe PH with only mild airflow obstruction</span>.</p>
+            <ul class="tight">
+              <li>Lower D<sub>LCO</sub>, resting hypoxaemia, circulatory (not ventilatory) exercise limit.</li>
+              <li>Severe PH = <span class="key">PVR &gt; 5 WU</span> → 1-yr mortality of <span class="key2">24–30%</span>.</li>
+            </ul>
+            <p class="muted" style="font-size:20px;">Considerable overlap with "PAH + lung phenotype".</p>
+          </div>
+          <div class="col">
+            <div class="chart-card">
+              <h3>Vascular-phenotype cluster: FEV₁ (% pred) vs mPAP (mmHg)</h3>
+              <div class="chart-host"><canvas data-chart="copd"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>Source: Thabut 2005 [105]; Kovacs 2018 [109]; mortality [107,108]</span><span>Weatherald et al. 2024 · Eur Respir J</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. PH IN ILD -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Group 3: PH in Interstitial Lung Disease</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Even mild PH worsens survival in ILD. Severity is graded haemodynamically by PVR.</p>
+            <ul class="tight">
+              <li><span class="key3">PVR &gt; 5 WU</span> defines severe PH (2022 ESC/ERS).</li>
+              <li><span class="key2">PVR &gt; 8 WU</span> is the best discriminator of worse prognosis.</li>
+              <li>Inhaled treprostinil (INCREASE) improved exercise capacity &amp; delayed progression.</li>
+            </ul>
+          </div>
+          <div class="col">
+            <div class="chart-card">
+              <h3>Selected ILD-PH metrics</h3>
+              <div class="chart-host"><canvas data-chart="ild"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>Source: Olsson 2021 [121]; Raghu 2015 [120]; CPFE [124–126]; INCREASE [128,129]</span><span>Weatherald et al. 2024 · Eur Respir J</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. CTEPH -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Group 4: Three-Way Phenotyping of CTEPD</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Treatment of CTEPH (surgery, BPA, medical therapy) hinges on integrated phenotyping:</p>
+            <ul class="tight">
+              <li><span class="key">Clinical</span> — comorbidity, frailty, operability/risk.</li>
+              <li><span class="key3">Morphological</span> — 5 angiographic lesion types (A–E).</li>
+              <li><span class="key2">Haemodynamic</span> — RHC; upstream vs downstream PVR partitioning.</li>
+            </ul>
+            <div class="stat-row" style="margin-top:6px;">
+              <div class="stat"><div class="num a">11%</div><div class="lbl">have elevated LV filling pressures (comorbid LHD → higher mortality)</div></div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="chart-card">
+              <h3>Angiographic lesion classification (types A–E)</h3>
+              <div class="chart-host"><canvas data-chart="cteph"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>Source: Kawakami 2016 [140]; Gerges 2020/2023 [138,145]</span><span>Weatherald et al. 2024 · Eur Respir J</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. SARCOIDOSIS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Group 5: Sarcoidosis-Associated PH (SAPH)</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col">
+            <p>The best-characterised Group&nbsp;5 entity. Careful multimodal work-up guides management.</p>
+            <ul class="tight">
+              <li>Most common with lung fibrosis (Scadding stage 4), but can occur without.</li>
+              <li>Guidelines suggest monotherapy when FVC &lt; 50% predicted.</li>
+            </ul>
+          </div>
+          <div class="col center-col">
+            <div class="card">
+              <p class="sub" style="margin-bottom:8px;">Distinct sub-phenotypes</p>
+              <p style="font-size:20px;"><span class="key2">Compressive</span> — granulomatous/fibrosing mediastinal compression of vessels → PET-CT-guided immunomodulation ± stenting.</p>
+              <p style="font-size:20px;"><span class="key3">Veno-occlusive</span> — poor therapy response; prompt transplant referral.</p>
+            </div>
+          </div>
+        </div>
+        <p class="cap" style="text-align:center;margin-top:10px;">Refs: Nunes 2006 [146]; WASOG [147]; Samaranayake 2021 [148]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. KEY FINDINGS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Key Findings</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col">
+            <div class="card">
+              <p><span class="key">①</span> Comorbidities reshape PAH — left-heart &amp; lung phenotypes resemble Group 2 / 3 and respond less well to combination therapy.</p>
+              <p><span class="key">②</span> Severe pulmonary vasculopathy can occur with only mild airway or parenchymal disease — a recurring "vascular phenotype".</p>
+            </div>
+          </div>
+          <div class="col center-col">
+            <div class="card">
+              <p><span class="key2">③</span> Omics &amp; ML reveal distinct immune, autoimmune and genetic sub-phenotypes with prognostic value.</p>
+              <p><span class="key2">④</span> PAWP at a single time-point is fragile — Cpc-PH and HFpEF-PH overlap heavily with PAH's left-heart phenotype.</p>
+            </div>
+          </div>
+        </div>
+        <p class="cap" style="text-align:center;margin-top:12px;">Validating phenotypic / endotypic signatures as treatable traits remains the central unmet need.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15. CONCLUSION -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Conclusion</h2></div>
+      <div class="content-block">
+        <div class="col center-col" style="height:100%;">
+          <div class="card" style="text-align:center;">
+            <p style="font-size:24px;">The current five-group classification is a durable framework — but considerable heterogeneity remains <em>within</em> each group.</p>
+            <p style="font-size:24px;margin-top:14px;">Integrating <span class="key">clinical data</span>, <span class="key3">imaging</span>, <span class="key2">multi-omics</span> and longitudinal exposures promises sharper sub-phenotypes and endotypes.</p>
+            <p style="font-size:24px;margin-top:14px;">The next iterations of the classification should enable <span class="key">precision therapy</span>, enriched trials and better outcomes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16. THANK YOU -->
+  <section data-transition="fade">
+    <div class="cover">
+      <div class="tag">Thank You · Questions &amp; Discussion</div>
+      <h1>Phenotyping the <span class="accent">Pulmonary Vasculature</span></h1>
+      <div class="bar"></div>
+      <div class="authors">Weatherald J, Hemnes AR, Maron BA, et al.</div>
+      <div class="journal">Eur Respir J 2024; 64: 2301633 · DOI: 10.1183/13993003.01633-2023</div>
+    </div>
+  </section>
+
+
+  <!-- ========== SWEATT 2019: Distinct Immune Phenotypes in PAH ========== -->
+
+<!-- 1. TITLE -->
+  <section data-transition="fade">
+    <div class="cover">
+      <div class="tag">Circulation Research · Original Research · 2019</div>
+      <h1>Distinct <span class="accent">Immune Phenotypes</span><br>in Pulmonary Arterial Hypertension</h1>
+      <div class="bar"></div>
+      <div class="authors">Sweatt AJ, Hedlin HK, Balasubramanian V, … Khatri P, Zamanian RT</div>
+      <div class="journal">Discovery via unsupervised machine learning · Circ Res 2019; 124(6): 904–919 · DOI: 10.1161/CIRCRESAHA.118.313911</div>
+    </div>
+  </section>
+
+  <!-- 2. AGENDA -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Agenda</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col"><div class="card">
+            <p><span class="key">01</span> &nbsp;The clinical problem in PAH classification</p>
+            <p><span class="key">02</span> &nbsp;Study design &amp; machine-learning method</p>
+            <p><span class="key">03</span> &nbsp;Four immune clusters discovered</p>
+            <p><span class="key">04</span> &nbsp;Central cytokine signatures</p>
+          </div></div>
+          <div class="col center-col"><div class="card">
+            <p><span class="key2">05</span> &nbsp;Independence from PAH subtype</p>
+            <p><span class="key2">06</span> &nbsp;Differential clinical risk &amp; haemodynamics</p>
+            <p><span class="key2">07</span> &nbsp;Survival &amp; external validation</p>
+            <p><span class="key2">08</span> &nbsp;Key findings &amp; clinical implications</p>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. RATIONALE -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>The Problem: One Label, Many Diseases</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col">
+            <p class="sub">Why look beyond WHO subtypes?</p>
+            <ul class="tight">
+              <li>Inflammation &amp; autoimmunity are increasingly implicated in PAH pathogenesis.</li>
+              <li>WHO Group 1 subtypes are defined by <span class="key">etiology</span> — they neither guide therapy nor forecast treatment response.</li>
+              <li>It was <span class="key2">unknown</span> whether distinct immune phenotypes exist across patients.</li>
+            </ul>
+          </div>
+          <div class="col center-col"><div class="card">
+            <p class="sub" style="margin-bottom:10px;">The hypothesis</p>
+            <p style="font-size:21px;">Unsupervised profiling of the circulating immune milieu — analysed as a <span class="key">multivariable system</span> rather than single markers — can uncover phenotypes tied to pathobiology and prognosis, independent of clinical subtype.</p>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Sweatt et al. 2019 · Introduction</span><span>Circ Res 2019; 124(6): 904–919</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. METHODS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Study Design &amp; Machine-Learning Method</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Prospective profiling of a <span class="key">48-protein</span> cytokine / chemokine / growth-factor panel (Bio-Plex multiplex immunoassay).</p>
+            <ul class="tight">
+              <li><span class="key">Consensus clustering</span> (k-medoids, Euclidean) — 1,000 resampling iterations, blind to clinical data.</li>
+              <li><span class="key3">Partial-correlation networks</span> identified central cytokines per cluster.</li>
+              <li>Clinical features &amp; survival compared afterward.</li>
+            </ul>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>Study populations (n)</h3>
+            <div class="chart-host"><canvas data-chart="cohorts"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Methods · Stanford (2008–14), Sheffield (2009–12)</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. DISCOVERY COHORT PROFILE -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Discovery Cohort: A Severe, Mixed Population</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <div class="stat-row">
+              <div class="stat"><div class="num">52</div><div class="lbl">median age (yrs)</div></div>
+              <div class="stat"><div class="num a">73%</div><div class="lbl">female</div></div>
+            </div>
+            <div class="stat-row">
+              <div class="stat"><div class="num c">47</div><div class="lbl">mPAP (mmHg)</div></div>
+              <div class="stat"><div class="num c">720</div><div class="lbl">PVR (dyn·s·cm⁻⁵)</div></div>
+              <div class="stat"><div class="num">62%</div><div class="lbl">FC III–IV</div></div>
+            </div>
+            <p class="muted" style="font-size:20px;">All five major Group 1 etiologies were represented.</p>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>Underlying PAH etiology (n=281)</h3>
+            <div class="chart-host"><canvas data-chart="etiology"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Table 1</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. FOUR CLUSTERS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Patients Partition Into Four Immune Clusters</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p><span class="keyg">61%</span> of patients carried evidence of circulating inflammation (clusters 1, 3, 4); <span class="key">39%</span> (cluster 2) resembled healthy controls.</p>
+            <ul class="tight">
+              <li><span class="key2">Cluster 1</span> — distinct cytokine set, high-risk.</li>
+              <li><span class="legend-dot" style="background:#6E9BC5"></span><b style="color:#6E9BC5">Cluster 2</b> — low signal, control-like.</li>
+              <li><span class="keyg">Cluster 3</span> — moderate signal, low-risk.</li>
+              <li><span class="key3">Cluster 4</span> — highest cytokine levels (smallest group).</li>
+            </ul>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>Cluster size — share of discovery cohort (%)</h3>
+            <div class="chart-host"><canvas data-chart="clustersize"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Results · Figure 2A</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. CENTRAL SIGNATURES -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Each Cluster Has a Unique Cytokine Signature</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Partial-correlation networks revealed a distinct set of <span class="key">central proteins</span> per cluster — no single cytokine was central in ≥3 clusters.</p>
+            <p style="font-size:20px;"><span class="key2">C1:</span> TRAIL · CCL5 · CCL7 · CCL4 · MIF<br>
+            <span class="keyg">C3:</span> IL-12 · IL-17 · IL-10 · IL-7 · VEGF<br>
+            <span class="key3">C4:</span> IL-8 · IL-4 · PDGF-β · IL-6 · CCL11<br>
+            <span class="muted">C2: no upregulated central proteins</span></p>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>Number of central network proteins per cluster</h3>
+            <div class="chart-host"><canvas data-chart="central"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Figure 3B · network centrality analysis</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. ROBUSTNESS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Clusters Are Stable &amp; Well-Separated</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col"><div class="chart-card">
+            <h3>Intra-cluster consensus stability (%) — 1,000 iterations</h3>
+            <div class="chart-host"><canvas data-chart="consensus"></canvas></div>
+          </div></div>
+          <div class="col"><div class="chart-card">
+            <h3>Protein–protein partial correlation (75–90th pct range)</h3>
+            <div class="chart-host"><canvas data-chart="network"></canvas></div>
+          </div></div>
+        </div>
+        <p class="cap" style="text-align:center;margin-top:8px;">Clusters 1 &amp; 4 show the densest networks; cluster 2 the sparsest — Source: Results, Online Figs II &amp; V</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. INDEPENDENCE -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Phenotypes Cut Across Clinical Subtypes</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col"><div class="card">
+            <p class="sub" style="margin-bottom:8px;">No association with…</p>
+            <span class="pill">PAH etiology <b>p=0.110</b></span>
+            <span class="pill">Age / sex / race</span>
+            <span class="pill">Comorbidities</span>
+            <span class="pill">Illness duration</span>
+            <span class="pill">Background therapy</span>
+          </div></div>
+          <div class="col center-col">
+            <p>Every Group 1 subtype contained all four immune clusters — and no subtype carried a single characteristic immune profile.</p>
+            <p class="muted" style="font-size:20px;">Inflammation is therefore an <span class="key">orthogonal axis</span> of heterogeneity, not a restatement of clinical class.</p>
+          </div>
+        </div>
+        <div class="footer"><span>Source: Results · Figure 4A · Table 2</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. CLINICAL RISK -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Cluster 1 Carries the Worst Risk Profile</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Across established surrogates, <span class="key2">cluster 1</span> was high-risk and <span class="keyg">cluster 3</span> low-risk (clusters 2 &amp; 4 intermediate).</p>
+            <ul class="tight">
+              <li>FC IV: 22.4% vs 5.4% (p=0.022)</li>
+              <li>NT-proBNP &gt;1500: 39.7% vs 14.3% (p=0.007)</li>
+              <li>High REVEAL: 36.2% vs 13.0% (p=0.012)</li>
+            </ul>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>High-risk markers: % of patients — C1 vs C3</h3>
+            <div class="chart-host"><canvas data-chart="risk"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Results · Figure 4B · Online Table VI</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. HEMODYNAMICS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Right Heart Strain Tracks With Cluster</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>RV impairment and filling pressures were greatest in <span class="key2">cluster 1</span>:</p>
+            <ul class="tight">
+              <li>mPAP 52 vs 45 mmHg (C1 vs C3, p=0.005).</li>
+              <li>RV fractional area change 24% vs 29% (p=0.028).</li>
+              <li>TAPSE ≤1.6 cm in 53.8% of C1 patients.</li>
+            </ul>
+            <p class="muted" style="font-size:20px;">PVR, cardiac index and wedge pressure did not differ.</p>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>Mean right atrial pressure by cluster (mmHg)</h3>
+            <div class="chart-host"><canvas data-chart="hemo"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Results · Online Tables VII–VIII</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. DISCOVERY SURVIVAL -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Survival Differs Markedly Across Clusters</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Over a median 3.0 years: <span class="key2">62 deaths, 17 transplants</span>. Event rates ranged from <span class="keyg">11.6%</span> (C3) to <span class="key2">50.0%</span> (C1).</p>
+            <div class="stat-row">
+              <div class="stat"><div class="num c">47.6%</div><div class="lbl">5-yr transplant-free survival, Cluster 1</div></div>
+              <div class="stat"><div class="num g">82.4%</div><div class="lbl">5-yr transplant-free survival, Cluster 3</div></div>
+            </div>
+            <p class="cap">Across-cluster log-rank p &lt; 0.001</p>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>5-yr transplant-free survival (%) — discovery</h3>
+            <div class="chart-host"><canvas data-chart="survdisc"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Results · Figure 4C (Kaplan–Meier)</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. VALIDATION DISTRIBUTION -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>External Validation Reproduces the Clusters</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>Re-applying the same method to the independent <span class="key">Sheffield cohort (n=104, all treatment-naïve)</span> again produced four clusters with comparable proteomic profiles and proportions.</p>
+            <p class="muted" style="font-size:20px;">Cluster sizes mirrored the discovery cohort despite differing demographics (older, 94% white).</p>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>Cluster distribution: discovery vs validation (%)</h3>
+            <div class="chart-host"><canvas data-chart="valdist"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Results · Figure 5A–B</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. SURVIVAL ACROSS COHORTS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>The Prognostic Signal Replicates</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>The survival ranking — <span class="keyg">C3 best</span>, <span class="key2">C1 worst</span> — held across both cohorts and in the pooled analysis (n=385).</p>
+            <ul class="tight">
+              <li>Validation 5-yr survival: C3 63.9% vs C1 30.8% (p=0.029).</li>
+              <li>Pooled 5-yr survival: C3 79.4% vs C1 39.5% (p&lt;0.0001).</li>
+            </ul>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>5-yr survival (%) by cluster &amp; cohort</h3>
+            <div class="chart-host"><canvas data-chart="survall"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Results · Figures 4C, 5C · Online Fig XIV</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15. COX HR -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Independent of Established Predictors</h2></div>
+      <div class="content-block">
+        <div class="grid2 lean">
+          <div class="col center-col">
+            <p>In multivariable Cox modelling adjusted for age, sex, etiology, treatment-naïve status, functional class and right atrial pressure:</p>
+            <ul class="tight">
+              <li><span class="key2">Cluster 1</span> — HR 2.19 (1.51–3.18), p&lt;0.0001.</li>
+              <li><span class="keyg">Cluster 3</span> — HR 0.39 (0.25–0.63), p=0.0001.</li>
+            </ul>
+            <p class="muted" style="font-size:20px;">Immune phenotype adds prognostic information beyond standard clinical risk.</p>
+          </div>
+          <div class="col"><div class="chart-card">
+            <h3>Adjusted 5-yr risk of death (HR, ref = 1.0)</h3>
+            <div class="chart-host"><canvas data-chart="hr"></canvas></div>
+          </div></div>
+        </div>
+        <div class="footer"><span>Source: Results · Online Table XII A–C</span><span>Sweatt et al. 2019</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16. KEY FINDINGS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Key Findings</h2></div>
+      <div class="content-block">
+        <div class="grid2">
+          <div class="col center-col"><div class="card">
+            <p><span class="key">①</span> Unsupervised ML defines <b>four reproducible immune phenotypes</b> from blood cytokines alone.</p>
+            <p><span class="key">②</span> They are <b>independent</b> of WHO Group 1 subtype, demographics, comorbidity and therapy.</p>
+          </div></div>
+          <div class="col center-col"><div class="card">
+            <p><span class="key2">③</span> Each carries a <b>unique central cytokine signature</b> — candidate precision targets.</p>
+            <p><span class="key2">④</span> Phenotypes stratify <b>clinical risk &amp; survival</b>, replicated externally and independent of known predictors.</p>
+          </div></div>
+        </div>
+        <p class="cap" style="text-align:center;margin-top:12px;">Higher cytokine levels did not equal worse outcome — C3 (moderate signal) fared best, C1 (different signal) worst.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17. CONCLUSION -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Clinical Implications</h2></div>
+      <div class="content-block">
+        <div class="col center-col" style="height:100%;">
+          <div class="card" style="text-align:center;">
+            <p style="font-size:24px;">Inflammation is a <span class="key">viable platform for precision endotyping</span> in PAH — a dimension invisible to the current etiology-based classification.</p>
+            <p style="font-size:24px;margin-top:14px;">Immune phenotyping could <span class="key3">enrich or stratify clinical trials</span> of immune-targeting therapies and identify likely responders.</p>
+            <p style="font-size:22px;margin-top:14px;" class="muted">Key caveat: profiling at a <em>single time point</em> — temporal stability and treatment-related change remain to be tested.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18. THANK YOU -->
+  <section data-transition="fade">
+    <div class="cover">
+      <div class="tag">Thank You · Questions &amp; Discussion</div>
+      <h1>Immune Phenotyping<br><span class="accent">Toward Precision Medicine in PAH</span></h1>
+      <div class="bar"></div>
+      <div class="authors">Sweatt AJ, et al.</div>
+      <div class="journal">Circ Res 2019; 124(6): 904–919 · DOI: 10.1161/CIRCRESAHA.118.313911</div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<script>
+/* ---------- Reveal ---------- */
+Reveal.initialize({
+  width:1280, height:720, margin:0.1, minScale:0.2, maxScale:2.0,
+  center:false, hash:true, transition:'slide', controls:true, progress:true
+});
+
+/* ---------- Chart.js global theme ---------- */
+const CY='#45C4D8', CO='#F2645A', AM='#F5B14C', GR='#5FCF80', BL='#6E9BC5', MUT='#94A6B8';
+const CLUST=[CO,BL,GR,AM]; // Sweatt cluster palette 1..4
+const CL=['Cluster 1','Cluster 2','Cluster 3','Cluster 4'];
+Chart.defaults.color = '#CBD7E2';
+Chart.defaults.font.family = "'Segoe UI',Helvetica,Arial,sans-serif";
+Chart.defaults.font.size = 13;
+const GRID = 'rgba(148,166,184,0.15)';
+const tt={backgroundColor:'#0E1620',borderColor:CY,borderWidth:1,padding:10,titleColor:'#fff',bodyColor:'#E6EDF3'};
+const baseOpts = (extra={}) => Object.assign({
+  responsive:true, maintainAspectRatio:false,
+  animation:{duration:900,easing:'easeOutQuart'},
+  plugins:{
+    legend:{labels:{boxWidth:14,padding:12,font:{size:13}}},
+    tooltip:tt
+  },
+
+  scales:{
+    x:{grid:{color:GRID},ticks:{font:{size:12}}},
+    y:{grid:{color:GRID},ticks:{font:{size:12}}}
+  }
+}, extra);
+
+/* ---------- Chart builders ---------- */
+const builders = {
+  clusters(ctx){
+    return new Chart(ctx,{type:'bar',data:{
+      labels:['PAH immune\nphenotypes [17]','Autoimmune\nlevels [18]','SSc PH\nclusters [56]'],
+      datasets:[{label:'Distinct subgroups identified',data:[4,3,4],
+        backgroundColor:[CY,AM,CO],borderRadius:8,maxBarThickness:70}]},
+      options:baseOpts({plugins:{legend:{display:false},tooltip:Chart.defaults.plugins?.tooltip},
+        scales:{y:{beginAtZero:true,max:5,grid:{color:GRID},title:{display:true,text:'# subgroups'}},
+                x:{grid:{display:false}}}})});
+  },
+  pvdomics(ctx){
+    return new Chart(ctx,{type:'doughnut',data:{
+      labels:['Confirmed PAH (Group 1)','Re-assigned to other PH form'],
+      datasets:[{data:[74,26],backgroundColor:[CY,CO],borderColor:'#0E1620',borderWidth:3,hoverOffset:8}]},
+      options:Object.assign(baseOpts(),{cutout:'58%',scales:{},
+        plugins:{legend:{position:'bottom',labels:{padding:14}},
+          tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed}%`}}}})});
+  },
+  pahpheno(ctx){
+    return new Chart(ctx,{type:'bar',data:{
+      labels:['Classical PAH','Left heart phenotype','Lung phenotype'],
+      datasets:[
+        {label:'% female',data:[67,67,33],backgroundColor:CY,borderRadius:6,maxBarThickness:40},
+        {label:'% atrial fibrillation',data:[8,40,10],backgroundColor:CO,borderRadius:6,maxBarThickness:40}
+      ]},
+      options:baseOpts({scales:{y:{beginAtZero:true,max:100,grid:{color:GRID},ticks:{callback:v=>v+'%'}},
+        x:{grid:{display:false}}}})});
+  },
+  leftheart(ctx){
+    return new Chart(ctx,{type:'radar',data:{
+      labels:['Age ≥65','HFpEF risk\nfactors','Atrial\nfibrillation','Obesity /\ndiabetes','Severe exercise\nlimitation'],
+      datasets:[
+        {label:'Left heart phenotype',data:[3,3,2.5,2.8,3],borderColor:AM,backgroundColor:'rgba(245,177,76,0.25)',pointBackgroundColor:AM},
+        {label:'Classical PAH',data:[1,0.3,0.5,0.6,2],borderColor:CY,backgroundColor:'rgba(69,196,216,0.20)',pointBackgroundColor:CY}
+      ]},
+      options:Object.assign(baseOpts(),{scales:{r:{min:0,max:3,grid:{color:GRID},angleLines:{color:GRID},
+        pointLabels:{font:{size:12},color:'#CBD7E2'},ticks:{display:false,stepSize:1}}},
+        plugins:{legend:{position:'bottom'}}})});
+  },
+  copd(ctx){
+    return new Chart(ctx,{type:'bar',data:{
+      labels:['FEV₁ (% predicted)','mPAP (mmHg)'],
+      datasets:[{label:'Pulmonary vascular phenotype cluster',data:[48.5,39.8],
+        backgroundColor:[CY,CO],borderRadius:8,maxBarThickness:90,
+        errorVal:[11.8,10.2]}]},
+      options:baseOpts({plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>{const sd=[11.8,10.2][c.dataIndex];return ` ${c.parsed.y} ± ${sd}`;}}}},
+        scales:{y:{beginAtZero:true,max:60,grid:{color:GRID}},x:{grid:{display:false}}}})});
+  },
+  ild(ctx){
+    return new Chart(ctx,{type:'bar',data:{
+      labels:['Severe PH\nthreshold (PVR, WU)','Best prognostic\nPVR cut-off (WU)','Post-cap PH\nin IPF (%)','PH in CPFE (%)'],
+      datasets:[{label:'Value',data:[5,8,5,50],
+        backgroundColor:[AM,CO,CY,GR],borderRadius:7,maxBarThickness:60}]},
+      options:baseOpts({indexAxis:'y',plugins:{legend:{display:false}},
+        scales:{x:{beginAtZero:true,grid:{color:GRID}},y:{grid:{display:false},ticks:{font:{size:11}}}}})});
+  },
+  cteph(ctx){
+    return new Chart(ctx,{type:'polarArea',data:{
+      labels:['A · Ring-like stenoses','B · Web lesions','C · Subtotal occlusions','D · Chronic total occlusions','E · Tortuous lesions'],
+      datasets:[{data:[1,1,1,1,1],
+        backgroundColor:['rgba(69,196,216,.75)','rgba(245,177,76,.75)','rgba(242,100,90,.75)','rgba(95,207,128,.75)','rgba(155,140,230,.75)'],
+        borderColor:'#0E1620',borderWidth:2}]},
+      options:Object.assign(baseOpts(),{scales:{r:{grid:{color:GRID},ticks:{display:false}}},
+        plugins:{legend:{position:'right',labels:{font:{size:12},padding:8}},
+          tooltip:{callbacks:{label:c=>` ${c.label}`}}}})});
+  },
+
+  /* ---- Sweatt 2019 chart builders ---- */
+  cohorts(c){return new Chart(c,{type:'bar',data:{
+    labels:['Discovery\n(Stanford)','Validation\n(Sheffield)','Healthy\ncontrols'],
+    datasets:[{data:[281,104,88],backgroundColor:[CY,AM,BL],borderRadius:8,maxBarThickness:80}]},
+    options:baseOpts({plugins:{legend:{display:false},tooltip:tt},
+      scales:{y:{beginAtZero:true,grid:{color:GRID},title:{display:true,text:'patients (n)'}},x:{grid:{display:false}}}})});},
+
+  etiology(c){return new Chart(c,{type:'doughnut',data:{
+    labels:['CTD-APAH','Idiopathic','Drugs & toxins','Congenital HD','Portopulmonary','Hereditary'],
+    datasets:[{data:[31.0,29.9,17.4,13.5,6.8,1.4],
+      backgroundColor:[CO,CY,AM,GR,BL,'#9B8CE6'],borderColor:'#0E1620',borderWidth:3,hoverOffset:8}]},
+    options:Object.assign(baseOpts(),{cutout:'52%',scales:{},
+      plugins:{legend:{position:'right',labels:{padding:8,font:{size:12}}},
+        tooltip:{callbacks:{label:x=>` ${x.label}: ${x.parsed}%`}}}})});},
+
+  clustersize(c){return new Chart(c,{type:'bar',data:{
+    labels:CL,datasets:[{data:[20.6,38.8,27.4,13.2],backgroundColor:CLUST,borderRadius:8,maxBarThickness:75}]},
+    options:baseOpts({plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:x=>` ${x.parsed.y}%  (n=${[58,109,77,37][x.dataIndex]})`}}},
+      scales:{y:{beginAtZero:true,max:45,grid:{color:GRID},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}})});},
+
+  central(c){return new Chart(c,{type:'bar',data:{
+    labels:CL,datasets:[{data:[9,0,13,15],backgroundColor:CLUST,borderRadius:8,maxBarThickness:75}]},
+    options:baseOpts({plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true,max:16,grid:{color:GRID},title:{display:true,text:'central proteins'}},x:{grid:{display:false}}}})});},
+
+  consensus(c){return new Chart(c,{type:'bar',data:{
+    labels:CL,datasets:[{data:[92.5,95.5,95.0,98.2],backgroundColor:CLUST,borderRadius:8,maxBarThickness:70}]},
+    options:baseOpts({plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>` ${x.parsed.y}%`}}},
+      scales:{y:{beginAtZero:false,min:85,max:100,grid:{color:GRID},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}})});},
+
+  network(c){return new Chart(c,{type:'bar',data:{
+    labels:CL,datasets:[{label:'75–90th percentile range',
+      data:[[0.402,0.542],[0.173,0.245],[0.229,0.328],[0.389,0.526]],
+      backgroundColor:CLUST,borderRadius:6,maxBarThickness:70}]},
+    options:baseOpts({plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:x=>{const v=x.raw;return ` ${v[0]}–${v[1]}`;}}}},
+      scales:{y:{beginAtZero:true,max:0.6,grid:{color:GRID},title:{display:true,text:'partial correlation'}},x:{grid:{display:false}}}})});},
+
+  risk(c){return new Chart(c,{type:'bar',data:{
+    labels:['FC IV','NT-proBNP\n>1500','High REVEAL'],
+    datasets:[
+      {label:'Cluster 1 (high-risk)',data:[22.4,39.7,36.2],backgroundColor:CO,borderRadius:6,maxBarThickness:46},
+      {label:'Cluster 3 (low-risk)',data:[5.4,14.3,13.0],backgroundColor:GR,borderRadius:6,maxBarThickness:46}]},
+    options:baseOpts({plugins:{legend:{position:'top'},tooltip:{callbacks:{label:x=>` ${x.dataset.label}: ${x.parsed.y}%`}}},
+      scales:{y:{beginAtZero:true,max:50,grid:{color:GRID},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}})});},
+
+  hemo(c){return new Chart(c,{type:'bar',data:{
+    labels:CL,datasets:[{data:[11,8,7,6],backgroundColor:CLUST,borderRadius:8,maxBarThickness:75}]},
+    options:baseOpts({plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>` ${x.parsed.y} mmHg`}}},
+      scales:{y:{beginAtZero:true,max:13,grid:{color:GRID},title:{display:true,text:'RAP (mmHg)'}},x:{grid:{display:false}}}})});},
+
+  survdisc(c){const ci=['35.4–64.1','56.7–78.3','72.0–94.3','51.3–84.7'];
+    return new Chart(c,{type:'bar',data:{
+    labels:CL,datasets:[{data:[47.6,66.6,82.4,66.0],backgroundColor:CLUST,borderRadius:8,maxBarThickness:75}]},
+    options:baseOpts({plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:x=>` ${x.parsed.y}%  (95% CI ${ci[x.dataIndex]})`}}},
+      scales:{y:{beginAtZero:true,max:100,grid:{color:GRID},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}})});},
+
+  valdist(c){return new Chart(c,{type:'bar',data:{
+    labels:CL,datasets:[
+      {label:'Discovery',data:[20.6,38.8,27.4,13.2],backgroundColor:CY,borderRadius:6,maxBarThickness:42},
+      {label:'Validation',data:[25.0,31.7,34.6,8.7],backgroundColor:AM,borderRadius:6,maxBarThickness:42}]},
+    options:baseOpts({plugins:{legend:{position:'top'},tooltip:{callbacks:{label:x=>` ${x.dataset.label}: ${x.parsed.y}%`}}},
+      scales:{y:{beginAtZero:true,max:45,grid:{color:GRID},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}})});},
+
+  survall(c){return new Chart(c,{type:'bar',data:{
+    labels:CL,datasets:[
+      {label:'Discovery',data:[47.6,66.6,82.4,66.0],backgroundColor:CY,borderRadius:5,maxBarThickness:34},
+      {label:'Validation',data:[30.8,54.5,63.9,44.4],backgroundColor:AM,borderRadius:5,maxBarThickness:34},
+      {label:'Pooled',data:[39.5,62.3,79.4,60.9],backgroundColor:GR,borderRadius:5,maxBarThickness:34}]},
+    options:baseOpts({plugins:{legend:{position:'top'},tooltip:{callbacks:{label:x=>` ${x.dataset.label}: ${x.parsed.y}%`}}},
+      scales:{y:{beginAtZero:true,max:100,grid:{color:GRID},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}})});},
+
+  hr(c){return new Chart(c,{type:'bar',data:{
+    labels:['Cluster 1','Cluster 3'],
+    datasets:[{data:[2.19,0.39],backgroundColor:[CO,GR],borderRadius:7,maxBarThickness:55}]},
+    options:baseOpts({indexAxis:'y',plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:x=>{const ci=x.dataIndex===0?'1.51–3.18':'0.25–0.63';return ` HR ${x.parsed.x} (95% CI ${ci})`;}}}},
+      scales:{x:{beginAtZero:true,max:3.4,grid:{color:GRID},title:{display:true,text:'hazard ratio  (1.0 = no effect)'}},
+              y:{grid:{display:false}}}})});}
+
+};
+
+/* ---------- Lazy init per slide ---------- */
+const done = new Set();
+function renderVisible(){
+  document.querySelectorAll('section.present canvas[data-chart]').forEach(cv=>{
+    const key = cv.getAttribute('data-chart');
+    if(done.has(cv)) return;
+    if(builders[key]){ builders[key](cv.getContext('2d')); done.add(cv); }
+  });
+}
+Reveal.on('ready', ()=> setTimeout(renderVisible,120));
+Reveal.on('slidechanged', ()=> setTimeout(renderVisible,120));
+</script>
+</body>
+</html>

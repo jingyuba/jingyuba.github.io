@@ -102,6 +102,51 @@
 <div class="reveal">
 <div class="slides">
 
+  <!-- 0. PREVALENCE OF PH GROUPS -->
+  <section>
+    <div class="slide-wrap">
+      <div class="title-block"><h2>Prevalence of Pulmonary Hypertension by <span class="accent">Clinical Group</span></h2></div>
+      <div class="content-block" style="padding-top:0.4%;padding-bottom:2.5%;justify-content:flex-start;">
+        <div class="stat-row" style="margin-bottom:10px;flex-shrink:0;">
+          <div class="stat"><div class="num">~1%</div><div class="lbl">Global PH prevalence (all groups); ~10% in adults &gt;65 yrs <span style="opacity:.7">[1]</span></div></div>
+          <div class="stat"><div class="num a">90–95%</div><div class="lbl">of PH cases are Group 2 or 3 worldwide <span style="opacity:.7">[2]</span></div></div>
+          <div class="stat"><div class="num c">15–60</div><div class="lbl">PAH (Group 1) cases per million (Europe) <span style="opacity:.7">[3]</span></div></div>
+        </div>
+        <div class="grid2 lean" style="flex:1;min-height:0;height:auto;">
+          <div class="col" style="gap:8px;justify-content:flex-start;">
+            <div class="card" style="padding:10px 14px;">
+              <p style="margin:0 0 4px;font-size:17px;"><span class="key">Group 1 · PAH</span></p>
+              <p style="margin:0;font-size:15px;line-height:1.35;">Rare: prevalence <span class="key">15–60 / million</span>, incidence 5–10 / million / yr (Europe) <span class="muted" style="font-size:13px;">[3]</span>. Mean RHC-confirmed prevalence ~3.7 / 100&nbsp;000 <span class="muted" style="font-size:13px;">[4]</span>. GBD 2021: ~192&nbsp;000 prevalent cases globally (age-std. 2.28 / 100&nbsp;000) <span class="muted" style="font-size:13px;">[5]</span>.</p>
+            </div>
+            <div class="card" style="padding:10px 14px;">
+              <p style="margin:0 0 4px;font-size:17px;"><span class="key3">Group 2 · Left heart disease</span></p>
+              <p style="margin:0;font-size:15px;line-height:1.35;">Most common form. Ontario cohort (n=50&nbsp;529): Group 2 in <span class="key3">68.5%</span> of adult PH (alone 34.2%; with Group 3 29.3%). PH complicates only ~3.6% of people with left heart disease <span class="muted" style="font-size:13px;">[6]</span>.</p>
+            </div>
+            <div class="card" style="padding:10px 14px;">
+              <p style="margin:0 0 4px;font-size:17px;"><span class="key2">Group 3 · Lung disease / hypoxia</span></p>
+              <p style="margin:0;font-size:15px;line-height:1.35;">Second most frequent. Group 3 present in <span class="key2">~47%</span> of adult PH. PH is uncommon among all lung-disease patients (~0.7%), yet with Group 2 accounts for nearly all population-level PH <span class="muted" style="font-size:13px;">[2,6]</span>.</p>
+            </div>
+            <div class="card" style="padding:10px 14px;">
+              <p style="margin:0 0 4px;font-size:17px;"><span class="keyg">Group 4 · CTEPH</span> &nbsp;·&nbsp; <span class="key" style="font-weight:500;">Group 5 · Multifactorial</span></p>
+              <p style="margin:0;font-size:15px;line-height:1.35;"><b>G4:</b> ~3–30 / million; ~0.5–3% after PE; ~9% of adult PH <span class="muted" style="font-size:13px;">[6–8]</span>. <b>G5:</b> unclear / multifactorial (hematologic, systemic, metabolic) — least well quantified population estimates.</p>
+            </div>
+          </div>
+          <div class="col" style="min-height:0;">
+            <div class="chart-card">
+              <h3>Share of adult PH by WHO group (Ontario) <span class="muted" style="font-weight:500;font-size:13px;">[6]</span></h3>
+              <div class="chart-host"><canvas data-chart="phprev"></canvas></div>
+              <p class="cap" style="margin-top:4px;">Codes may overlap (&gt;1 group in 35.4%). Group 1 = residual without LHD / lung / CTEPH codes (~13.8%).</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer" style="font-size:11px;line-height:1.3;">
+          <span>[1] Hoeper Lancet Respir Med 2016 · [2] Kovacs ERJ 2024 · [3] ESC/ERS 2015/2022 · [4] Emmons-Bell Pulm Circ 2022 · [5] GBD/Leary · [6] Wijeratne 2018 · [7] Medrek 2016 · [8] Ende-Verhaar ERJ 2017</span>
+          <span>Prevalence overview</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 1. TITLE -->
   <section data-transition="fade">
     <div class="cover">
@@ -910,6 +955,16 @@ const baseOpts = (extra={}) => Object.assign({
 
 /* ---------- Chart builders ---------- */
 const builders = {
+  phprev(ctx){
+    return new Chart(ctx,{type:'bar',data:{
+      labels:['Group 1\n(PAH)','Group 2\n(LHD)','Group 3\n(Lung)','Group 4\n(CTEPH)'],
+      datasets:[{label:'% of adult PH population',data:[13.8,68.5,47.0,9.0],
+        backgroundColor:[CY,AM,CO,GR],borderRadius:8,maxBarThickness:70}]},
+      options:baseOpts({plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>` ${c.parsed.y}% of adult PH (codes may overlap)`}}},
+        scales:{y:{beginAtZero:true,max:80,grid:{color:GRID},ticks:{callback:v=>v+'%'}},
+                x:{grid:{display:false}}}})});
+  },
   clusters(ctx){
     return new Chart(ctx,{type:'bar',data:{
       labels:['PAH immune\nphenotypes [17]','Autoimmune\nlevels [18]','SSc PH\nclusters [56]'],

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>IPAH Phenotypes by Cluster Analysis</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0b1220;
+  --card: #151e2e;
+  --border: #243044;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent1: #22c55e; /* Cluster 1 green */
+  --accent2: #3b82f6; /* Cluster 2 blue */
+  --accent3: #ef4444; /* Cluster 3 red */
+  --accent4: #94a3b8; /* Cluster 4 gray */
+  --highlight: #38bdf8;
+}
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  overflow: hidden;
+}
+.reveal {
+  background: var(--bg);
+}
+.reveal .slides {
+  width: 1280px !important;
+  height: 720px !important;
+}
+.reveal .slides section {
+  height: 720px;
+  padding: 0 !important;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+/* Title block: top 10% */
+.slide-title {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 4%;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--border);
+}
+.slide-title h1, .slide-title h2 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 1.15;
+}
+/* Content block: bottom 90% */
+.slide-content {
+  height: 90%;
+  width: 100%;
+  padding: 2.5% 5%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  text-align: left;
+  overflow: hidden;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  padding: 14px 18px;
+  box-sizing: border-box;
+}
+.card-title {
+  font-size: 18pt;
+  font-weight: 600;
+  color: var(--highlight);
+  margin: 0 0 8px 0;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  height: 100%;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  height: 100%;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  height: 100%;
+}
+.kpi {
+  text-align: center;
+  padding: 12px 8px;
+}
+.kpi .value {
+  font-size: 28pt;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.kpi .label {
+  font-size: 13pt;
+  color: var(--muted);
+  margin-top: 4px;
+}
+body-text, .body-text {
+  font-size: 20pt;
+  line-height: 1.35;
+  color: var(--text);
+  margin: 0;
+}
+.small {
+  font-size: 14pt;
+  color: var(--muted);
+}
+.caption {
+  font-size: 12pt;
+  color: var(--muted);
+  margin-top: 6px;
+}
+ul.clean {
+  margin: 0;
+  padding-left: 22px;
+  font-size: 20pt;
+  line-height: 1.4;
+}
+ul.clean li { margin-bottom: 6px; }
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.chart-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 13pt;
+  font-weight: 600;
+}
+.b1 { background: rgba(34,197,94,0.2); color: var(--accent1); }
+.b2 { background: rgba(59,130,246,0.2); color: var(--accent2); }
+.b3 { background: rgba(239,68,68,0.2); color: var(--accent3); }
+.b4 { background: rgba(148,163,184,0.25); color: var(--accent4); }
+.flex-row {
+  display: flex;
+  gap: 16px;
+  height: 100%;
+}
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+.grow { flex: 1; min-height: 0; }
+.center-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+}
+.title-slide .slide-content {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.accent-bar {
+  width: 80px;
+  height: 4px;
+  background: var(--highlight);
+  margin: 12px auto;
+  border-radius: 2px;
+}
+@media (max-width: 1024px) {
+  .slide-title h1, .slide-title h2 { font-size: 28pt !important; }
+  .body-text, ul.clean { font-size: 16pt !important; }
+}
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- 1. Title -->
+<section class="title-slide">
+  <div class="slide-title" style="border:none;height:0;padding:0;"></div>
+  <div class="slide-content center-all">
+    <div>
+      <div style="font-size:18pt;color:var(--highlight);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">Journal of Heart and Lung Transplantation · 2020</div>
+      <h1 style="font-size:40pt;max-width:1000px;margin:0 auto;line-height:1.2;">Clinical Implications of IPAH Phenotypes Defined by Cluster Analysis</h1>
+      <div class="accent-bar"></div>
+      <p style="font-size:20pt;color:var(--muted);margin:16px 0 0;">Badagliacca R, et al. · n = 252 patients · 4 distinct phenotypes</p>
+      <p class="caption" style="margin-top:24px;">Source: Badagliacca et al. J Heart Lung Transplant 2020;39:310–320</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Agenda -->
+<section>
+  <div class="slide-title"><h2 style="font-size:36pt;">Agenda</h2></div>
+  <div class="slide-content">
+    <div class="grid-2" style="align-items:stretch;">
+      <div class="card grow">
+        <div class="card-title">Study Focus</div>
+        <ul class="clean">
+          <li>Background &amp; clinical problem</li>
+          <li>Methods &amp; cohort</li>
+          <li>Cluster identification</li>
+          <li>Key discriminating variables</li>
+        </ul>
+      </div>
+      <div class="card grow">
+        <div class="card-title">Results &amp; Implications</div>
+        <ul class="clean">
+          <li>Four IPAH phenotypes detailed</li>
+          <li>Comparative metrics (charts)</li>
+          <li>Clinical worsening &amp; survival</li>
+          <li>Key findings &amp; conclusions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Background -->
+<section>
+  <div class="slide-title"><h2 style="font-size:36pt;">Background &amp; Rationale</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;">
+      <p class="body-text" style="margin-bottom:14px;">Idiopathic pulmonary arterial hypertension (IPAH) is a clinical syndrome diagnosed by exclusion. Significant heterogeneity exists within the diagnosis.</p>
+      <ul class="clean">
+        <li>Patients with identical RV afterload may or may not develop RV failure</li>
+        <li>Current risk tools (Euro-score, French, REVEAL) incompletely capture phenotype diversity</li>
+        <li>Treatment response remains highly variable despite modern therapies</li>
+        <li>Cluster analysis of clinical variables can reveal clinically meaningful subtypes</li>
+      </ul>
+      <p class="caption" style="margin-top:16px;">Aim: Apply hierarchical cluster analysis to improve phenotyping and relate clusters to long-term clinical worsening.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Methods -->
+<section>
+  <div class="slide-title"><h2 style="font-size:36pt;">Methods &amp; Cohort</h2></div>
+  <div class="slide-content">
+    <div class="grid-3">
+      <div class="card kpi">
+        <div class="value" style="color:var(--highlight);">252</div>
+        <div class="label">IPAH patients<br>2 referral centers</div>
+      </div>
+      <div class="card kpi">
+        <div class="value" style="color:var(--highlight);">28</div>
+        <div class="label">Baseline variables<br>(clinical, RHC, echo, CPET)</div>
+      </div>
+      <div class="card kpi">
+        <div class="value" style="color:var(--highlight);">995</div>
+        <div class="label">Mean follow-up (days)<br>± 623</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px;">
+      <p class="body-text" style="font-size:18pt;">Hierarchical cluster analysis (Ward’s method, squared Euclidean distance) → 4-cluster solution. Discriminant analysis ranked mPAP, RVEDA and O₂ pulse as top predictors of cluster membership (Wilks’ λ = 0.107, p = 0.0001).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Four Clusters Overview -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Four Distinct IPAH Phenotypes</h2></div>
+  <div class="slide-content">
+    <div class="grid-4">
+      <div class="card" style="border-top:4px solid var(--accent1);">
+        <div class="badge b1">Cluster 1</div>
+        <p style="font-size:16pt;margin:10px 0 4px;font-weight:600;">Mild PH + Preserved RV</p>
+        <p class="small">Young · High O₂ pulse<br>n = 57 · Best prognosis</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--accent2);">
+        <div class="badge b2">Cluster 2</div>
+        <p style="font-size:16pt;margin:10px 0 4px;font-weight:600;">Severe PH + Adaptive RV</p>
+        <p class="small">High O₂ pulse<br>n = 46 · Intermediate risk</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--accent3);">
+        <div class="badge b3">Cluster 3</div>
+        <p style="font-size:16pt;margin:10px 0 4px;font-weight:600;">Severe PH + Maladaptive RV</p>
+        <p class="small">Male predominance · Low O₂ pulse<br>n = 102 · Worst prognosis</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--accent4);">
+        <div class="badge b4">Cluster 4</div>
+        <p style="font-size:16pt;margin:10px 0 4px;font-weight:600;">Mild PH + Deconditioned RV</p>
+        <p class="small">Older · Overweight · Low O₂ pulse<br>n = 46 · Intermediate risk</p>
+      </div>
+    </div>
+    <p class="caption" style="margin-top:10px;">Source: Badagliacca et al. JHLT 2020; Table 1 &amp; Figure 4</p>
+  </div>
+</section>
+
+<!-- 6. Cluster size chart -->
+<section>
+  <div class="slide-title"><h2 style="font-size:36pt;">Cluster Distribution</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;">
+      <div class="card-title">Patient numbers per phenotype (total n = 252)</div>
+      <div class="chart-wrap grow">
+        <canvas id="chartClusterSize"></canvas>
+      </div>
+      <p class="caption">Cluster 3 accounts for 40% of the cohort and carries the highest clinical-worsening burden.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Discriminant variables -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Top Discriminating Variables</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;">
+      <div class="card-title">Standardized discriminant function coefficients</div>
+      <div class="chart-wrap grow">
+        <canvas id="chartDiscriminant"></canvas>
+      </div>
+      <p class="caption">mPAP (0.83), RVEDA (0.68) and O₂ pulse (0.27) are the dominant drivers of cluster membership.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. Key metrics comparison -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Core Metrics Across Clusters</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;">
+      <div class="card-title">Age, mPAP, RVEDA, O₂ pulse (mean values)</div>
+      <div class="chart-wrap grow">
+        <canvas id="chartCoreMetrics"></canvas>
+      </div>
+      <p class="caption">Source: Table 1 – Badagliacca et al. JHLT 2020</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9. Hemodynamics -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Hemodynamic Profile</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;">
+      <div class="card-title">mPAP, RAP, Cardiac Index, PVR</div>
+      <div class="chart-wrap grow">
+        <canvas id="chartHemo"></canvas>
+      </div>
+      <p class="caption">Clusters 1 &amp; 4 share mild afterload; Clusters 2 &amp; 3 share severe afterload.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10. Exercise capacity -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Exercise Capacity (CPET &amp; 6MWT)</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;">
+      <div class="card-title">Peak VO₂, O₂ pulse, 6MWD, VE/VCO₂ slope</div>
+      <div class="chart-wrap grow">
+        <canvas id="chartExercise"></canvas>
+      </div>
+      <p class="caption">O₂ pulse cleanly separates adaptive (C1/C2) from maladaptive/deconditioned (C3/C4) phenotypes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11. Echo parameters -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Right-Ventricular Phenotype (Echo)</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;">
+      <div class="card-title">RVEDA, RVFAC, TAPSE, RA area</div>
+      <div class="chart-wrap grow">
+        <canvas id="chartEcho"></canvas>
+      </div>
+      <p class="caption">Cluster 3 shows the most severe RV remodeling and reduced systolic function.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12. Clinical worsening risk -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Risk of Clinical Worsening</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;">
+      <div class="card-title">Hazard ratios vs Cluster 1 (reference)</div>
+      <div class="chart-wrap grow">
+        <canvas id="chartHR"></canvas>
+      </div>
+      <p class="caption">Cluster 3: HR 13.8 (95% CI 5.60–34.0); Cluster 2: HR 7.38; Cluster 4: HR 4.12. Overall CW rate 48.8%.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13. Freedom from CW -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Freedom from Clinical Worsening</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;">
+      <div class="card-title">Kaplan–Meier estimates at 1, 3 and 5 years</div>
+      <div class="chart-wrap grow">
+        <canvas id="chartKM"></canvas>
+      </div>
+      <p class="caption">Cluster 1 remains &gt;90% free of CW at 5 years; Cluster 3 falls to 16%.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 14. Risk scores vs clusters -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Traditional Risk Scores vs Clusters</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;">
+      <p class="body-text" style="margin-bottom:12px;">Current tools (European average, French low-risk count, REVEAL) show substantial overlap across clusters and fail to mirror the large outcome differences.</p>
+      <ul class="clean">
+        <li>Most patients in every cluster fall into the intermediate-risk category</li>
+        <li>Low-risk patients are still present in Cluster 3 (worst outcome)</li>
+        <li>c-statistic of clustering model ≈ 0.61 – similar to risk scores, yet provides orthogonal phenotypic information</li>
+        <li>Highlight: need to incorporate RV imaging + CPET parameters into risk assessment</li>
+      </ul>
+      <p class="caption" style="margin-top:10px;">Source: Figure 3 &amp; Discussion – Badagliacca et al. JHLT 2020</p>
+    </div>
+  </div>
+</section>
+
+<!-- 15. Phenotype summary matrix -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Phenotype Summary Matrix</h2></div>
+  <div class="slide-content">
+    <div class="grid-2" style="height:100%;">
+      <div class="card" style="border-left:5px solid var(--accent1);">
+        <div class="badge b1">Cluster 1 – Mild / Preserved</div>
+        <ul class="clean" style="font-size:16pt;margin-top:10px;">
+          <li>Age ≈ 47 y · High O₂ pulse</li>
+          <li>Mild PH &amp; RV dilation</li>
+          <li>Excellent long-term survival</li>
+          <li>Potential monotherapy candidates</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:5px solid var(--accent2);">
+        <div class="badge b2">Cluster 2 – Severe / Adaptive</div>
+        <ul class="clean" style="font-size:16pt;margin-top:10px;">
+          <li>Severe PH yet preserved O₂ pulse</li>
+          <li>Adaptive RV remodeling</li>
+          <li>Intermediate prognosis</li>
+          <li>Likely dual oral therapy</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:5px solid var(--accent3);">
+        <div class="badge b3">Cluster 3 – Severe / Maladaptive</div>
+        <ul class="clean" style="font-size:16pt;margin-top:10px;">
+          <li>Male predominance · Low O₂ pulse</li>
+          <li>Marked RV dilation &amp; dysfunction</li>
+          <li>Highest CW rate</li>
+          <li>Consider upfront parenteral prostanoids</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:5px solid var(--accent4);">
+        <div class="badge b4">Cluster 4 – Mild / Deconditioned</div>
+        <ul class="clean" style="font-size:16pt;margin-top:10px;">
+          <li>Older, overweight · Low O₂ pulse</li>
+          <li>Mild PH yet poor exercise capacity</li>
+          <li>Intermediate prognosis</li>
+          <li>Exercise training + PAH drugs</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16. Key Findings -->
+<section>
+  <div class="slide-title"><h2 style="font-size:36pt;">Key Findings</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;">
+      <ul class="clean">
+        <li>Four reproducible clinical phenotypes exist inside the single diagnostic label “IPAH”</li>
+        <li>Combination of mPAP + RVEDA + O₂ pulse is sufficient to stratify patients</li>
+        <li>Cluster 3 (severe PH + maladaptive RV) carries a 13.8-fold higher risk of clinical worsening versus Cluster 1</li>
+        <li>Traditional risk scores do not adequately separate these outcome trajectories</li>
+        <li>Multidimensional phenotyping (echo + CPET) is required for precision treatment decisions</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 17. Clinical Implications -->
+<section>
+  <div class="slide-title"><h2 style="font-size:34pt;">Clinical &amp; Research Implications</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;">
+      <ul class="clean">
+        <li>Treatment intensity should be phenotype-guided rather than solely risk-score-guided</li>
+        <li>Cluster 1: possible monotherapy or treatment de-escalation</li>
+        <li>Cluster 2: dual oral combination (AMBITION-style)</li>
+        <li>Cluster 3: early consideration of parenteral prostanoids</li>
+        <li>Cluster 4: structured exercise rehabilitation programs</li>
+        <li>Future trials should enrich or stratify by these phenotypes to reduce heterogeneity of treatment effect</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 18. Conclusions -->
+<section>
+  <div class="slide-title"><h2 style="font-size:36pt;">Conclusions</h2></div>
+  <div class="slide-content">
+    <div class="card" style="height:100%;display:flex;flex-direction:column;justify-content:center;">
+      <p class="body-text" style="font-size:22pt;margin-bottom:18px;">Cluster analysis of routinely available clinical, hemodynamic, echocardiographic and CPET variables identifies four distinct, prognostically relevant IPAH phenotypes.</p>
+      <p class="body-text" style="font-size:20pt;color:var(--muted);">These findings underscore the high degree of disease heterogeneity within IPAH and the necessity of advanced phenotyping to refine risk assessment and personalize therapy.</p>
+      <p class="caption" style="margin-top:20px;">Badagliacca et al. J Heart Lung Transplant 2020;39:310–320</p>
+    </div>
+  </div>
+</section>
+
+<!-- 19. Thank You -->
+<section class="title-slide">
+  <div class="slide-title" style="border:none;height:0;padding:0;"></div>
+  <div class="slide-content center-all">
+    <div>
+      <h1 style="font-size:44pt;margin:0;">Thank You</h1>
+      <div class="accent-bar"></div>
+      <p style="font-size:22pt;color:var(--muted);margin-top:16px;">Questions &amp; Discussion</p>
+      <p class="caption" style="margin-top:28px;">Data source: Badagliacca R, et al. Clinical implications of idiopathic pulmonary arterial hypertension phenotypes defined by cluster analysis. J Heart Lung Transplant. 2020;39:310–320.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280,
+  height: 720,
+  margin: 0.1,
+  minScale: 0.2,
+  maxScale: 2.0,
+  center: false,
+  hash: true,
+  transition: 'fade',
+  backgroundTransition: 'fade'
+});
+
+const colors = {
+  c1: '#22c55e',
+  c2: '#3b82f6',
+  c3: '#ef4444',
+  c4: '#94a3b8',
+  grid: 'rgba(148,163,184,0.15)',
+  text: '#94a3b8'
+};
+
+const chartDefaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { labels: { color: colors.text, font: { size: 13 } } },
+    tooltip: { backgroundColor: '#1e293b', titleColor: '#e2e8f0', bodyColor: '#e2e8f0', borderColor: '#334155', borderWidth: 1 }
+  },
+  scales: {
+    x: { ticks: { color: colors.text, font: { size: 12 } }, grid: { color: colors.grid } },
+    y: { ticks: { color: colors.text, font: { size: 12 } }, grid: { color: colors.grid } }
+  }
+};
+
+// Cluster size pie
+new Chart(document.getElementById('chartClusterSize'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Cluster 1 (n=57)', 'Cluster 2 (n=46)', 'Cluster 3 (n=102)', 'Cluster 4 (n=46)'],
+    datasets: [{
+      data: [57, 46, 102, 46],
+      backgroundColor: [colors.c1, colors.c2, colors.c3, colors.c4],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { color: colors.text, font: { size: 14 }, padding: 16 } },
+      tooltip: chartDefaults.plugins.tooltip
+    }
+  }
+});
+
+// Discriminant coefficients
+new Chart(document.getElementById('chartDiscriminant'), {
+  type: 'bar',
+  data: {
+    labels: ['mPAP', 'RVEDA', 'O₂ pulse', 'VO₂ peak', 'RVESA', 'RVFAC', '6MWT', 'Age', 'TAPSE', 'VE/VCO₂'],
+    datasets: [{
+      label: 'Standardized coefficient',
+      data: [0.83, 0.68, 0.27, -0.45, -0.46, -0.25, 0.13, 0.11, -0.15, 0.13],
+      backgroundColor: [colors.c3, colors.c3, colors.c2, colors.c4, colors.c4, colors.c4, colors.c4, colors.c4, colors.c4, colors.c4],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    ...chartDefaults,
+    indexAxis: 'y',
+    plugins: { ...chartDefaults.plugins, legend: { display: false } },
+    scales: {
+      x: { ...chartDefaults.scales.x, min: -0.6, max: 1.0 },
+      y: { ...chartDefaults.scales.y, grid: { display: false } }
+    }
+  }
+});
+
+// Core metrics grouped bar
+new Chart(document.getElementById('chartCoreMetrics'), {
+  type: 'bar',
+  data: {
+    labels: ['Age (y)', 'mPAP (mmHg)', 'RVEDA (cm²)', 'O₂ pulse (ml/beat)'],
+    datasets: [
+      { label: 'Cluster 1', data: [47.3, 33.8, 23.8, 10.0], backgroundColor: colors.c1, borderRadius: 3 },
+      { label: 'Cluster 2', data: [57.0, 54.6, 29.4, 8.9], backgroundColor: colors.c2, borderRadius: 3 },
+      { label: 'Cluster 3', data: [53.6, 54.4, 32.5, 6.2], backgroundColor: colors.c3, borderRadius: 3 },
+      { label: 'Cluster 4', data: [63.2, 34.8, 22.9, 6.0], backgroundColor: colors.c4, borderRadius: 3 }
+    ]
+  },
+  options: {
+    ...chartDefaults,
+    plugins: { ...chartDefaults.plugins, legend: { labels: { color: colors.text, font: { size: 12 } } } }
+  }
+});
+
+// Hemodynamics
+new Chart(document.getElementById('chartHemo'), {
+  type: 'bar',
+  data: {
+    labels: ['mPAP', 'RAP', 'CI', 'PVR (WU)'],
+    datasets: [
+      { label: 'C1', data: [33.8, 5.9, 2.7, 5.3], backgroundColor: colors.c1, borderRadius: 3 },
+      { label: 'C2', data: [54.6, 8.3, 2.5, 10.0], backgroundColor: colors.c2, borderRadius: 3 },
+      { label: 'C3', data: [54.4, 8.6, 2.4, 11.4], backgroundColor: colors.c3, borderRadius: 3 },
+      { label: 'C4', data: [34.8, 4.9, 2.7, 5.4], backgroundColor: colors.c4, borderRadius: 3 }
+    ]
+  },
+  options: chartDefaults
+});
+
+// Exercise
+new Chart(document.getElementById('chartExercise'), {
+  type: 'bar',
+  data: {
+    labels: ['VO₂ peak', 'O₂ pulse', '6MWD (/10)', 'VE/VCO₂'],
+    datasets: [
+      { label: 'C1', data: [16.6, 10.0, 48.2, 41.2], backgroundColor: colors.c1, borderRadius: 3 },
+      { label: 'C2', data: [15.3, 8.9, 40.2, 45.6], backgroundColor: colors.c2, borderRadius: 3 },
+      { label: 'C3', data: [11.4, 6.2, 38.6, 53.7], backgroundColor: colors.c3, borderRadius: 3 },
+      { label: 'C4', data: [11.3, 6.0, 38.8, 45.7], backgroundColor: colors.c4, borderRadius: 3 }
+    ]
+  },
+  options: {
+    ...chartDefaults,
+    plugins: {
+      ...chartDefaults.plugins,
+      title: { display: true, text: '6MWD scaled ÷10 for visual comparison', color: colors.text, font: { size: 12 } }
+    }
+  }
+});
+
+// Echo
+new Chart(document.getElementById('chartEcho'), {
+  type: 'bar',
+  data: {
+    labels: ['RVEDA', 'RVFAC (%)', 'TAPSE (mm)', 'RA area'],
+    datasets: [
+      { label: 'C1', data: [23.8, 40.2, 22.2, 26.0], backgroundColor: colors.c1, borderRadius: 3 },
+      { label: 'C2', data: [29.4, 36.0, 20.2, 31.8], backgroundColor: colors.c2, borderRadius: 3 },
+      { label: 'C3', data: [32.5, 29.4, 17.5, 33.8], backgroundColor: colors.c3, borderRadius: 3 },
+      { label: 'C4', data: [22.9, 36.0, 20.5, 23.5], backgroundColor: colors.c4, borderRadius: 3 }
+    ]
+  },
+  options: chartDefaults
+});
+
+// Hazard ratios
+new Chart(document.getElementById('chartHR'), {
+  type: 'bar',
+  data: {
+    labels: ['Cluster 2', 'Cluster 3', 'Cluster 4'],
+    datasets: [{
+      label: 'HR vs Cluster 1',
+      data: [7.38, 13.8, 4.12],
+      backgroundColor: [colors.c2, colors.c3, colors.c4],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    ...chartDefaults,
+    plugins: { ...chartDefaults.plugins, legend: { display: false } },
+    scales: {
+      y: { ...chartDefaults.scales.y, title: { display: true, text: 'Hazard Ratio', color: colors.text } },
+      x: chartDefaults.scales.x
+    }
+  }
+});
+
+// Kaplan-Meier style (freedom from CW)
+new Chart(document.getElementById('chartKM'), {
+  type: 'line',
+  data: {
+    labels: ['Baseline', '1 year', '3 years', '5 years'],
+    datasets: [
+      { label: 'Cluster 1', data: [100, 98, 92, 90], borderColor: colors.c1, backgroundColor: 'transparent', tension: 0.25, pointRadius: 5, borderWidth: 3 },
+      { label: 'Cluster 2', data: [100, 87, 58, 39], borderColor: colors.c2, backgroundColor: 'transparent', tension: 0.25, pointRadius: 5, borderWidth: 3 },
+      { label: 'Cluster 3', data: [100, 70, 43, 16], borderColor: colors.c3, backgroundColor: 'transparent', tension: 0.25, pointRadius: 5, borderWidth: 3 },
+      { label: 'Cluster 4', data: [100, 91, 75, 66], borderColor: colors.c4, backgroundColor: 'transparent', tension: 0.25, pointRadius: 5, borderWidth: 3 }
+    ]
+  },
+  options: {
+    ...chartDefaults,
+    scales: {
+      y: { ...chartDefaults.scales.y, min: 0, max: 100, title: { display: true, text: 'Freedom from CW (%)', color: colors.text } },
+      x: chartDefaults.scales.x
+    }
+  }
+});
+</script>
+</body>
+</html>

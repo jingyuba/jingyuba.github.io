@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>問診助手 · Consultation Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+    body { font-family: 'Noto Sans TC', 'Inter', system-ui, sans-serif; }
+    .pulse-dot {
+      animation: pulse-dot 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+    .waveform {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 28px;
+    }
+    .waveform span {
+      width: 3px;
+      border-radius: 999px;
+      background: #7c3aed;
+      animation: wave 0.9s ease-in-out infinite;
+    }
+    .waveform span:nth-child(1) { height: 8px; animation-delay: 0s; }
+    .waveform span:nth-child(2) { height: 18px; animation-delay: 0.1s; }
+    .waveform span:nth-child(3) { height: 12px; animation-delay: 0.2s; }
+    .waveform span:nth-child(4) { height: 22px; animation-delay: 0.15s; }
+    .waveform span:nth-child(5) { height: 10px; animation-delay: 0.25s; }
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.45); opacity: 0.5; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+    .turn-card textarea {
+      field-sizing: content;
+      min-height: 2.75rem;
+    }
+    #summary-output {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .scroll-thin::-webkit-scrollbar { width: 6px; }
+    .scroll-thin::-webkit-scrollbar-thumb {
+      background: #d4d4d8;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-800 min-h-screen">
+  <!-- Top bar -->
+  <header class="bg-white border-b border-zinc-200 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="../tools.html" class="text-zinc-400 hover:text-violet-700 transition-colors shrink-0" title="返回小工具列表">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div class="w-8 h-8 bg-violet-700 rounded-lg flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-stethoscope text-white text-sm"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-semibold tracking-tight truncate">問診助手</div>
+          <div class="text-[10px] text-zinc-500 -mt-0.5 truncate">語音辨識 · AI 英文總結</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-settings" type="button"
+          class="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl border border-zinc-200 hover:bg-zinc-50 text-sm font-medium transition-colors">
+          <i class="fa-solid fa-key text-violet-700"></i>
+          <span class="hidden sm:inline">API 設定</span>
+        </button>
+        <button id="btn-new-session" type="button"
+          class="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl border border-zinc-200 hover:bg-zinc-50 text-sm font-medium transition-colors">
+          <i class="fa-solid fa-rotate-right text-zinc-500"></i>
+          <span class="hidden sm:inline">新問診</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 grid lg:grid-cols-5 gap-6">
+    <!-- Left: dialogue -->
+    <section class="lg:col-span-3 flex flex-col gap-4">
+      <!-- Patient context -->
+      <div class="bg-white border border-zinc-200 rounded-3xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
+            <i class="fa-solid fa-user-injured text-violet-600"></i>
+            問診情境（選填）
+          </h2>
+          <span class="text-[11px] text-zinc-400">幫助 AI 產出更精準的英文總結</span>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <label class="block text-xs text-zinc-500">
+            主訴 / 科別
+            <input id="chief-complaint" type="text" placeholder="例：全身性紅斑狼瘡門診追蹤"
+              class="mt-1 w-full h-10 px-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400">
+          </label>
+          <label class="block text-xs text-zinc-500">
+            語音辨識語言
+            <select id="stt-lang"
+              class="mt-1 w-full h-10 px-3 rounded-xl border border-zinc-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400">
+              <option value="zh-TW" selected>中文（台灣）</option>
+              <option value="zh-CN">中文（簡體）</option>
+              <option value="en-US">English (US)</option>
+              <option value="en-GB">English (UK)</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <!-- Live recording panel -->
+      <div class="bg-white border border-zinc-200 rounded-3xl p-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h2 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
+            <i class="fa-solid fa-microphone text-violet-600"></i>
+            即時錄音辨識
+          </h2>
+          <div id="rec-status" class="text-xs text-zinc-500 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-zinc-300"></span>
+            待機中
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button id="btn-rec-doctor" type="button"
+            class="inline-flex items-center gap-2 px-4 h-11 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-user-doctor"></i>
+            錄製醫師發言
+          </button>
+          <button id="btn-rec-patient" type="button"
+            class="inline-flex items-center gap-2 px-4 h-11 rounded-2xl bg-violet-700 hover:bg-violet-800 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-user"></i>
+            錄製病患回應
+          </button>
+          <button id="btn-stop-rec" type="button" disabled
+            class="inline-flex items-center gap-2 px-4 h-11 rounded-2xl border border-rose-200 text-rose-700 hover:bg-rose-50 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-stop"></i>
+            停止
+          </button>
+        </div>
+
+        <div id="live-transcript-wrap" class="hidden rounded-2xl bg-violet-50 border border-violet-100 p-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2 text-xs font-medium text-violet-800">
+              <div class="waveform" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <span id="live-role-label">辨識中…</span>
+            </div>
+            <span class="text-[11px] text-violet-500">說完後按「停止」寫入對話</span>
+          </div>
+          <p id="live-transcript" class="text-sm text-zinc-700 min-h-[1.5rem] leading-relaxed"></p>
+        </div>
+
+        <p id="stt-support-msg" class="hidden mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+          此瀏覽器不支援 Web Speech API。請改用 Chrome / Edge，或手動輸入對話內容。
+        </p>
+      </div>
+
+      <!-- Dialogue turns -->
+      <div class="bg-white border border-zinc-200 rounded-3xl p-5 flex flex-col min-h-[320px]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
+            <i class="fa-solid fa-comments text-violet-600"></i>
+            問診對話紀錄
+            <span id="turn-count" class="text-xs font-normal text-zinc-400">(0 則)</span>
+          </h2>
+          <div class="flex gap-2">
+            <button id="btn-add-doctor" type="button"
+              class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium">
+              + 醫師文字
+            </button>
+            <button id="btn-add-patient" type="button"
+              class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium">
+              + 病患文字
+            </button>
+          </div>
+        </div>
+
+        <div id="turns-empty" class="flex-1 flex flex-col items-center justify-center text-center py-10 text-sm text-zinc-400">
+          <i class="fa-solid fa-microphone-lines text-3xl mb-3 text-zinc-300"></i>
+          <p>尚無對話。請按上方按鈕錄製，或手動新增文字。</p>
+          <p class="text-xs mt-1">醫師與病患可多次輪流對話後再產生總結。</p>
+        </div>
+
+        <ol id="turns-list" class="space-y-3 scroll-thin max-h-[52vh] overflow-y-auto pr-1 hidden"></ol>
+      </div>
+    </section>
+
+    <!-- Right: AI summary -->
+    <section class="lg:col-span-2 flex flex-col gap-4">
+      <div class="bg-white border border-zinc-200 rounded-3xl p-5 flex flex-col flex-1 min-h-[420px]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-violet-600"></i>
+            英文總結
+          </h2>
+          <div class="flex gap-1.5">
+            <button id="btn-copy-summary" type="button" disabled
+              class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+              title="複製">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+            <button id="btn-download-summary" type="button" disabled
+              class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+              title="下載 .txt">
+              <i class="fa-solid fa-download"></i>
+            </button>
+          </div>
+        </div>
+
+        <p class="text-xs text-zinc-500 mb-4 leading-relaxed">
+          將目前對話送至 AI，產出適合病歷 / 轉診的 <strong class="font-medium text-zinc-700">英文文字總結</strong>
+          （Chief Complaint、HPI、ROS、Assessment、Plan 等）。
+        </p>
+
+        <button id="btn-summarize" type="button"
+          class="w-full inline-flex items-center justify-center gap-2 h-12 rounded-2xl bg-violet-700 hover:bg-violet-800 text-white text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4">
+          <i class="fa-solid fa-language"></i>
+          <span id="summarize-label">產生英文總結</span>
+        </button>
+
+        <div id="summary-placeholder" class="flex-1 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 flex items-center justify-center p-6 text-center text-sm text-zinc-400">
+          總結結果會顯示於此
+        </div>
+        <div id="summary-box" class="hidden flex-1 flex flex-col min-h-0">
+          <div id="summary-output" class="flex-1 overflow-y-auto scroll-thin rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm leading-relaxed text-zinc-800 font-mono"></div>
+          <p id="summary-meta" class="mt-2 text-[11px] text-zinc-400"></p>
+        </div>
+        <p id="summary-error" class="hidden mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2"></p>
+      </div>
+
+      <div class="bg-violet-50 border border-violet-100 rounded-3xl p-4 text-xs text-violet-900/80 leading-relaxed space-y-1.5">
+        <div class="font-semibold text-violet-900 flex items-center gap-1.5">
+          <i class="fa-solid fa-shield-halved"></i>
+          隱私提醒
+        </div>
+        <p>• 語音由瀏覽器 Web Speech API 辨識（Chrome / Edge 效果較佳）。</p>
+        <p>• API 金鑰僅存於本機瀏覽器（localStorage），不會上傳到本站伺服器。</p>
+        <p>• 對話內容會送至您設定的 AI 服務以產生總結；請勿在未授權環境處理敏感個資。</p>
+        <p>• 產出內容僅供臨床參考，需由醫師核對後使用。</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Settings modal -->
+  <div id="settings-modal" class="hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-zinc-900/40 backdrop-blur-[2px]" data-close-modal></div>
+    <div class="relative max-w-md mx-auto mt-[12vh] bg-white rounded-3xl border border-zinc-200 shadow-xl p-6 mx-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-lg tracking-tight">AI API 設定</h3>
+        <button type="button" data-close-modal class="w-8 h-8 rounded-lg hover:bg-zinc-100 text-zinc-500">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p class="text-xs text-zinc-500 mb-4 leading-relaxed">
+        預設使用 <strong class="text-zinc-700">xAI (Grok)</strong> OpenAI 相容 API。
+        金鑰請至 <a href="https://console.x.ai" target="_blank" rel="noopener" class="text-violet-700 underline">console.x.ai</a> 建立。
+      </p>
+      <label class="block text-xs text-zinc-500 mb-1">Base URL</label>
+      <input id="cfg-base-url" type="url" value="https://api.x.ai/v1"
+        class="w-full h-10 px-3 mb-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200">
+      <label class="block text-xs text-zinc-500 mb-1">Model</label>
+      <input id="cfg-model" type="text" value="grok-4.5"
+        class="w-full h-10 px-3 mb-3 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200">
+      <label class="block text-xs text-zinc-500 mb-1">API Key</label>
+      <div class="relative mb-2">
+        <input id="cfg-api-key" type="password" autocomplete="off" placeholder="xai-..."
+          class="w-full h-10 px-3 pr-10 rounded-xl border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200">
+        <button type="button" id="btn-toggle-key" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 text-zinc-400 hover:text-zinc-600">
+          <i class="fa-regular fa-eye"></i>
+        </button>
+      </div>
+      <p id="cfg-key-status" class="text-[11px] text-zinc-400 mb-4"></p>
+      <div class="flex gap-2">
+        <button id="btn-save-settings" type="button"
+          class="flex-1 h-10 rounded-xl bg-violet-700 hover:bg-violet-800 text-white text-sm font-medium">
+          儲存
+        </button>
+        <button id="btn-clear-key" type="button"
+          class="h-10 px-4 rounded-xl border border-zinc-200 text-sm font-medium hover:bg-zinc-50">
+          清除金鑰
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-2xl bg-zinc-900 text-white text-sm shadow-lg"></div>
+
+  <script>
+    const STORAGE_KEY = 'consultation-assistant-settings-v1';
+    const SESSION_KEY = 'consultation-assistant-session-v1';
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    /** @type {{ id: string, role: 'doctor'|'patient', text: string, source: 'speech'|'typed', ts: number }[]} */
+    let turns = [];
+    let recognition = null;
+    let recordingRole = null; // 'doctor' | 'patient' | null
+    let finalTranscript = '';
+    let interimTranscript = '';
+    let shouldRestart = false;
+    let summarizeAbort = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    function uid() {
+      return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function toast(msg, ms = 2200) {
+      const el = $('toast');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => el.classList.add('hidden'), ms);
+    }
+
+    function loadSettings() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    function saveSettings(partial) {
+      const next = { ...loadSettings(), ...partial };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      updateKeyStatus();
+      return next;
+    }
+
+    function updateKeyStatus() {
+      const s = loadSettings();
+      const has = Boolean(s.apiKey && s.apiKey.trim());
+      $('cfg-key-status').textContent = has
+        ? `已儲存金鑰（${s.apiKey.slice(0, 6)}…）· 僅存在本機`
+        : '尚未設定 API 金鑰';
+    }
+
+    function openSettings() {
+      const s = loadSettings();
+      $('cfg-base-url').value = s.baseUrl || 'https://api.x.ai/v1';
+      $('cfg-model').value = s.model || 'grok-4.5';
+      $('cfg-api-key').value = s.apiKey || '';
+      $('cfg-api-key').type = 'password';
+      updateKeyStatus();
+      $('settings-modal').classList.remove('hidden');
+    }
+
+    function closeSettings() {
+      $('settings-modal').classList.add('hidden');
+    }
+
+    function persistSession() {
+      const payload = {
+        chiefComplaint: $('chief-complaint').value,
+        sttLang: $('stt-lang').value,
+        turns,
+        summary: $('summary-output').textContent || '',
+        summaryMeta: $('summary-meta').textContent || '',
+      };
+      try {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(payload));
+      } catch { /* ignore quota */ }
+    }
+
+    function restoreSession() {
+      try {
+        const raw = sessionStorage.getItem(SESSION_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (data.chiefComplaint) $('chief-complaint').value = data.chiefComplaint;
+        if (data.sttLang) $('stt-lang').value = data.sttLang;
+        if (Array.isArray(data.turns)) turns = data.turns;
+        if (data.summary) {
+          showSummary(data.summary, data.summaryMeta || '');
+        }
+        renderTurns();
+      } catch { /* ignore */ }
+    }
+
+    function setRecStatus(mode, role) {
+      const el = $('rec-status');
+      if (mode === 'idle') {
+        el.innerHTML = '<span class="w-2 h-2 rounded-full bg-zinc-300"></span>待機中';
+        return;
+      }
+      const label = role === 'doctor' ? '醫師' : '病患';
+      el.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 pulse-dot"></span>正在錄製${label}…`;
+    }
+
+    function setRecordingUI(active, role) {
+      recordingRole = active ? role : null;
+      $('btn-rec-doctor').disabled = active;
+      $('btn-rec-patient').disabled = active;
+      $('btn-stop-rec').disabled = !active;
+      $('live-transcript-wrap').classList.toggle('hidden', !active);
+      if (active) {
+        $('live-role-label').textContent = role === 'doctor' ? '辨識醫師發言…' : '辨識病患回應…';
+        $('live-transcript').textContent = '';
+        setRecStatus('recording', role);
+      } else {
+        setRecStatus('idle');
+      }
+    }
+
+    function updateLiveText() {
+      const finalPart = finalTranscript.trim();
+      const interimPart = interimTranscript.trim();
+      let html = escapeHtml(finalPart);
+      if (interimPart) {
+        html += (finalPart ? ' ' : '') + `<span class="text-violet-500/80">${escapeHtml(interimPart)}</span>`;
+      }
+      $('live-transcript').innerHTML = html || '<span class="text-zinc-400">聆聽中…</span>';
+    }
+
+    function ensureRecognition() {
+      if (!SpeechRecognition) return null;
+      if (recognition) return recognition;
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+
+      recognition.onresult = (event) => {
+        let interim = '';
+        let finalChunk = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          const text = result[0]?.transcript || '';
+          if (result.isFinal) finalChunk += text;
+          else interim += text;
+        }
+        if (finalChunk) {
+          finalTranscript = `${finalTranscript} ${finalChunk}`.replace(/\s+/g, ' ').trim();
+        }
+        interimTranscript = interim;
+        updateLiveText();
+      };
+
+      recognition.onerror = (event) => {
+        const err = event.error;
+        if (err === 'aborted' || err === 'no-speech') return;
+        if (err === 'not-allowed') {
+          toast('無法使用麥克風，請允許瀏覽器權限');
+          stopRecording(false);
+          return;
+        }
+        console.warn('SpeechRecognition error:', err);
+      };
+
+      recognition.onend = () => {
+        if (shouldRestart && recordingRole) {
+          try {
+            recognition.lang = $('stt-lang').value || 'zh-TW';
+            recognition.start();
+          } catch (e) {
+            console.warn(e);
+          }
+        }
+      };
+
+      return recognition;
+    }
+
+    function startRecording(role) {
+      if (!SpeechRecognition) {
+        $('stt-support-msg').classList.remove('hidden');
+        toast('瀏覽器不支援語音辨識');
+        return;
+      }
+      const rec = ensureRecognition();
+      finalTranscript = '';
+      interimTranscript = '';
+      shouldRestart = true;
+      rec.lang = $('stt-lang').value || 'zh-TW';
+      setRecordingUI(true, role);
+      updateLiveText();
+      try {
+        rec.start();
+      } catch (e) {
+        // Already started
+        console.warn(e);
+      }
+    }
+
+    function stopRecording(commit = true) {
+      shouldRestart = false;
+      const role = recordingRole;
+      const text = `${finalTranscript} ${interimTranscript}`.replace(/\s+/g, ' ').trim();
+      if (recognition) {
+        try { recognition.stop(); } catch { /* ignore */ }
+      }
+      setRecordingUI(false);
+      finalTranscript = '';
+      interimTranscript = '';
+
+      if (commit && role && text) {
+        addTurn(role, text, 'speech');
+        toast(role === 'doctor' ? '已寫入醫師發言' : '已寫入病患回應');
+      }
+    }
+
+    function addTurn(role, text, source = 'typed') {
+      const cleaned = (text || '').trim();
+      turns.push({
+        id: uid(),
+        role,
+        text: cleaned,
+        source,
+        ts: Date.now(),
+      });
+      renderTurns();
+      persistSession();
+    }
+
+    function updateTurn(id, text) {
+      const t = turns.find((x) => x.id === id);
+      if (!t) return;
+      t.text = text;
+      persistSession();
+    }
+
+    function removeTurn(id) {
+      turns = turns.filter((x) => x.id !== id);
+      renderTurns();
+      persistSession();
+    }
+
+    function renderTurns() {
+      const list = $('turns-list');
+      const empty = $('turns-empty');
+      $('turn-count').textContent = `(${turns.length} 則)`;
+
+      if (!turns.length) {
+        list.classList.add('hidden');
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      list.classList.remove('hidden');
+      list.innerHTML = turns.map((t, index) => {
+        const isDoctor = t.role === 'doctor';
+        const badge = isDoctor
+          ? 'bg-teal-100 text-teal-800 border-teal-200'
+          : 'bg-violet-100 text-violet-800 border-violet-200';
+        const roleLabel = isDoctor ? '醫師' : '病患';
+        const icon = isDoctor ? 'fa-user-doctor' : 'fa-user';
+        const sourceLabel = t.source === 'speech' ? '語音' : '文字';
+        return `
+          <li class="turn-card rounded-2xl border border-zinc-200 bg-zinc-50/80 p-3" data-id="${t.id}">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium border ${badge}">
+                  <i class="fa-solid ${icon}"></i>${roleLabel}
+                </span>
+                <span class="text-[11px] text-zinc-400">#${index + 1} · ${sourceLabel}</span>
+              </div>
+              <button type="button" data-remove="${t.id}" class="w-7 h-7 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50" title="刪除">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
+            <textarea data-edit="${t.id}" rows="2"
+              class="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-violet-200 resize-y"
+              placeholder="${isDoctor ? '醫師發言…' : '病患回應…'}">${escapeHtml(t.text)}</textarea>
+          </li>
+        `;
+      }).join('');
+
+      list.querySelectorAll('[data-remove]').forEach((btn) => {
+        btn.addEventListener('click', () => removeTurn(btn.getAttribute('data-remove')));
+      });
+      list.querySelectorAll('textarea[data-edit]').forEach((ta) => {
+        ta.addEventListener('input', () => updateTurn(ta.getAttribute('data-edit'), ta.value));
+      });
+
+      list.scrollTop = list.scrollHeight;
+    }
+
+    function buildDialogueText() {
+      return turns
+        .filter((t) => (t.text || '').trim())
+        .map((t, i) => {
+          const role = t.role === 'doctor' ? 'Doctor' : 'Patient';
+          return `[${i + 1}] ${role}: ${(t.text || '').trim()}`;
+        })
+        .join('\n');
+    }
+
+    function showSummary(text, meta = '') {
+      $('summary-placeholder').classList.add('hidden');
+      $('summary-box').classList.remove('hidden');
+      $('summary-output').textContent = text;
+      $('summary-meta').textContent = meta;
+      $('btn-copy-summary').disabled = !text;
+      $('btn-download-summary').disabled = !text;
+      $('summary-error').classList.add('hidden');
+    }
+
+    function showSummaryError(msg) {
+      const el = $('summary-error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function setSummarizing(busy) {
+      $('btn-summarize').disabled = busy;
+      $('summarize-label').textContent = busy ? '分析中…' : '產生英文總結';
+      if (busy) {
+        $('btn-summarize').querySelector('i').className = 'fa-solid fa-spinner fa-spin';
+      } else {
+        $('btn-summarize').querySelector('i').className = 'fa-solid fa-language';
+      }
+    }
+
+    async function generateSummary() {
+      const dialogue = buildDialogueText();
+      if (!dialogue) {
+        toast('請先錄製或輸入至少一則對話');
+        return;
+      }
+
+      const settings = loadSettings();
+      const apiKey = (settings.apiKey || '').trim();
+      if (!apiKey) {
+        openSettings();
+        toast('請先設定 API 金鑰');
+        return;
+      }
+
+      const baseUrl = (settings.baseUrl || 'https://api.x.ai/v1').replace(/\/$/, '');
+      const model = settings.model || 'grok-4.5';
+      const chief = ($('chief-complaint').value || '').trim();
+
+      const systemPrompt = [
+        'You are an experienced bilingual clinical documentation assistant for physicians.',
+        'Given a multi-turn doctor–patient consultation transcript (often in Chinese, possibly mixed languages),',
+        'produce a clear, professional ENGLISH medical summary suitable for clinic notes / referral.',
+        'Do NOT invent facts not supported by the dialogue. If information is missing, write "Not discussed".',
+        'Prefer concise clinical English. Use bullet points where helpful.',
+        'Structure the output exactly with these section headings:',
+        '1. Chief Complaint',
+        '2. History of Present Illness',
+        '3. Relevant History / Context',
+        '4. Review of Systems (if mentioned)',
+        '5. Assessment',
+        '6. Plan / Next Steps',
+        '7. Key Patient Quotes (English translation of important patient statements)',
+        '8. Uncertainties / Follow-up Questions',
+      ].join(' ');
+
+      const userPrompt = [
+        chief ? `Visit context / chief complaint (from physician): ${chief}` : 'Visit context: not provided.',
+        '',
+        'Consultation transcript (chronological multi-turn dialogue):',
+        dialogue,
+        '',
+        'Write the English summary now.',
+      ].join('\n');
+
+      if (summarizeAbort) summarizeAbort.abort();
+      summarizeAbort = new AbortController();
+      setSummarizing(true);
+      $('summary-error').classList.add('hidden');
+
+      try {
+        const res = await fetch(`${baseUrl}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+          signal: summarizeAbort.signal,
+          body: JSON.stringify({
+            model,
+            temperature: 0.2,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: userPrompt },
+            ],
+          }),
+        });
+
+        if (!res.ok) {
+          let detail = '';
+          try {
+            const errBody = await res.json();
+            detail = errBody?.error?.message || JSON.stringify(errBody);
+          } catch {
+            detail = await res.text();
+          }
+          throw new Error(`API ${res.status}: ${detail || res.statusText}`);
+        }
+
+        const data = await res.json();
+        const content =
+          data?.choices?.[0]?.message?.content?.trim() ||
+          data?.output_text?.trim() ||
+          '';
+
+        if (!content) throw new Error('模型未回傳內容');
+
+        const meta = `${new Date().toLocaleString('zh-TW')} · ${model} · ${turns.filter((t) => t.text.trim()).length} turns`;
+        showSummary(content, meta);
+        persistSession();
+        toast('英文總結已完成');
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+        console.error(err);
+        showSummaryError(err.message || String(err));
+        toast('總結失敗，請檢查 API 設定');
+      } finally {
+        setSummarizing(false);
+      }
+    }
+
+    function newSession() {
+      if (recordingRole) stopRecording(false);
+      if (turns.length || $('summary-output').textContent) {
+        if (!confirm('確定要清空目前問診對話與總結？')) return;
+      }
+      turns = [];
+      $('chief-complaint').value = '';
+      $('summary-output').textContent = '';
+      $('summary-meta').textContent = '';
+      $('summary-box').classList.add('hidden');
+      $('summary-placeholder').classList.remove('hidden');
+      $('btn-copy-summary').disabled = true;
+      $('btn-download-summary').disabled = true;
+      $('summary-error').classList.add('hidden');
+      renderTurns();
+      persistSession();
+      toast('已開始新問診');
+    }
+
+    async function copySummary() {
+      const text = $('summary-output').textContent || '';
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        toast('已複製英文總結');
+      } catch {
+        toast('複製失敗，請手動選取文字');
+      }
+    }
+
+    function downloadSummary() {
+      const text = $('summary-output').textContent || '';
+      if (!text) return;
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+      a.href = url;
+      a.download = `consultation-summary-${stamp}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Events
+    $('btn-settings').addEventListener('click', openSettings);
+    $('btn-new-session').addEventListener('click', newSession);
+    document.querySelectorAll('[data-close-modal]').forEach((el) => {
+      el.addEventListener('click', closeSettings);
+    });
+    $('btn-save-settings').addEventListener('click', () => {
+      saveSettings({
+        baseUrl: $('cfg-base-url').value.trim() || 'https://api.x.ai/v1',
+        model: $('cfg-model').value.trim() || 'grok-4.5',
+        apiKey: $('cfg-api-key').value.trim(),
+      });
+      closeSettings();
+      toast('設定已儲存');
+    });
+    $('btn-clear-key').addEventListener('click', () => {
+      $('cfg-api-key').value = '';
+      saveSettings({ apiKey: '' });
+      toast('金鑰已清除');
+    });
+    $('btn-toggle-key').addEventListener('click', () => {
+      const input = $('cfg-api-key');
+      const icon = $('btn-toggle-key').querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    });
+
+    $('btn-rec-doctor').addEventListener('click', () => startRecording('doctor'));
+    $('btn-rec-patient').addEventListener('click', () => startRecording('patient'));
+    $('btn-stop-rec').addEventListener('click', () => stopRecording(true));
+
+    $('btn-add-doctor').addEventListener('click', () => {
+      addTurn('doctor', '', 'typed');
+      const last = $('turns-list').querySelector('li:last-child textarea');
+      last?.focus();
+    });
+    $('btn-add-patient').addEventListener('click', () => {
+      addTurn('patient', '', 'typed');
+      const last = $('turns-list').querySelector('li:last-child textarea');
+      last?.focus();
+    });
+
+    $('btn-summarize').addEventListener('click', generateSummary);
+    $('btn-copy-summary').addEventListener('click', copySummary);
+    $('btn-download-summary').addEventListener('click', downloadSummary);
+
+    $('chief-complaint').addEventListener('input', persistSession);
+    $('stt-lang').addEventListener('change', persistSession);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !$('settings-modal').classList.contains('hidden')) {
+        closeSettings();
+      }
+    });
+
+    // Boot
+    if (!SpeechRecognition) {
+      $('stt-support-msg').classList.remove('hidden');
+    }
+    updateKeyStatus();
+    restoreSession();
+    renderTurns();
+  </script>
+</body>
+</html>

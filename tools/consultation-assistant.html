@@ -37,10 +37,8 @@
       0%, 100% { transform: scaleY(0.45); opacity: 0.5; }
       50% { transform: scaleY(1); opacity: 1; }
     }
-    .turn-card textarea {
-      field-sizing: content;
-      min-height: 2.75rem;
-    }
+    #transcript-input,
+    #translated-output,
     #summary-output {
       white-space: pre-wrap;
       word-break: break-word;
@@ -49,6 +47,16 @@
     .scroll-thin::-webkit-scrollbar-thumb {
       background: #d4d4d8;
       border-radius: 999px;
+    }
+    .step-badge {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -65,7 +73,7 @@
         </div>
         <div class="min-w-0">
           <div class="font-semibold tracking-tight truncate">問診助手</div>
-          <div class="text-[10px] text-zinc-500 -mt-0.5 truncate">語音辨識 · AI 英文總結</div>
+          <div class="text-[10px] text-zinc-500 -mt-0.5 truncate">單一錄音 · 一鍵英譯 · AI 總結</div>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -84,7 +92,7 @@
   </header>
 
   <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 grid lg:grid-cols-5 gap-6">
-    <!-- Left: dialogue -->
+    <!-- Left: recording + transcript -->
     <section class="lg:col-span-3 flex flex-col gap-4">
       <!-- Patient context -->
       <div class="bg-white border border-zinc-200 rounded-3xl p-5">
@@ -114,12 +122,13 @@
         </div>
       </div>
 
-      <!-- Live recording panel -->
+      <!-- Step 1: Single recording -->
       <div class="bg-white border border-zinc-200 rounded-3xl p-5">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <h2 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
+            <span class="step-badge bg-violet-700 text-white">1</span>
             <i class="fa-solid fa-microphone text-violet-600"></i>
-            即時錄音辨識
+            單一錄音辨識
           </h2>
           <div id="rec-status" class="text-xs text-zinc-500 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-zinc-300"></span>
@@ -127,35 +136,62 @@
           </div>
         </div>
 
+        <p class="text-xs text-zinc-500 mb-4 leading-relaxed">
+          不區分醫師／病患角色，全程以<strong class="font-medium text-zinc-700">單一錄音</strong>連續辨識。
+          錄完後按「錄音完成」，再一鍵翻譯與 AI 總結。
+        </p>
+
         <div class="flex flex-wrap gap-2 mb-4">
-          <button id="btn-rec-doctor" type="button"
-            class="inline-flex items-center gap-2 px-4 h-11 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-            <i class="fa-solid fa-user-doctor"></i>
-            錄製醫師發言
-          </button>
-          <button id="btn-rec-patient" type="button"
+          <button id="btn-rec-start" type="button"
             class="inline-flex items-center gap-2 px-4 h-11 rounded-2xl bg-violet-700 hover:bg-violet-800 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-            <i class="fa-solid fa-user"></i>
-            錄製病患回應
+            <i class="fa-solid fa-microphone"></i>
+            開始錄音
           </button>
-          <button id="btn-stop-rec" type="button" disabled
-            class="inline-flex items-center gap-2 px-4 h-11 rounded-2xl border border-rose-200 text-rose-700 hover:bg-rose-50 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-            <i class="fa-solid fa-stop"></i>
-            停止
+          <button id="btn-rec-stop" type="button" disabled
+            class="inline-flex items-center gap-2 px-4 h-11 rounded-2xl border border-zinc-200 text-zinc-700 hover:bg-zinc-50 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-pause"></i>
+            暫停
+          </button>
+          <button id="btn-rec-finish" type="button" disabled
+            class="inline-flex items-center gap-2 px-4 h-11 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-circle-check"></i>
+            錄音完成
           </button>
         </div>
 
-        <div id="live-transcript-wrap" class="hidden rounded-2xl bg-violet-50 border border-violet-100 p-4">
+        <div id="live-transcript-wrap" class="hidden rounded-2xl bg-violet-50 border border-violet-100 p-4 mb-4">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2 text-xs font-medium text-violet-800">
               <div class="waveform" aria-hidden="true">
                 <span></span><span></span><span></span><span></span><span></span>
               </div>
-              <span id="live-role-label">辨識中…</span>
+              <span>辨識中…</span>
             </div>
-            <span class="text-[11px] text-violet-500">說完後按「停止」寫入對話</span>
+            <span class="text-[11px] text-violet-500">可按「暫停」暫停，或「錄音完成」結束</span>
           </div>
           <p id="live-transcript" class="text-sm text-zinc-700 min-h-[1.5rem] leading-relaxed"></p>
+        </div>
+
+        <div id="finished-banner" class="hidden mb-4 rounded-2xl bg-teal-50 border border-teal-100 px-4 py-3 text-sm text-teal-900 flex items-center gap-2">
+          <i class="fa-solid fa-circle-check text-teal-700"></i>
+          <span>錄音已完成。請確認下方原文後，進行一鍵英譯與 AI 總結。</span>
+        </div>
+
+        <label class="block text-xs text-zinc-500 mb-1.5 font-medium">
+          語音辨識原文
+          <span class="font-normal text-zinc-400">（可手動編輯／補字）</span>
+        </label>
+        <textarea id="transcript-input" rows="8" placeholder="錄音內容會自動寫入此處，也可直接手動輸入問診內容…"
+          class="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-zinc-50/50 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400 resize-y min-h-[10rem]"></textarea>
+
+        <div class="mt-2 flex items-center justify-between gap-2">
+          <p class="text-[11px] text-zinc-400">
+            <span id="transcript-char-count">0</span> 字
+          </p>
+          <button id="btn-clear-transcript" type="button"
+            class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium text-zinc-600">
+            清空原文
+          </button>
         </div>
 
         <p id="stt-support-msg" class="hidden mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
@@ -163,50 +199,57 @@
           此瀏覽器不支援 Web Speech API。請改用 Chrome / Edge，或手動輸入對話內容。
         </p>
       </div>
-
-      <!-- Dialogue turns -->
-      <div class="bg-white border border-zinc-200 rounded-3xl p-5 flex flex-col min-h-[320px]">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
-            <i class="fa-solid fa-comments text-violet-600"></i>
-            問診對話紀錄
-            <span id="turn-count" class="text-xs font-normal text-zinc-400">(0 則)</span>
-          </h2>
-          <div class="flex gap-2">
-            <button id="btn-add-doctor" type="button"
-              class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium">
-              + 醫師文字
-            </button>
-            <button id="btn-add-patient" type="button"
-              class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium">
-              + 病患文字
-            </button>
-          </div>
-        </div>
-
-        <div id="turns-empty" class="flex-1 flex flex-col items-center justify-center text-center py-10 text-sm text-zinc-400">
-          <i class="fa-solid fa-microphone-lines text-3xl mb-3 text-zinc-300"></i>
-          <p>尚無對話。請按上方按鈕錄製，或手動新增文字。</p>
-          <p class="text-xs mt-1">醫師與病患可多次輪流對話後再產生總結。</p>
-        </div>
-
-        <ol id="turns-list" class="space-y-3 scroll-thin max-h-[52vh] overflow-y-auto pr-1 hidden"></ol>
-      </div>
     </section>
 
-    <!-- Right: AI summary -->
+    <!-- Right: translate + summary -->
     <section class="lg:col-span-2 flex flex-col gap-4">
-      <div class="bg-white border border-zinc-200 rounded-3xl p-5 flex flex-col flex-1 min-h-[420px]">
+      <!-- Step 2: Translate -->
+      <div class="bg-white border border-zinc-200 rounded-3xl p-5 flex flex-col">
         <div class="flex items-center justify-between mb-3">
           <h2 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
+            <span class="step-badge bg-violet-700 text-white">2</span>
+            <i class="fa-solid fa-language text-violet-600"></i>
+            一鍵英譯
+          </h2>
+          <button id="btn-copy-translated" type="button" disabled
+            class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+            title="複製英文譯文">
+            <i class="fa-regular fa-copy mr-1"></i>複製
+          </button>
+        </div>
+
+        <p class="text-xs text-zinc-500 mb-3 leading-relaxed">
+          將上方<strong class="font-medium text-zinc-700">全部語音辨識原文</strong>一次翻譯成英文。
+        </p>
+
+        <button id="btn-translate" type="button"
+          class="w-full inline-flex items-center justify-center gap-2 h-11 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-3">
+          <i class="fa-solid fa-globe"></i>
+          <span id="translate-label">一鍵翻譯成英文</span>
+        </button>
+
+        <div id="translated-placeholder" class="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 flex items-center justify-center p-5 text-center text-sm text-zinc-400 min-h-[7rem]">
+          英文譯文會顯示於此
+        </div>
+        <div id="translated-box" class="hidden">
+          <div id="translated-output" class="max-h-[28vh] overflow-y-auto scroll-thin rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm leading-relaxed text-zinc-800"></div>
+        </div>
+        <p id="translate-error" class="hidden mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2"></p>
+      </div>
+
+      <!-- Step 3: AI summary -->
+      <div class="bg-white border border-zinc-200 rounded-3xl p-5 flex flex-col flex-1 min-h-[280px]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold text-zinc-700 flex items-center gap-2">
+            <span class="step-badge bg-violet-700 text-white">3</span>
             <i class="fa-solid fa-wand-magic-sparkles text-violet-600"></i>
-            英文總結
+            AI 英文總結
           </h2>
           <div class="flex gap-1.5">
             <button id="btn-copy-summary" type="button" disabled
               class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium disabled:opacity-40 disabled:cursor-not-allowed"
-              title="複製">
-              <i class="fa-regular fa-copy"></i>
+              title="複製總結">
+              <i class="fa-regular fa-copy mr-1"></i>複製
             </button>
             <button id="btn-download-summary" type="button" disabled
               class="text-xs px-2.5 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 font-medium disabled:opacity-40 disabled:cursor-not-allowed"
@@ -216,22 +259,21 @@
           </div>
         </div>
 
-        <p class="text-xs text-zinc-500 mb-4 leading-relaxed">
-          將目前對話送至 AI，產出適合病歷 / 轉診的 <strong class="font-medium text-zinc-700">英文文字總結</strong>
-          （Chief Complaint、HPI、ROS、Assessment、Plan 等）。
+        <p class="text-xs text-zinc-500 mb-3 leading-relaxed">
+          依原文與英譯產出適合病歷／轉診的 <strong class="font-medium text-zinc-700">英文臨床總結</strong>。
         </p>
 
         <button id="btn-summarize" type="button"
-          class="w-full inline-flex items-center justify-center gap-2 h-12 rounded-2xl bg-violet-700 hover:bg-violet-800 text-white text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4">
-          <i class="fa-solid fa-language"></i>
-          <span id="summarize-label">產生英文總結</span>
+          class="w-full inline-flex items-center justify-center gap-2 h-11 rounded-2xl bg-violet-700 hover:bg-violet-800 text-white text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-3">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span id="summarize-label">產生 AI 總結</span>
         </button>
 
-        <div id="summary-placeholder" class="flex-1 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 flex items-center justify-center p-6 text-center text-sm text-zinc-400">
+        <div id="summary-placeholder" class="flex-1 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 flex items-center justify-center p-5 text-center text-sm text-zinc-400 min-h-[8rem]">
           總結結果會顯示於此
         </div>
         <div id="summary-box" class="hidden flex-1 flex flex-col min-h-0">
-          <div id="summary-output" class="flex-1 overflow-y-auto scroll-thin rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm leading-relaxed text-zinc-800 font-mono"></div>
+          <div id="summary-output" class="flex-1 overflow-y-auto scroll-thin max-h-[36vh] rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm leading-relaxed text-zinc-800 font-mono"></div>
           <p id="summary-meta" class="mt-2 text-[11px] text-zinc-400"></p>
         </div>
         <p id="summary-error" class="hidden mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2"></p>
@@ -244,7 +286,7 @@
         </div>
         <p>• 語音由瀏覽器 Web Speech API 辨識（Chrome / Edge 效果較佳）。</p>
         <p>• API 金鑰僅存於本機瀏覽器（localStorage），不會上傳到本站伺服器。</p>
-        <p>• 對話內容會送至您設定的 AI 服務以產生總結；請勿在未授權環境處理敏感個資。</p>
+        <p>• 對話內容會送至您設定的 AI 服務以產生譯文與總結；請勿在未授權環境處理敏感個資。</p>
         <p>• 產出內容僅供臨床參考，需由醫師核對後使用。</p>
       </div>
     </section>
@@ -297,24 +339,20 @@
 
   <script>
     const STORAGE_KEY = 'consultation-assistant-settings-v1';
-    const SESSION_KEY = 'consultation-assistant-session-v1';
+    const SESSION_KEY = 'consultation-assistant-session-v2';
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    /** @type {{ id: string, role: 'doctor'|'patient', text: string, source: 'speech'|'typed', ts: number }[]} */
-    let turns = [];
     let recognition = null;
-    let recordingRole = null; // 'doctor' | 'patient' | null
+    let isRecording = false;
+    let isFinished = false;
     let finalTranscript = '';
     let interimTranscript = '';
     let shouldRestart = false;
+    let translateAbort = null;
     let summarizeAbort = null;
 
     const $ = (id) => document.getElementById(id);
-
-    function uid() {
-      return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-    }
 
     function escapeHtml(text) {
       return String(text)
@@ -369,13 +407,23 @@
       $('settings-modal').classList.add('hidden');
     }
 
+    function getTranscript() {
+      return ($('transcript-input').value || '').trim();
+    }
+
+    function updateCharCount() {
+      $('transcript-char-count').textContent = String(($('transcript-input').value || '').length);
+    }
+
     function persistSession() {
       const payload = {
         chiefComplaint: $('chief-complaint').value,
         sttLang: $('stt-lang').value,
-        turns,
+        transcript: $('transcript-input').value || '',
+        translated: $('translated-output').textContent || '',
         summary: $('summary-output').textContent || '',
         summaryMeta: $('summary-meta').textContent || '',
+        isFinished,
       };
       try {
         sessionStorage.setItem(SESSION_KEY, JSON.stringify(payload));
@@ -389,37 +437,52 @@
         const data = JSON.parse(raw);
         if (data.chiefComplaint) $('chief-complaint').value = data.chiefComplaint;
         if (data.sttLang) $('stt-lang').value = data.sttLang;
-        if (Array.isArray(data.turns)) turns = data.turns;
-        if (data.summary) {
-          showSummary(data.summary, data.summaryMeta || '');
+        if (data.transcript) $('transcript-input').value = data.transcript;
+        if (data.isFinished) {
+          isFinished = true;
+          $('finished-banner').classList.remove('hidden');
         }
-        renderTurns();
+        if (data.translated) showTranslated(data.translated);
+        if (data.summary) showSummary(data.summary, data.summaryMeta || '');
+        updateCharCount();
+        updateFinishButtonState();
       } catch { /* ignore */ }
     }
 
-    function setRecStatus(mode, role) {
+    function setRecStatus(mode) {
       const el = $('rec-status');
       if (mode === 'idle') {
         el.innerHTML = '<span class="w-2 h-2 rounded-full bg-zinc-300"></span>待機中';
-        return;
+      } else if (mode === 'recording') {
+        el.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 pulse-dot"></span>錄音中…';
+      } else if (mode === 'finished') {
+        el.innerHTML = '<span class="w-2 h-2 rounded-full bg-teal-500"></span>已完成';
+      } else if (mode === 'paused') {
+        el.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span>已暫停';
       }
-      const label = role === 'doctor' ? '醫師' : '病患';
-      el.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 pulse-dot"></span>正在錄製${label}…`;
     }
 
-    function setRecordingUI(active, role) {
-      recordingRole = active ? role : null;
-      $('btn-rec-doctor').disabled = active;
-      $('btn-rec-patient').disabled = active;
-      $('btn-stop-rec').disabled = !active;
+    function setRecordingUI(active) {
+      isRecording = active;
+      $('btn-rec-start').disabled = active || isFinished;
+      $('btn-rec-stop').disabled = !active;
       $('live-transcript-wrap').classList.toggle('hidden', !active);
       if (active) {
-        $('live-role-label').textContent = role === 'doctor' ? '辨識醫師發言…' : '辨識病患回應…';
         $('live-transcript').textContent = '';
-        setRecStatus('recording', role);
-      } else {
-        setRecStatus('idle');
+        setRecStatus('recording');
+        isFinished = false;
+        $('finished-banner').classList.add('hidden');
+      } else if (!isFinished) {
+        setRecStatus(getTranscript() ? 'paused' : 'idle');
       }
+      updateFinishButtonState();
+    }
+
+    function updateFinishButtonState() {
+      // Enable finish if recording, or if there is transcript / was recording session
+      const hasText = Boolean(getTranscript() || finalTranscript || interimTranscript);
+      $('btn-rec-finish').disabled = isFinished || (!isRecording && !hasText);
+      if (isFinished) setRecStatus('finished');
     }
 
     function updateLiveText() {
@@ -430,6 +493,23 @@
         html += (finalPart ? ' ' : '') + `<span class="text-violet-500/80">${escapeHtml(interimPart)}</span>`;
       }
       $('live-transcript').innerHTML = html || '<span class="text-zinc-400">聆聽中…</span>';
+    }
+
+    function appendToTranscript(chunk) {
+      const text = (chunk || '').trim();
+      if (!text) return;
+      const ta = $('transcript-input');
+      const current = ta.value.trim();
+      ta.value = current ? `${current} ${text}` : text;
+      updateCharCount();
+      persistSession();
+    }
+
+    function flushLiveToTranscript() {
+      const text = `${finalTranscript} ${interimTranscript}`.replace(/\s+/g, ' ').trim();
+      if (text) appendToTranscript(text);
+      finalTranscript = '';
+      interimTranscript = '';
     }
 
     function ensureRecognition() {
@@ -469,7 +549,7 @@
       };
 
       recognition.onend = () => {
-        if (shouldRestart && recordingRole) {
+        if (shouldRestart && isRecording) {
           try {
             recognition.lang = $('stt-lang').value || 'zh-TW';
             recognition.start();
@@ -482,130 +562,101 @@
       return recognition;
     }
 
-    function startRecording(role) {
+    function startRecording() {
+      if (isFinished) {
+        if (!confirm('目前已標記錄音完成。要繼續追加錄音嗎？')) return;
+        isFinished = false;
+        $('finished-banner').classList.add('hidden');
+      }
+
       if (!SpeechRecognition) {
         $('stt-support-msg').classList.remove('hidden');
         toast('瀏覽器不支援語音辨識');
         return;
       }
+
       const rec = ensureRecognition();
       finalTranscript = '';
       interimTranscript = '';
       shouldRestart = true;
       rec.lang = $('stt-lang').value || 'zh-TW';
-      setRecordingUI(true, role);
+      setRecordingUI(true);
       updateLiveText();
       try {
         rec.start();
       } catch (e) {
-        // Already started
         console.warn(e);
       }
     }
 
-    function stopRecording(commit = true) {
+    /**
+     * @param {boolean} commit - flush live text into transcript
+     * @param {boolean} finish - mark recording complete
+     */
+    function stopRecording(commit = true, finish = false) {
       shouldRestart = false;
-      const role = recordingRole;
-      const text = `${finalTranscript} ${interimTranscript}`.replace(/\s+/g, ' ').trim();
       if (recognition) {
         try { recognition.stop(); } catch { /* ignore */ }
       }
+
+      if (commit) flushLiveToTranscript();
+      else {
+        finalTranscript = '';
+        interimTranscript = '';
+      }
+
       setRecordingUI(false);
-      finalTranscript = '';
-      interimTranscript = '';
 
-      if (commit && role && text) {
-        addTurn(role, text, 'speech');
-        toast(role === 'doctor' ? '已寫入醫師發言' : '已寫入病患回應');
+      if (finish) {
+        isFinished = true;
+        $('finished-banner').classList.remove('hidden');
+        setRecStatus('finished');
+        $('btn-rec-start').disabled = false; // allow resume with confirm
+        $('btn-rec-finish').disabled = true;
+        toast(getTranscript() ? '錄音完成，可進行一鍵英譯' : '錄音完成（尚無文字）');
+        persistSession();
+      } else if (commit && getTranscript()) {
+        toast('已暫停，原文已更新');
+        updateFinishButtonState();
+        persistSession();
+      } else {
+        updateFinishButtonState();
       }
     }
 
-    function addTurn(role, text, source = 'typed') {
-      const cleaned = (text || '').trim();
-      turns.push({
-        id: uid(),
-        role,
-        text: cleaned,
-        source,
-        ts: Date.now(),
-      });
-      renderTurns();
-      persistSession();
-    }
-
-    function updateTurn(id, text) {
-      const t = turns.find((x) => x.id === id);
-      if (!t) return;
-      t.text = text;
-      persistSession();
-    }
-
-    function removeTurn(id) {
-      turns = turns.filter((x) => x.id !== id);
-      renderTurns();
-      persistSession();
-    }
-
-    function renderTurns() {
-      const list = $('turns-list');
-      const empty = $('turns-empty');
-      $('turn-count').textContent = `(${turns.length} 則)`;
-
-      if (!turns.length) {
-        list.classList.add('hidden');
-        list.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
+    function finishRecording() {
+      if (isRecording) {
+        stopRecording(true, true);
+      } else {
+        flushLiveToTranscript();
+        isFinished = true;
+        $('finished-banner').classList.remove('hidden');
+        setRecStatus('finished');
+        $('btn-rec-finish').disabled = true;
+        toast(getTranscript() ? '錄音完成，可進行一鍵英譯' : '請先錄音或輸入文字');
+        persistSession();
       }
-
-      empty.classList.add('hidden');
-      list.classList.remove('hidden');
-      list.innerHTML = turns.map((t, index) => {
-        const isDoctor = t.role === 'doctor';
-        const badge = isDoctor
-          ? 'bg-teal-100 text-teal-800 border-teal-200'
-          : 'bg-violet-100 text-violet-800 border-violet-200';
-        const roleLabel = isDoctor ? '醫師' : '病患';
-        const icon = isDoctor ? 'fa-user-doctor' : 'fa-user';
-        const sourceLabel = t.source === 'speech' ? '語音' : '文字';
-        return `
-          <li class="turn-card rounded-2xl border border-zinc-200 bg-zinc-50/80 p-3" data-id="${t.id}">
-            <div class="flex items-center justify-between gap-2 mb-2">
-              <div class="flex items-center gap-2">
-                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium border ${badge}">
-                  <i class="fa-solid ${icon}"></i>${roleLabel}
-                </span>
-                <span class="text-[11px] text-zinc-400">#${index + 1} · ${sourceLabel}</span>
-              </div>
-              <button type="button" data-remove="${t.id}" class="w-7 h-7 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50" title="刪除">
-                <i class="fa-solid fa-trash-can text-xs"></i>
-              </button>
-            </div>
-            <textarea data-edit="${t.id}" rows="2"
-              class="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-violet-200 resize-y"
-              placeholder="${isDoctor ? '醫師發言…' : '病患回應…'}">${escapeHtml(t.text)}</textarea>
-          </li>
-        `;
-      }).join('');
-
-      list.querySelectorAll('[data-remove]').forEach((btn) => {
-        btn.addEventListener('click', () => removeTurn(btn.getAttribute('data-remove')));
-      });
-      list.querySelectorAll('textarea[data-edit]').forEach((ta) => {
-        ta.addEventListener('input', () => updateTurn(ta.getAttribute('data-edit'), ta.value));
-      });
-
-      list.scrollTop = list.scrollHeight;
     }
 
-    function buildDialogueText() {
-      return turns
-        .filter((t) => (t.text || '').trim())
-        .map((t, i) => {
-          const role = t.role === 'doctor' ? 'Doctor' : 'Patient';
-          return `[${i + 1}] ${role}: ${(t.text || '').trim()}`;
-        })
-        .join('\n');
+    function showTranslated(text) {
+      $('translated-placeholder').classList.add('hidden');
+      $('translated-box').classList.remove('hidden');
+      $('translated-output').textContent = text;
+      $('btn-copy-translated').disabled = !text;
+      $('translate-error').classList.add('hidden');
+    }
+
+    function showTranslateError(msg) {
+      const el = $('translate-error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function setTranslating(busy) {
+      $('btn-translate').disabled = busy;
+      $('translate-label').textContent = busy ? '翻譯中…' : '一鍵翻譯成英文';
+      const icon = $('btn-translate').querySelector('i');
+      icon.className = busy ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-globe';
     }
 
     function showSummary(text, meta = '') {
@@ -626,38 +677,135 @@
 
     function setSummarizing(busy) {
       $('btn-summarize').disabled = busy;
-      $('summarize-label').textContent = busy ? '分析中…' : '產生英文總結';
-      if (busy) {
-        $('btn-summarize').querySelector('i').className = 'fa-solid fa-spinner fa-spin';
-      } else {
-        $('btn-summarize').querySelector('i').className = 'fa-solid fa-language';
-      }
+      $('summarize-label').textContent = busy ? '分析中…' : '產生 AI 總結';
+      const icon = $('btn-summarize').querySelector('i');
+      icon.className = busy ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-wand-magic-sparkles';
     }
 
-    async function generateSummary() {
-      const dialogue = buildDialogueText();
-      if (!dialogue) {
-        toast('請先錄製或輸入至少一則對話');
-        return;
-      }
-
+    function requireApiKey() {
       const settings = loadSettings();
       const apiKey = (settings.apiKey || '').trim();
       if (!apiKey) {
         openSettings();
         toast('請先設定 API 金鑰');
+        return null;
+      }
+      return {
+        apiKey,
+        baseUrl: (settings.baseUrl || 'https://api.x.ai/v1').replace(/\/$/, ''),
+        model: settings.model || 'grok-4.5',
+      };
+    }
+
+    async function callChatCompletions({ apiKey, baseUrl, model, systemPrompt, userPrompt, signal, temperature = 0.2 }) {
+      const res = await fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        signal,
+        body: JSON.stringify({
+          model,
+          temperature,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt },
+          ],
+        }),
+      });
+
+      if (!res.ok) {
+        let detail = '';
+        try {
+          const errBody = await res.json();
+          detail = errBody?.error?.message || JSON.stringify(errBody);
+        } catch {
+          detail = await res.text();
+        }
+        throw new Error(`API ${res.status}: ${detail || res.statusText}`);
+      }
+
+      const data = await res.json();
+      const content =
+        data?.choices?.[0]?.message?.content?.trim() ||
+        data?.output_text?.trim() ||
+        '';
+
+      if (!content) throw new Error('模型未回傳內容');
+      return content;
+    }
+
+    async function translateAll() {
+      const transcript = getTranscript();
+      if (!transcript) {
+        toast('請先完成錄音或輸入原文');
         return;
       }
 
-      const baseUrl = (settings.baseUrl || 'https://api.x.ai/v1').replace(/\/$/, '');
-      const model = settings.model || 'grok-4.5';
+      const cfg = requireApiKey();
+      if (!cfg) return;
+
+      if (translateAbort) translateAbort.abort();
+      translateAbort = new AbortController();
+      setTranslating(true);
+      $('translate-error').classList.add('hidden');
+
+      const systemPrompt = [
+        'You are a professional medical interpreter and translator.',
+        'Translate the entire consultation transcript into clear, natural clinical English.',
+        'Preserve meaning, speaker intent, medical terms, numbers, drug names, and chronology.',
+        'Do not summarize — produce a full translation of all content.',
+        'If the source is already English, lightly polish for clinical clarity without inventing facts.',
+        'Output ONLY the English translation text, with no preface or commentary.',
+      ].join(' ');
+
+      const userPrompt = [
+        'Translate the following consultation speech-recognition transcript into English:',
+        '',
+        transcript,
+      ].join('\n');
+
+      try {
+        const content = await callChatCompletions({
+          ...cfg,
+          systemPrompt,
+          userPrompt,
+          signal: translateAbort.signal,
+          temperature: 0.15,
+        });
+        showTranslated(content);
+        persistSession();
+        toast('英文譯文已完成');
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+        console.error(err);
+        showTranslateError(err.message || String(err));
+        toast('翻譯失敗，請檢查 API 設定');
+      } finally {
+        setTranslating(false);
+      }
+    }
+
+    async function generateSummary() {
+      const transcript = getTranscript();
+      if (!transcript) {
+        toast('請先完成錄音或輸入原文');
+        return;
+      }
+
+      const cfg = requireApiKey();
+      if (!cfg) return;
+
+      const translated = ($('translated-output').textContent || '').trim();
       const chief = ($('chief-complaint').value || '').trim();
 
       const systemPrompt = [
         'You are an experienced bilingual clinical documentation assistant for physicians.',
-        'Given a multi-turn doctor–patient consultation transcript (often in Chinese, possibly mixed languages),',
-        'produce a clear, professional ENGLISH medical summary suitable for clinic notes / referral.',
-        'Do NOT invent facts not supported by the dialogue. If information is missing, write "Not discussed".',
+        'Given a consultation transcript (often Chinese speech recognition, possibly mixed languages),',
+        'and optionally an English translation, produce a clear, professional ENGLISH medical summary',
+        'suitable for clinic notes / referral.',
+        'Do NOT invent facts not supported by the source. If information is missing, write "Not discussed".',
         'Prefer concise clinical English. Use bullet points where helpful.',
         'Structure the output exactly with these section headings:',
         '1. Chief Complaint',
@@ -666,17 +814,21 @@
         '4. Review of Systems (if mentioned)',
         '5. Assessment',
         '6. Plan / Next Steps',
-        '7. Key Patient Quotes (English translation of important patient statements)',
+        '7. Key Patient Quotes (English translation of important statements)',
         '8. Uncertainties / Follow-up Questions',
       ].join(' ');
 
       const userPrompt = [
         chief ? `Visit context / chief complaint (from physician): ${chief}` : 'Visit context: not provided.',
         '',
-        'Consultation transcript (chronological multi-turn dialogue):',
-        dialogue,
+        'Original transcript (speech recognition):',
+        transcript,
         '',
-        'Write the English summary now.',
+        translated
+          ? `English translation of transcript:\n${translated}`
+          : 'English translation: not provided yet — translate as needed while summarizing.',
+        '',
+        'Write the English clinical summary now.',
       ].join('\n');
 
       if (summarizeAbort) summarizeAbort.abort();
@@ -685,46 +837,17 @@
       $('summary-error').classList.add('hidden');
 
       try {
-        const res = await fetch(`${baseUrl}/chat/completions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
+        const content = await callChatCompletions({
+          ...cfg,
+          systemPrompt,
+          userPrompt,
           signal: summarizeAbort.signal,
-          body: JSON.stringify({
-            model,
-            temperature: 0.2,
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: userPrompt },
-            ],
-          }),
+          temperature: 0.2,
         });
-
-        if (!res.ok) {
-          let detail = '';
-          try {
-            const errBody = await res.json();
-            detail = errBody?.error?.message || JSON.stringify(errBody);
-          } catch {
-            detail = await res.text();
-          }
-          throw new Error(`API ${res.status}: ${detail || res.statusText}`);
-        }
-
-        const data = await res.json();
-        const content =
-          data?.choices?.[0]?.message?.content?.trim() ||
-          data?.output_text?.trim() ||
-          '';
-
-        if (!content) throw new Error('模型未回傳內容');
-
-        const meta = `${new Date().toLocaleString('zh-TW')} · ${model} · ${turns.filter((t) => t.text.trim()).length} turns`;
+        const meta = `${new Date().toLocaleString('zh-TW')} · ${cfg.model} · ${transcript.length} chars`;
         showSummary(content, meta);
         persistSession();
-        toast('英文總結已完成');
+        toast('AI 總結已完成');
       } catch (err) {
         if (err.name === 'AbortError') return;
         console.error(err);
@@ -735,13 +858,15 @@
       }
     }
 
-    function newSession() {
-      if (recordingRole) stopRecording(false);
-      if (turns.length || $('summary-output').textContent) {
-        if (!confirm('確定要清空目前問診對話與總結？')) return;
-      }
-      turns = [];
-      $('chief-complaint').value = '';
+    function clearTranslated() {
+      $('translated-output').textContent = '';
+      $('translated-box').classList.add('hidden');
+      $('translated-placeholder').classList.remove('hidden');
+      $('btn-copy-translated').disabled = true;
+      $('translate-error').classList.add('hidden');
+    }
+
+    function clearSummary() {
       $('summary-output').textContent = '';
       $('summary-meta').textContent = '';
       $('summary-box').classList.add('hidden');
@@ -749,17 +874,38 @@
       $('btn-copy-summary').disabled = true;
       $('btn-download-summary').disabled = true;
       $('summary-error').classList.add('hidden');
-      renderTurns();
+    }
+
+    function newSession() {
+      if (isRecording) stopRecording(false, false);
+      const hasContent =
+        getTranscript() ||
+        ($('summary-output').textContent || '') ||
+        ($('translated-output').textContent || '');
+      if (hasContent) {
+        if (!confirm('確定要清空目前問診錄音、譯文與總結？')) return;
+      }
+      isFinished = false;
+      finalTranscript = '';
+      interimTranscript = '';
+      $('chief-complaint').value = '';
+      $('transcript-input').value = '';
+      $('finished-banner').classList.add('hidden');
+      setRecStatus('idle');
+      setRecordingUI(false);
+      clearTranslated();
+      clearSummary();
+      updateCharCount();
+      updateFinishButtonState();
       persistSession();
       toast('已開始新問診');
     }
 
-    async function copySummary() {
-      const text = $('summary-output').textContent || '';
+    async function copyText(text, successMsg) {
       if (!text) return;
       try {
         await navigator.clipboard.writeText(text);
-        toast('已複製英文總結');
+        toast(successMsg);
       } catch {
         toast('複製失敗，請手動選取文字');
       }
@@ -810,23 +956,42 @@
       }
     });
 
-    $('btn-rec-doctor').addEventListener('click', () => startRecording('doctor'));
-    $('btn-rec-patient').addEventListener('click', () => startRecording('patient'));
-    $('btn-stop-rec').addEventListener('click', () => stopRecording(true));
+    $('btn-rec-start').addEventListener('click', startRecording);
+    $('btn-rec-stop').addEventListener('click', () => stopRecording(true, false));
+    $('btn-rec-finish').addEventListener('click', finishRecording);
 
-    $('btn-add-doctor').addEventListener('click', () => {
-      addTurn('doctor', '', 'typed');
-      const last = $('turns-list').querySelector('li:last-child textarea');
-      last?.focus();
-    });
-    $('btn-add-patient').addEventListener('click', () => {
-      addTurn('patient', '', 'typed');
-      const last = $('turns-list').querySelector('li:last-child textarea');
-      last?.focus();
+    $('btn-clear-transcript').addEventListener('click', () => {
+      if (!getTranscript() && !isRecording) return;
+      if (!confirm('確定清空語音辨識原文？')) return;
+      if (isRecording) stopRecording(false, false);
+      $('transcript-input').value = '';
+      isFinished = false;
+      $('finished-banner').classList.add('hidden');
+      setRecStatus('idle');
+      updateCharCount();
+      updateFinishButtonState();
+      persistSession();
     });
 
+    $('transcript-input').addEventListener('input', () => {
+      updateCharCount();
+      if (isFinished && !getTranscript()) {
+        isFinished = false;
+        $('finished-banner').classList.add('hidden');
+        setRecStatus('idle');
+      }
+      updateFinishButtonState();
+      persistSession();
+    });
+
+    $('btn-translate').addEventListener('click', translateAll);
     $('btn-summarize').addEventListener('click', generateSummary);
-    $('btn-copy-summary').addEventListener('click', copySummary);
+    $('btn-copy-translated').addEventListener('click', () => {
+      copyText($('translated-output').textContent || '', '已複製英文譯文');
+    });
+    $('btn-copy-summary').addEventListener('click', () => {
+      copyText($('summary-output').textContent || '', '已複製 AI 總結');
+    });
     $('btn-download-summary').addEventListener('click', downloadSummary);
 
     $('chief-complaint').addEventListener('input', persistSession);
@@ -844,7 +1009,8 @@
     }
     updateKeyStatus();
     restoreSession();
-    renderTurns();
+    updateCharCount();
+    updateFinishButtonState();
   </script>
 </body>
 </html>

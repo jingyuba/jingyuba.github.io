@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Critical Appraisal | Explainable ML Model for In-Hospital Infection in SLE</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+  .prose-excerpt { border-left: 3px solid #6366f1; background: #f8fafc; }
+  .section-card { transition: box-shadow 0.2s; }
+  .section-card:hover { box-shadow: 0 4px 12px rgba(99,102,241,0.08); }
+</style>
+</head>
+<body class="bg-[#FAFAFA] text-[#374151] leading-relaxed">
+
+<!-- HEADER -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-medium text-indigo-600 tracking-wide uppercase mb-1">Renal Failure · Clinical Study</p>
+        <h1 class="text-lg sm:text-xl font-semibold text-[#1F2937] leading-snug">An explainable machine learning model for predicting in-hospital infection in patients with systemic lupus erythematosus</h1>
+        <p class="mt-1 text-sm text-gray-500">Jiabao Liu, Yong Wang, Zheyi Dong, Zhe Feng, Xiaomin Liu, Yue Niu, Jie Wu, Li Zhang, Pu Chen, Guangyan Cai, Sai Pan, Ping Li &amp; Xiangmei Chen</p>
+      </div>
+      <div class="flex-shrink-0 text-right">
+        <a href="https://doi.org/10.1080/0886022X.2026.2696631" target="_blank" class="inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-800">
+          <span>DOI: 10.1080/0886022X.2026.2696631</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <p class="text-xs text-gray-400 mt-1">Published online 05 Aug 2026 · Vol 48(1)</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-10">
+
+<!-- BIBLIOMETRICS -->
+<section>
+  <h2 class="text-sm font-semibold text-[#1F2937] uppercase tracking-wider mb-4">Journal Bibliometrics</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+    <div class="bg-white rounded-lg border border-gray-100 p-4 text-center">
+      <p class="text-2xl font-bold text-indigo-600">3.8</p>
+      <p class="text-xs text-gray-500 mt-1">Impact Factor (2025)</p>
+    </div>
+    <div class="bg-white rounded-lg border border-gray-100 p-4 text-center">
+      <p class="text-2xl font-bold text-indigo-600">0.946</p>
+      <p class="text-xs text-gray-500 mt-1">SJR (2025)</p>
+    </div>
+    <div class="bg-white rounded-lg border border-gray-100 p-4 text-center">
+      <p class="text-2xl font-bold text-indigo-600">76</p>
+      <p class="text-xs text-gray-500 mt-1">h-index</p>
+    </div>
+    <div class="bg-white rounded-lg border border-gray-100 p-4 text-center">
+      <p class="text-2xl font-bold text-indigo-600">Q1</p>
+      <p class="text-xs text-gray-500 mt-1">Nephrology</p>
+    </div>
+    <div class="bg-white rounded-lg border border-gray-100 p-4 text-center">
+      <p class="text-2xl font-bold text-indigo-600">Q1</p>
+      <p class="text-xs text-gray-500 mt-1">Critical Care</p>
+    </div>
+    <div class="bg-white rounded-lg border border-gray-100 p-4 text-center">
+      <p class="text-2xl font-bold text-indigo-600">4.5</p>
+      <p class="text-xs text-gray-500 mt-1">CiteScore (2025)</p>
+    </div>
+  </div>
+</section>
+
+<!-- STUDY SNAPSHOT (TASK 1) -->
+<section class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="bg-slate-50 px-5 py-3 border-b border-gray-100">
+    <h2 class="text-base font-semibold text-[#1F2937]">Study Snapshot — Structured Data Extraction</h2>
+  </div>
+  <div class="p-5 sm:p-6 space-y-6">
+
+    <!-- Full fields -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Title</p>
+        <p class="mt-0.5">An explainable machine learning model for predicting in-hospital infection in patients with systemic lupus erythematosus</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Publish Date</p>
+        <p class="mt-0.5">Published online 05 August 2026; Volume 48, Issue 1, Article 2696631</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">DOI</p>
+        <p class="mt-0.5"><a href="https://doi.org/10.1080/0886022X.2026.2696631" class="text-indigo-600 hover:underline">10.1080/0886022X.2026.2696631</a></p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Journal</p>
+        <p class="mt-0.5">Renal Failure (Taylor &amp; Francis)</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-xs font-medium text-gray-400 uppercase">Authors</p>
+        <p class="mt-0.5">Jiabao Liu, Yong Wang, Zheyi Dong, Zhe Feng, Xiaomin Liu, Yue Niu, Jie Wu, Li Zhang, Pu Chen, Guangyan Cai, Sai Pan, Ping Li, Xiangmei Chen</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Impact Factor</p>
+        <p class="mt-0.5">3.8 (2025 JCR)</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">SJR / h-index</p>
+        <p class="mt-0.5">SJR 0.946 (2025); h-index 76</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Subject Ranking</p>
+        <p class="mt-0.5">Nephrology Q1; Critical Care &amp; Intensive Care Medicine Q1; Medicine (miscellaneous) Q1</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Design</p>
+        <p class="mt-0.5">Retrospective cohort study using electronic medical record (EMR) data</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Country / Setting</p>
+        <p class="mt-0.5">China — Chinese PLA General Hospital (First Medical Center), Beijing; Departments of Nephrology, Dermatology, Rheumatology &amp; Immunology; admissions 1 Jan 2000 – 31 Jul 2024</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-xs font-medium text-gray-400 uppercase">Population</p>
+        <p class="mt-0.5">Adult patients (≥18 years) hospitalized with SLE (n = 7,833). Of these, 3,157 (40.3%) developed in-hospital infection ≥72 h after admission. Initial pool 13,439 SLE admissions; exclusions applied for preexisting/early infection, &gt;10% missing baseline data, and special high-risk cohorts (transplant recipients, active malignancy on systemic therapy).</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-xs font-medium text-gray-400 uppercase">Inclusion / Exclusion Criteria (verbatim)</p>
+        <div class="mt-1 text-sm space-y-1">
+          <p><span class="font-medium">Inclusion:</span> (1) Age ≥18 years at admission; (2) Documented diagnosis of SLE meeting at least one of: 1997 ACR, 2012 SLICC, or 2019 EULAR/ACR criteria.</p>
+          <p><span class="font-medium">Exclusion:</span> (1) Preexisting or early infection present on admission or occurring within 72 hours of admission; (2) Baseline clinical and laboratory data with &gt;10% missingness; (3) Special high-risk cohorts at admission: recipients of solid organ or hematopoietic stem-cell transplantation, or patients with active malignancy receiving systemic cytotoxic or targeted anti-cancer therapy.</p>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Case / Control</p>
+        <p class="mt-0.5">Infection group n = 3,157 vs Non-infection group n = 4,676</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Primary Outcome</p>
+        <p class="mt-0.5">First occurrence of nosocomial infection developing &gt;72 h after hospital admission (composite: ICD-9/10 infectious diagnosis code, positive microbiological culture, or initiation of new systemic antimicrobial therapy)</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Intervention</p>
+        <p class="mt-0.5">None (predictive modelling study; no therapeutic intervention tested)</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-xs font-medium text-gray-400 uppercase">Final Predictor Variables (9)</p>
+        <p class="mt-0.5">Daily prednisone equivalent dose, albumin, hydroxychloroquine (HCQ) use, C-reactive protein (CRP), D-dimer, glucose, cystatin C, hemoglobin, alpha1-globulin</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-xs font-medium text-gray-400 uppercase">Statistical / Modelling Approach</p>
+        <p class="mt-0.5">70%/30% random train/validation split (n = 5,483 / 2,350). Multi-stage feature selection: Boruta + LASSO intersection → Recursive Feature Elimination (RFE). Ten algorithms trained with 10-fold CV + grid-search hyperparameter tuning. Primary metric AUC; secondary: accuracy, F1, sensitivity, specificity, calibration. Final model interpreted with SHAP. Robustness confirmed by 5-fold and 10-fold CV on full dataset. Risk stratification by Youden index (cutoff 0.412). Sensitivity analyses on alternative outcome definitions.</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-xs font-medium text-gray-400 uppercase">Purposes</p>
+        <p class="mt-0.5">To develop and validate a robust, parsimonious, and fully explainable machine-learning model for predicting the risk of in-hospital infection among patients with SLE, ultimately to guide timely clinical interventions aimed at reducing mortality and improving prognosis.</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-xs font-medium text-gray-400 uppercase">Key Results (all major findings)</p>
+        <ul class="mt-1 list-disc list-inside space-y-1 text-sm">
+          <li>Gradient Boosting achieved the highest validation AUC of 0.858 (accuracy 76.4%, sensitivity 78.6%, specificity 75.0%, F1 0.729).</li>
+          <li>5-fold CV mean AUC 0.855 ± 0.002; 10-fold CV mean AUC 0.854 ± 0.008.</li>
+          <li>SHAP ranked daily prednisone equivalent dose, albumin, and HCQ use as the three most influential predictors.</li>
+          <li>High-risk group (predicted probability ≥0.412) showed significantly lower infection-free survival (Log-rank p &lt; 0.001) at 15 days, 1 month, and entire hospitalization.</li>
+          <li>Sensitivity analyses: &gt;48 h infection definition AUC 0.871; severe infection (IV antimicrobials) AUC 0.842; pulmonary infection AUC 0.826 — same nine predictors retained.</li>
+          <li>Web-based clinical calculator deployed at https://nephrology301-sle-infection.streamlit.app/</li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-xs font-medium text-gray-400 uppercase">Conclusion</p>
+        <p class="mt-0.5">In this large-scale cohort study, we developed and validated a robust, interpretable machine learning model that accurately predicts the risk of in-hospital infection among patients with SLE using only nine readily available clinical variables. By providing transparent, patient-specific risk stratification, this tool has the potential to enhance clinical decision-making and improve outcomes for this vulnerable patient population.</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Innovation</p>
+        <p class="mt-0.5">Large real-world cohort (n=7,833); rigorous multi-stage feature selection; full SHAP global + local interpretability; clinically deployable web calculator; sensitivity analyses across outcome definitions.</p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-gray-400 uppercase">Limitations (as stated)</p>
+        <p class="mt-0.5">Retrospective single-center design; possible unmeasured confounders and EMR recording bias; composite infection definition may include empiric antibiotics for sterile inflammation; no non-SLE control cohort; external generalizability untested.</p>
+      </div>
+    </div>
+
+    <!-- KEY RESULTS VISUALIZATION -->
+    <div class="mt-8 pt-6 border-t border-gray-100">
+      <h3 class="text-sm font-semibold text-[#1F2937] mb-4">Key Results Visualization</h3>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-slate-50 rounded-lg p-4">
+          <p class="text-xs font-medium text-gray-500 mb-2 text-center">Model Discrimination (Validation Set AUC)</p>
+          <canvas id="aucChart" height="260"></canvas>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-4">
+          <p class="text-xs font-medium text-gray-500 mb-2 text-center">SHAP Feature Importance (Mean |SHAP|)</p>
+          <canvas id="shapChart" height="260"></canvas>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-4 lg:col-span-2">
+          <p class="text-xs font-medium text-gray-500 mb-2 text-center">Gradient Boosting Performance Across Evaluation Settings</p>
+          <canvas id="cvChart" height="180"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CRITICAL APPRAISAL (TASK 2) -->
+<section>
+  <h2 class="text-base font-semibold text-[#1F2937] mb-5">Critical Appraisal &amp; Analysis</h2>
+  <div class="space-y-5">
+
+    <!-- 1. Value -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">1. Value — Why this study was publishable</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3">
+        <p>“Infection is a leading cause of mortality in patients with systemic lupus erythematosus (SLE), yet effective tools for early identification of high-risk patients are lacking. … We developed and validated a high-performance, explainable ML model using nine routinely available clinical variables to accurately predict in-hospital infection risk in SLE patients.” (Abstract)</p>
+      </div>
+      <p class="text-sm">The paper addresses a clinically urgent problem—infection remains a dominant driver of morbidity and mortality in SLE—with a large (n=7,833), contemporary real-world cohort spanning 24 years and three specialty departments. The combination of strong discrimination (AUC 0.858), rigorous multi-stage feature selection, full SHAP interpretability, and an immediately usable web calculator meets the dual demands of methodological rigor and translational utility that Renal Failure prioritizes. The work fills a documented gap in high-quality, low-bias prediction models for infection in SLE and supplies an actionable decision-support tool rather than another opaque black-box model.</p>
+    </article>
+
+    <!-- 2. What the study aimed to do -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">2. What the study aimed to do</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3">
+        <p>“this study aims to leverage a large, real-world clinical dataset to develop and validate a robust, parsimonious, and fully explainable machine learning model for predicting the risk of in-hospital infection among patients with SLE, ultimately to guide timely clinical interventions aimed at reducing mortality and improving prognosis.” (Introduction, final paragraph)</p>
+      </div>
+      <p class="text-sm">The overarching objective was twofold: (1) construct a high-performing yet sparse prediction model from routinely available admission data, and (2) render the model transparent via SHAP so that clinicians can understand and trust individual risk estimates. Secondary aims included risk stratification utility (Kaplan–Meier) and deployment of a web-based calculator.</p>
+    </article>
+
+    <!-- 3. Summary of previous literature -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">3. Summary of previous literature</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3 space-y-2">
+        <p>“Multiple meta-analyses have confirmed that, compared to the general population, SLE patients have a significantly higher risk of severe infection (RR 2.96), pneumonia (RR 2.58), and tuberculosis (RR 6.11). Infections account for a substantial proportion of hospitalizations in SLE patients (approximately 14%–37%) and are the direct cause of death in one-third of cases.” (Introduction)</p>
+        <p>“Numerous studies and meta-analyses have identified key risk factors for infection in SLE. These include a high immunosuppressive burden (particularly heavy exposure to glucocorticoids and other immunosuppressants), elevated disease activity, cumulative organ damage (especially lupus nephritis or renal involvement), older age, male sex, metabolic and inflammatory comorbidities \ldots and immune cytopenias such as lymphopenia and hypocomplementemia; conversely, hydroxychloroquine (HCQ) use is frequently associated with a lower risk of infection.” (Introduction)</p>
+        <p>“Systematic reviews have revealed that the few existing prediction models for infection in SLE suffer from methodological weaknesses, such as small sample sizes, a high risk of bias, and a propensity for overfitting, rendering them unsuitable for widespread clinical application.” (Introduction, citing Restrepo-Escobar et al. 2021)</p>
+      </div>
+      <p class="text-sm">The literature establishes infection as a leading cause of death in SLE, catalogues established risk factors (glucocorticoids, disease activity, organ damage, cytopenias), and documents HCQ as protective. Existing prediction models are few and methodologically weak.</p>
+    </article>
+
+    <!-- 4. Critique of previous literature -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">4. Critique of previous literature</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3">
+        <p>“Systematic reviews have revealed that the few existing prediction models for infection in SLE suffer from methodological weaknesses, such as small sample sizes, a high risk of bias, and a propensity for overfitting, rendering them unsuitable for widespread clinical application [21]. This situation forces clinicians to rely more on personal experience and intuition when assessing infection risk, leading to a predominantly reactive rather than proactive management strategy.” (Introduction)</p>
+      </div>
+      <p class="text-sm">Prior models are criticized for insufficient sample size, high risk of bias, and overfitting—limitations that preclude reliable clinical use. The literature therefore leaves clinicians without a quantitative, validated, and interpretable tool for individualized infection-risk stratification at admission.</p>
+    </article>
+
+    <!-- 5. Gap -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">5. Gap between the known and unknown</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3">
+        <p>“Despite the broad recognition of these individual risk factors, a critical gap persists in clinical practice: the lack of a reliable, effective, and validated tool that can integrate these complex factors to provide a personalized, quantitative risk assessment for each patient.” (Introduction)</p>
+        <p>“However, its application to the critical challenge of predicting infection risk in SLE remains notably underdeveloped.” (Introduction, referring to machine learning)</p>
+      </div>
+      <p class="text-sm">While individual risk factors are well catalogued, no robust, parsimonious, externally usable, and fully explainable model existed that integrates them into a single quantitative probability at the point of hospital admission.</p>
+    </article>
+
+    <!-- 6. Rationale -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">6. Rationale for filling the gap</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3">
+        <p>“In recent years, machine learning (ML) has emerged as a powerful data analysis technique capable of effectively handling and modeling complex, non-linear relationships among variables, offering new avenues for addressing clinical challenges in heterogeneous diseases like SLE. \ldots Therefore, this study aims to leverage a large, real-world clinical dataset to develop and validate a robust, parsimonious, and fully explainable machine learning model\ldots” (Introduction)</p>
+      </div>
+      <p class="text-sm">The authors argue that modern ML methods, coupled with a large multi-decade EMR cohort and explicit explainability techniques (SHAP), can overcome the sample-size and opacity limitations of earlier models and deliver a clinically usable tool.</p>
+    </article>
+
+    <!-- 7. What they did -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">7. What they did in this study (methodology)</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3 space-y-2">
+        <p>“This retrospective cohort study utilized electronic medical record (EMR) data from three clinical departments at the Chinese PLA General Hospital \ldots covering admissions from 1 January 2000 to 31 July 2024.” (Methods 2.1)</p>
+        <p>“A total of 108 candidate predictor variables were extracted \ldots All candidate predictors were first screened using two distinct methods simultaneously: the Boruta algorithm and LASSO regression. The intersection \ldots was then retained \ldots Recursive Feature Elimination (RFE) was employed to systematically identify the most parsimonious and predictive subset.” (Methods 2.5–2.6)</p>
+        <p>“the entire dataset (N = 7,833) was randomly partitioned into a training set (70%, n = 5,483) and an independent validation set (30%, n = 2,350). \ldots ten distinct machine learning algorithms were developed \ldots The final selected model was interpreted using SHAP.” (Methods 2.7–2.8)</p>
+      </div>
+      <p class="text-sm">The pipeline comprised: (1) rigorous cohort assembly with explicit infection-timing exclusion; (2) multiple imputation for residual missingness; (3) multi-stage feature selection (Boruta ∩ LASSO → RFE) yielding nine predictors; (4) training and comparison of ten algorithms under nested cross-validation; (5) independent validation, calibration assessment, and risk-stratification analysis; (6) global and local SHAP explanations; and (7) deployment of a Streamlit web calculator. Sensitivity analyses redefined the infection window and restricted outcomes to severe or pulmonary infections.</p>
+    </article>
+
+    <!-- 8. Results consistent with literature -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">8. Results consistent with previous literature</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3 space-y-2">
+        <p>“The daily prednisone equivalent dose, as the most important predictor, reaffirms the broad consensus that glucocorticoids are a core driver of infection risk in SLE. \ldots SHAP dependence plots showed a strong positive collinearity with infection risk, with a notable increase when the daily dose exceeded 50 mg/day.” (Discussion)</p>
+        <p>“hydroxychloroquine (HCQ) use demonstrated a protective effect against infection in the model. The 2023 EULAR guidelines recommend HCQ for all SLE patients without contraindications \ldots Prior studies and meta-analyses confirm that HCQ is an independent protective factor against severe infection in SLE.” (Discussion)</p>
+        <p>“The second most important predictor was albumin, with a risk threshold of 39.6 g/L. \ldots Low albumin indicates both nutritional deficiency and compromised immune and barrier reserves.” (Discussion)</p>
+      </div>
+      <p class="text-sm">The model recovers the well-established roles of high-dose glucocorticoids as a major risk factor and of HCQ as protective. Hypoalbuminemia, elevated CRP, D-dimer, glucose, and cystatin C also align with known associations between systemic inflammation, metabolic dysregulation, coagulation activation, renal impairment, and infection susceptibility.</p>
+    </article>
+
+    <!-- 9. Results contrary / novel -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">9. Results contrary to / advancing previous literature</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3">
+        <p>“Compared to the existing literature, this study significantly advances the field by addressing the long-standing issue of a scarcity of robust and high-quality prediction models for infection in SLE. \ldots Using a large cohort of 7,833 patients and a rigorous, multi-stage feature-selection pipeline \ldots our study enhanced the model’s robustness and generalizability.” (Discussion)</p>
+        <p>“the core innovation of this research is the deep integration of XAI into the prediction of infection risk in SLE. \ldots By providing clear, individualized attribution analysis for every prediction through SHAP, our study takes a critical step in translating predictive models from theoretical research to practical clinical application.” (Discussion)</p>
+      </div>
+      <p class="text-sm">No major contradictory findings are claimed; rather, the work advances the field by delivering the first large-scale, fully explainable, and immediately deployable model that integrates the previously scattered risk factors into a single, calibrated probability with transparent local explanations.</p>
+    </article>
+
+    <!-- 10. Recommendations for future -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">10. Recommendations for future research (per the paper)</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3">
+        <p>“Future research should focus on several key areas: firstly, conducting prospective studies to validate the model’s predictive performance and clinical utility in real-world settings; secondly, performing external validation in diverse, multicenter, and multinational cohorts to assess its generalizability; and thirdly, designing clinical impact studies to determine whether using this model to guide clinical decisions can genuinely improve patient outcomes, such as reducing infection rates, shortening hospital stays, or lowering mortality.” (Discussion)</p>
+        <p>“Future studies introducing non-SLE inpatients or patients with other autoimmune diseases as control groups are warranted to further evaluate the cross-disease specificity of the model.” (Discussion, limitations)</p>
+      </div>
+      <p class="text-sm">The authors explicitly call for prospective validation, multi-center external validation, clinical-impact trials, and addition of non-SLE control cohorts to test disease specificity.</p>
+    </article>
+
+    <!-- 11. Points of critique -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">11. Points of critique (flaws &amp; limitations)</h3>
+      <div class="prose-excerpt p-3 rounded-r text-sm mb-3 space-y-2">
+        <p>“Firstly, as a retrospective analysis, it is subject to unmeasured confounders and potential recording biases within the EMR data. \ldots Secondly, while the data are drawn from a single medical center \ldots the model’s external generalizability requires validation in multicenter datasets \ldots Thirdly, the composite definition of infection \ldots may have inadvertently included cases where antibiotics were prescribed empirically for sterile inflammation, potentially leading to misclassification of outcomes.” (Discussion)</p>
+      </div>
+      <p class="text-sm">Key limitations are correctly acknowledged: single-center retrospective design, possible residual confounding, composite outcome that may capture non-infectious antimicrobial use, absence of a non-SLE control group, and lack of external validation. The 24-year time span also raises the possibility of secular changes in diagnostic coding, antimicrobial practice, and SLE management that were not formally examined.</p>
+    </article>
+
+    <!-- 12. Missed obvious points -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">12. Missed obvious points</h3>
+      <p class="text-sm">Several clinically relevant dimensions receive limited attention: (1) no time-to-infection competing-risk analysis beyond Kaplan–Meier stratification; (2) limited exploration of interaction terms (e.g., high-dose steroid × low albumin) that SHAP dependence plots hint at but do not formally quantify; (3) absence of cost-effectiveness or decision-curve analysis to demonstrate net clinical benefit over standard care; (4) no assessment of model performance across calendar eras (2000–2010 vs 2011–2024) despite major changes in SLE therapy; (5) the web calculator is presented without usability testing or clinician feedback data.</p>
+    </article>
+
+    <!-- 13. Relevant points to pursue -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">13. Relevant points worth pursuing</h3>
+      <p class="text-sm">Promising next steps include: prospective multi-center external validation; integration of the model into the hospital EMR with real-time risk alerts; decision-curve / net-benefit analysis; examination of whether model-guided steroid tapering or antimicrobial prophylaxis reduces infection incidence; addition of dynamic features (day-3 laboratory trajectories); and testing whether the same nine variables retain predictive power in other systemic autoimmune diseases.</p>
+    </article>
+
+    <!-- 14. Order of reasoning -->
+    <article class="section-card bg-white rounded-xl border border-gray-100 p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3">14. Order of reasoning in the discussion</h3>
+      <p class="text-sm">The Discussion follows a classic translational arc: (1) restatement of principal findings and discrimination/calibration performance; (2) biological and clinical interpretation of the top SHAP features (prednisone dose, albumin, HCQ) with mechanistic citations; (3) comparison with prior prediction models and methodological advances; (4) emphasis on explainability (XAI/SHAP) as the key translational innovation; (5) enumeration of study strengths; (6) frank acknowledgment of limitations; (7) articulation of potential clinical uses; and (8) explicit roadmap for future prospective, multi-center, and impact studies. The logic is coherent and moves systematically from internal validity to external implications.</p>
+    </article>
+
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-gray-200 bg-white mt-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-xs text-gray-400 flex flex-col sm:flex-row justify-between gap-2">
+    <p>Critical appraisal generated from the full text of Liu et al., Renal Failure 2026;48:2696631.</p>
+    <p>Open Access under CC BY-NC 4.0 · DOI <a href="https://doi.org/10.1080/0886022X.2026.2696631" class="text-indigo-500 hover:underline">10.1080/0886022X.2026.2696631</a></p>
+  </div>
+</footer>
+
+<script>
+// AUC Comparison Chart
+const aucCtx = document.getElementById('aucChart').getContext('2d');
+new Chart(aucCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Gradient Boosting', 'Random Forest', 'Extra Trees', 'AdaBoost', 'Decision Tree', 'SVC', 'Linear SVM', 'Logistic Reg.', 'K-Neighbors', 'Naive Bayes'],
+    datasets: [{
+      label: 'Validation AUC',
+      data: [0.858, 0.852, 0.848, 0.847, 0.838, 0.835, 0.834, 0.831, 0.824, 0.815],
+      backgroundColor: [
+        'rgba(99, 102, 241, 0.85)',
+        'rgba(99, 102, 241, 0.65)',
+        'rgba(99, 102, 241, 0.55)',
+        'rgba(99, 102, 241, 0.50)',
+        'rgba(148, 163, 184, 0.6)',
+        'rgba(148, 163, 184, 0.55)',
+        'rgba(148, 163, 184, 0.50)',
+        'rgba(148, 163, 184, 0.45)',
+        'rgba(148, 163, 184, 0.40)',
+        'rgba(148, 163, 184, 0.35)'
+      ],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => `AUC: ${ctx.raw.toFixed(3)}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        min: 0.80,
+        max: 0.87,
+        title: { display: true, text: 'AUC', color: '#6B7280', font: { size: 11 } },
+        grid: { color: '#F3F4F6' },
+        ticks: { color: '#6B7280' }
+      },
+      y: {
+        ticks: { color: '#4B5563', font: { size: 11 } },
+        grid: { display: false }
+      }
+    }
+  }
+});
+
+// SHAP Feature Importance (approximate relative heights from description)
+const shapCtx = document.getElementById('shapChart').getContext('2d');
+new Chart(shapCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Prednisone dose', 'Albumin', 'HCQ use', 'CRP', 'D-dimer', 'Glucose', 'Cystatin C', 'Hemoglobin', 'α1-globulin'],
+    datasets: [{
+      label: 'Mean |SHAP value|',
+      data: [0.42, 0.28, 0.19, 0.11, 0.09, 0.07, 0.06, 0.05, 0.04],
+      backgroundColor: 'rgba(99, 102, 241, 0.75)',
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => `Relative importance: ${ctx.raw}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Mean |SHAP| (relative)', color: '#6B7280', font: { size: 11 } },
+        grid: { color: '#F3F4F6' },
+        ticks: { color: '#6B7280' }
+      },
+      y: {
+        ticks: { color: '#4B5563', font: { size: 11 } },
+        grid: { display: false }
+      }
+    }
+  }
+});
+
+// Cross-validation / Sensitivity performance
+const cvCtx = document.getElementById('cvChart').getContext('2d');
+new Chart(cvCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Validation set', '5-fold CV', '10-fold CV', 'Infection >48 h', 'Severe infection', 'Pulmonary infection'],
+    datasets: [{
+      label: 'AUC',
+      data: [0.858, 0.855, 0.854, 0.871, 0.842, 0.826],
+      backgroundColor: [
+        'rgba(99, 102, 241, 0.85)',
+        'rgba(99, 102, 241, 0.65)',
+        'rgba(99, 102, 241, 0.65)',
+        'rgba(16, 185, 129, 0.7)',
+        'rgba(245, 158, 11, 0.7)',
+        'rgba(239, 68, 68, 0.65)'
+      ],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => `AUC: ${ctx.raw.toFixed(3)}`
+        }
+      }
+    },
+    scales: {
+      y: {
+        min: 0.80,
+        max: 0.90,
+        title: { display: true, text: 'AUC', color: '#6B7280', font: { size: 11 } },
+        grid: { color: '#F3F4F6' },
+        ticks: { color: '#6B7280' }
+      },
+      x: {
+        ticks: { color: '#4B5563', font: { size: 10 } },
+        grid: { display: false }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

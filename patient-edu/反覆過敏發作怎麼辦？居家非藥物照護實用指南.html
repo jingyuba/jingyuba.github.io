@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>反覆過敏發作怎麼辦？居家非藥物照護實用指南</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; }
+    .chart-container { position: relative; height: 280px; max-width: 100%; }
+    @media (min-width: 768px) { .chart-container { height: 320px; } }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-700 leading-relaxed">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-3xl mx-auto px-4 py-8 sm:py-10">
+      <p class="text-sm text-indigo-600 font-medium mb-2">民眾衛教</p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+        反覆過敏發作怎麼辦？<br class="sm:hidden">居家非藥物照護實用指南
+      </h1>
+      <p class="mt-3 text-slate-600 text-base sm:text-lg">
+        針對慢性自發性蕁麻疹反覆發作、過敏性鼻炎症狀反覆，或其他過敏疾病急性加重時，能在家嘗試的飲食、環境與生活調整方式。
+      </p>
+      <p class="mt-4 text-sm text-slate-500">
+        根據近年國際系統性文獻與指南整理｜僅供教育參考，不取代醫師診療
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8 space-y-12">
+
+    <!-- 重要提醒 -->
+    <section class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+      <h2 class="font-semibold text-amber-900 mb-2">先說清楚</h2>
+      <p class="text-amber-900/90 text-sm sm:text-base">
+        以下內容整理自系統性文獻與國際指南（如 EAACI 蕁麻疹指引、相關 Cochrane 與系統性回顧）。多數研究證據品質中低，缺乏大型雙盲對照試驗。飲食與環境措施對每個人效果差異很大，長期嚴格限制可能造成營養不足。請務必在醫師或營養師指導下嘗試，並以藥物控制基礎疾病為優先。
+      </p>
+    </section>
+
+    <!-- 什麼是反覆急性過敏 -->
+    <section>
+      <h2 class="text-xl font-bold text-slate-900 mb-4">什麼是「反覆急性過敏」？</h2>
+      <p class="mb-3">
+        很多人會在短時間內反覆出現皮膚紅腫癢（蕁麻疹）、鼻子過敏症狀突然加重，或是其他過敏相關不適。臨床上最常見的對應情況包括：
+      </p>
+      <ul class="list-disc pl-5 space-y-1 mb-4">
+        <li>慢性自發性蕁麻疹（CSU）的急性發作</li>
+        <li>過敏性鼻炎（AR）的反覆症狀</li>
+        <li>其他過敏性疾病的急性加重</li>
+      </ul>
+      <p>
+        這些發作常與肥大細胞釋放組織胺等介質有關。真正由 IgE 媒介的食物過敏在 CSU 中其實很少見，更多是非特異性觸發，或假過敏（pseudoallergic）反應。
+      </p>
+    </section>
+
+    <!-- 常見觸發 -->
+    <section>
+      <h2 class="text-xl font-bold text-slate-900 mb-4">常見觸發因素</h2>
+      <p class="mb-3">比起一股腦限制一堆東西，先找出自己真正的觸發因素通常更有用。常見相關的有：</p>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="bg-white border border-slate-200 rounded-lg p-4">
+          <p class="font-medium text-slate-800 mb-1">藥物與物質</p>
+          <p class="text-sm">非類固醇消炎止痛藥（NSAIDs）、酒精</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-lg p-4">
+          <p class="font-medium text-slate-800 mb-1">感染與壓力</p>
+          <p class="text-sm">感染、心理壓力、睡眠不足</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-lg p-4">
+          <p class="font-medium text-slate-800 mb-1">環境與溫度</p>
+          <p class="text-sm">塵蟎、寵物皮屑、花粉、霉菌、極端溫度變化</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-lg p-4">
+          <p class="font-medium text-slate-800 mb-1">飲食相關</p>
+          <p class="text-sm">食品添加物、天然胺類、高組胺食物（對部分人）</p>
+        </div>
+      </div>
+      <p class="mt-4 text-sm text-slate-600">
+        國際指引（Zuberbier 等，2022）也強調：個體化找出觸發因素，比全面限制更合理。
+      </p>
+    </section>
+
+    <!-- 飲食干預 -->
+    <section>
+      <h2 class="text-xl font-bold text-slate-900 mb-4">飲食調整：假過敏原自由飲食與低組胺飲食</h2>
+      <p class="mb-4">
+        這大概是患者最常問的非藥物方法了。系統性回顧顯示，照表操課做這些飲食，完全緩解大概只有 5–12%，部分改善約 37–44%。個人化排除的數字看起來漂亮些，但診斷是不是真的 CSU 常有疑問，而且幾乎沒有對照試驗。
+      </p>
+
+      <!-- Chart 1 -->
+      <div class="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 mb-6">
+        <h3 class="text-sm font-medium text-slate-800 mb-3">系統性飲食的緩解情況（綜合文獻）</h3>
+        <div class="chart-container">
+          <canvas id="dietChart"></canvas>
+        </div>
+        <p class="text-xs text-slate-500 mt-3">資料來源：Cornillier 等系統性回顧（約 1,734 名患者）。完全緩解指症狀幾乎消失；部分緩解指明顯改善但未完全消失。</p>
+      </div>
+
+      <p class="mb-4">
+        國際指南（EAACI 等）講得很直接：這些飲食有爭議，到現在還缺高品質的雙盲安慰劑對照證據。最多只能當「根據病史的診斷性措施」，短試 2–4 週（多數建議至少連續 3 週），不建議當日常長期做法，不然營養跟生活品質都可能出問題。
+      </p>
+
+      <h3 class="font-semibold text-slate-900 mt-6 mb-3">假過敏原自由飲食（Pseudoallergen-free diet）</h3>
+      <p class="mb-3 text-sm">核心原則：只吃純天然、無人工添加物的食物，同時排除部分天然假過敏原。</p>
+      
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-100">
+              <th class="border border-slate-200 px-3 py-2 text-left font-medium">較常允許</th>
+              <th class="border border-slate-200 px-3 py-2 text-left font-medium">較常避免</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border border-slate-200 px-3 py-2 align-top">
+                馬鈴薯、白米、無添加麵包或麵條、新鮮肉（僅用鹽與油烹調）、新鮮乳製品（鮮奶、純優格以外的簡單款）、萵苣、胡蘿蔔、西葫蘆、花椰菜等部分蔬菜、鹽、糖、純水、紅茶、咖啡
+              </td>
+              <td class="border border-slate-200 px-3 py-2 align-top">
+                所有含色素、防腐劑、香精的加工食品、番茄及製品、甜椒、菠菜、蘑菇、洋蔥、幾乎所有水果與果汁、魚、蛋、調味乳製品、多數香料（胡椒、辣椒、大蒜、香草等）、酒精、人造奶油
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="font-semibold text-slate-900 mt-6 mb-3">低組胺飲食（Low-histamine diet）</h3>
+      <p class="mb-3 text-sm">核心原則：減少高組胺食物，以及可能促進組胺釋放或抑制組胺分解的食物。組胺含量會隨新鮮度、儲存與發酵大幅變化。</p>
+      
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-100">
+              <th class="border border-slate-200 px-3 py-2 text-left font-medium">較低組胺（常見允許）</th>
+              <th class="border border-slate-200 px-3 py-2 text-left font-medium">較高組胺或需注意</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border border-slate-200 px-3 py-2 align-top">
+                米飯、馬鈴薯、麵條、新鮮或立即冷凍的白肉魚（如鱈魚、比目魚）、新鮮肉類、新鮮軟質乳製品、多數新鮮或冷凍蔬菜（排除高組胺項）、部分新鮮水果（蘋果、梨、水蜜桃、西瓜等）、蜂蜜
+              </td>
+              <td class="border border-slate-200 px-3 py-2 align-top">
+                罐頭魚、煙燻或醃製魚、多數深色/油性魚、貝類、香腸火腿等加工肉、陳年發酵起司、優格、番茄、菠菜、茄子、酪梨、發酵蔬菜、柑橘類、草莓、香蕉、奇異果、鳳梨、酒精、巧克力、堅果、多數香料與醬油
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bg-slate-100 rounded-lg p-4 text-sm">
+        <p class="font-medium mb-1">實務建議</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>多數文獻建議至少連續執行 3 週，觀察症狀變化（可用蕁麻疹活動評分 UAS 等簡單記錄）。</li>
+          <li>若有效，再逐步重新引入食物，測試耐受性。</li>
+          <li>長期嚴格限制容易造成維生素、纖維等營養不足，尤其兒童、孕婦更需謹慎。</li>
+          <li>真正 IgE 媒介的食物過敏需另外嚴格迴避，不是靠這些飲食。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 環境控制 -->
+    <section>
+      <h2 class="text-xl font-bold text-slate-900 mb-4">環境控制與過敏原迴避</h2>
+      <p class="mb-4">
+        針對塵蟎、寵物皮屑等室內過敏原，常見措施包括防蟎床品、空氣清淨機、定期清潔與濕度控制。研究顯示這些方法可以降低過敏原濃度，但症狀改善往往有限或不顯著，證據品質多為非常低。
+      </p>
+      <p class="mb-4">
+        多模式綜合措施通常比單一方法好一些。寵物相關則可考慮空氣清淨、寵物洗澡或暫時迴避。室外花粉則依賴監測與減少暴露時間。
+      </p>
+      <p class="text-sm text-slate-600">
+        韓國過敏氣喘與臨床免疫學會（KAAACI）2023 指引條件性推薦選擇性使用空氣過濾器、不透氣床品與清潔措施。總體來說，對已致敏患者的臨床獲益常不一致。
+      </p>
+    </section>
+
+    <!-- 鼻腔沖洗 -->
+    <section>
+      <h2 class="text-xl font-bold text-slate-900 mb-4">局部措施：鼻腔生理食鹽水沖洗</h2>
+      <p class="mb-3">
+        針對過敏性鼻炎相關的反覆症狀，鼻腔沖洗是證據相對較強的非藥物方法。生理食鹽水或高滲食鹽水沖洗可降低鼻部症狀評分、減少藥物使用，安全性高，特別適合兒童與孕婦作為輔助。
+      </p>
+      <p class="mb-3">
+        多項系統性回顧與統合分析支持其有效性。部分研究顯示高滲食鹽水效果可能優於等滲。其他如太陽眼鏡、空氣過濾等證據較弱。
+      </p>
+    </section>
+
+    <!-- 生活方式 -->
+    <section>
+      <h2 class="text-xl font-bold text-slate-900 mb-4">生活習慣調整</h2>
+      <div class="space-y-4">
+        <div class="bg-white border border-slate-200 rounded-lg p-4">
+          <p class="font-medium text-slate-800">壓力管理</p>
+          <p class="text-sm mt-1">約三分之一 CSU 患者回報壓力會加重症狀。詢問並適當減壓（如冥想、正念、規律作息）有助降低發作。</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-lg p-4">
+          <p class="font-medium text-slate-800">運動與溫度</p>
+          <p class="text-sm mt-1">規律運動可能改善部分誘導性蕁麻疹的症狀與生活品質。避免極端溫度與熱水淋浴等常見觸發。</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-lg p-4">
+          <p class="font-medium text-slate-800">其他實用做法</p>
+          <p class="text-sm mt-1">避免已知會加重的 NSAIDs 與酒精；維持良好睡眠；敏感皮膚溫和護理。植物性飲食模式或維生素 D 有初步關聯，但目前不是核心推薦。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chart 2: 措施比較 -->
+    <section>
+      <h2 class="text-xl font-bold text-slate-900 mb-4">各項非藥物措施的大致定位</h2>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 sm:p-6">
+        <div class="chart-container">
+          <canvas id="measureChart"></canvas>
+        </div>
+        <p class="text-xs text-slate-500 mt-3">示意比較：依據文獻證據強度與臨床實用性做的相對定位（非精確量化）。鼻腔沖洗證據相對較佳；飲食與環境措施多為低品質證據，效果因人而異。</p>
+      </div>
+    </section>
+
+    <!-- 綜合建議 -->
+    <section>
+      <h2 class="text-xl font-bold text-slate-900 mb-4">綜合建議與注意事項</h2>
+      <ol class="list-decimal pl-5 space-y-3">
+        <li>
+          <span class="font-medium">先從自己的觸發因素著手。</span>
+          這通常比全面限制更實際。
+        </li>
+        <li>
+          <span class="font-medium">飲食可以短期試試看。</span>
+          如果抗組織胺效果不好，或明顯覺得跟吃的有關，假過敏原自由或低組胺飲食可以試 2–4 週。整體來說系統性飲食幫助有限，不建議長期硬撐。
+        </li>
+        <li>
+          <span class="font-medium">環境措施選擇性實施。</span>
+          防蟎床品、清淨機、清潔可降低室內過敏原，但症狀改善證據有限。
+        </li>
+        <li>
+          <span class="font-medium">鼻腔沖洗可優先考慮。</span>
+          對過敏性鼻炎症狀有較好支持，安全性高。
+        </li>
+        <li>
+          <span class="font-medium">生活調整作為輔助。</span>
+          壓力管理、避免 NSAIDs／極端溫度、適度運動。
+        </li>
+        <li>
+          <span class="font-medium">真正食物過敏需嚴格迴避。</span>
+          由醫師確認的 IgE 媒介食物過敏，應在專業指導下執行。
+        </li>
+      </ol>
+      <p class="mt-6 p-4 bg-rose-50 border border-rose-200 rounded-lg text-sm text-rose-900">
+        再次提醒：本內容僅供教育與研究參考，不構成臨床建議。證據品質整體中低，存在營養缺乏與生活品質下降風險。任何調整請先諮詢過敏科、皮膚科或相關專科醫師，必要時配合註冊營養師監測。藥物控制仍是多數患者的基礎。
+      </p>
+    </section>
+
+    <!-- 參考來源簡述 -->
+    <section class="text-sm text-slate-500 border-t border-slate-200 pt-6">
+      <p class="font-medium text-slate-700 mb-2">主要參考來源（節選）</p>
+      <ul class="space-y-1">
+        <li>Cornillier H, et al. Effect of Diet in Chronic Spontaneous Urticaria: A Systematic Review. Acta Derm Venereol. 2019.</li>
+        <li>Zuberbier T, et al. The international EAACI/GA²LEN/EuroGuiDerm/APAAACI guideline for the definition, classification, diagnosis and management of urticaria. Allergy. 2022.</li>
+        <li>KAAACI Allergic Rhinitis Guidelines 2023 等相關共識。</li>
+        <li>鼻腔沖洗相關系統性回顧與統合分析（Wang 等，2020 等）。</li>
+      </ul>
+      <p class="mt-4">文獻優先近 5–10 年高品質來源。未來仍需更多標準化隨機對照試驗釐清亞群獲益與長期安全性。</p>
+    </section>
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 mt-8">
+    <div class="max-w-3xl mx-auto px-4 py-6 text-center text-xs text-slate-500">
+      <p>本頁面內容整理自公開科學文獻與國際指引，僅供一般民眾教育參考。</p>
+      <p class="mt-1">請勿自行據此調整藥物或長期極端限制飲食。有疑問請尋求合格醫療專業人員協助。</p>
+    </div>
+  </footer>
+
+  <script>
+    // Diet remission chart
+    const dietCtx = document.getElementById('dietChart').getContext('2d');
+    new Chart(dietCtx, {
+      type: 'bar',
+      data: {
+        labels: ['假過敏原自由飲食', '低組胺飲食', '系統性飲食整體'],
+        datasets: [
+          {
+            label: '完全緩解 (%)',
+            data: [4.8, 11.7, 4.9],
+            backgroundColor: 'rgba(99, 102, 241, 0.7)',
+            borderColor: 'rgb(99, 102, 241)',
+            borderWidth: 1
+          },
+          {
+            label: '部分緩解 (%)',
+            data: [37.0, 43.9, 37.5],
+            backgroundColor: 'rgba(165, 180, 252, 0.7)',
+            borderColor: 'rgb(129, 140, 248)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + context.raw + '%';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 50,
+            title: { display: true, text: '患者比例 (%)' }
+          }
+        }
+      }
+    });
+
+    // Measures comparison (radar-like or simple bar for evidence/usefulness)
+    const measureCtx = document.getElementById('measureChart').getContext('2d');
+    new Chart(measureCtx, {
+      type: 'bar',
+      data: {
+        labels: ['鼻腔沖洗', '壓力管理與生活調整', '短期飲食嘗試', '環境控制措施'],
+        datasets: [{
+          label: '相對證據與實用支持程度（示意）',
+          data: [75, 55, 40, 35],
+          backgroundColor: [
+            'rgba(16, 185, 129, 0.7)',
+            'rgba(59, 130, 246, 0.7)',
+            'rgba(245, 158, 11, 0.7)',
+            'rgba(148, 163, 184, 0.7)'
+          ],
+          borderColor: [
+            'rgb(16, 185, 129)',
+            'rgb(59, 130, 246)',
+            'rgb(245, 158, 11)',
+            'rgb(148, 163, 184)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return '示意分數: ' + context.raw + ' / 100（僅供相對比較）';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            max: 100,
+            title: { display: true, text: '相對支持程度（示意）' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

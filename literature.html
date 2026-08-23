@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>文獻解讀 • 鯨魚爸醫學教育平台</title>
+  <script src="js/literature-gate.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
@@ -748,10 +749,19 @@
       });
     }
 
+    function startWhenUnlocked() {
+      const start = () => requestAnimationFrame(bootLiteraturePage);
+      if (window.LiteratureGate && !window.LiteratureGate.isUnlocked()) {
+        window.LiteratureGate.onUnlock(start);
+        return;
+      }
+      start();
+    }
+
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(bootLiteraturePage));
+      document.addEventListener('DOMContentLoaded', startWhenUnlocked);
     } else {
-      requestAnimationFrame(bootLiteraturePage);
+      startWhenUnlocked();
     }
   </script>
   <script src="js/busuanzi.js" defer></script>
